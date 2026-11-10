@@ -1,0 +1,941 @@
+
+{% extends 'base.html' %}
+
+{% block title %}AI Job Recommendations{% endblock %}
+
+{% block extra_css %}
+<style>
+    .recommendations-page {
+        color: #17233f;
+    }
+
+    .recommendations-hero {
+        position: relative;
+        overflow: hidden;
+        padding: 2.5rem;
+        border-radius: 1.25rem;
+        color: #fff;
+        background: linear-gradient(135deg, #0D102B, #14213D 65%, #3155A6);
+        box-shadow: 0 12px 30px rgba(13, 16, 43, 0.15);
+    }
+
+    .recommendations-hero p {
+        color: rgba(255, 255, 255, 0.78);
+    }
+
+    .hero-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 58px;
+        height: 58px;
+        margin-bottom: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.12);
+        font-size: 1.8rem;
+    }
+
+    .section-heading {
+        color: #0D102B;
+        font-weight: 750;
+        letter-spacing: -0.4px;
+    }
+
+    .section-subtitle {
+        max-width: 760px;
+        color: #64708a;
+    }
+
+    .job-card {
+        height: 100%;
+        overflow: hidden;
+        border: 1px solid #e2e7f0;
+        border-radius: 1rem;
+        background: #fff;
+        box-shadow: 0 5px 18px rgba(13, 16, 43, 0.045);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .job-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 28px rgba(13, 16, 43, 0.1);
+    }
+
+    .job-card.eligible {
+        border-top: 4px solid #198754;
+    }
+
+    .job-card.ineligible {
+        border-top: 4px solid #e6a23c;
+    }
+
+    .job-title {
+        color: #0D102B;
+        font-size: 1.2rem;
+        font-weight: 750;
+        overflow-wrap: anywhere;
+    }
+
+    .job-meta {
+        color: #68758e;
+        font-size: 0.9rem;
+        overflow-wrap: anywhere;
+    }
+
+    .match-circle {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 76px;
+        height: 76px;
+        border: 3px solid #dbe4ff;
+        border-radius: 50%;
+        color: #3155A6;
+        background: #f3f5ff;
+    }
+
+    .match-circle strong {
+        font-size: 1.05rem;
+    }
+
+    .match-circle small {
+        color: #64708a;
+        font-size: 0.65rem;
+    }
+
+    .skill-badge {
+        display: inline-block;
+        margin: 0.15rem 0.15rem 0.15rem 0;
+        padding: 0.45rem 0.65rem;
+        border-radius: 0.5rem;
+        font-size: 0.78rem;
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .skill-matched {
+        color: #146c43;
+        background: #d9f3e5;
+    }
+
+    .skill-missing {
+        color: #795400;
+        background: #fff0c2;
+    }
+
+    .skill-section-title {
+        margin-bottom: 0.65rem;
+        color: #263653;
+        font-size: 0.9rem;
+        font-weight: 750;
+    }
+
+    .job-details {
+        padding: 0.9rem 1rem;
+        border: 1px solid #e7ebf3;
+        border-radius: 0.75rem;
+        background: #f7f8fc;
+    }
+
+    .job-detail-label {
+        display: block;
+        margin-bottom: 0.2rem;
+        color: #77829a;
+        font-size: 0.75rem;
+    }
+
+    .job-detail-value {
+        color: #17233f;
+        font-size: 0.9rem;
+        font-weight: 650;
+        overflow-wrap: anywhere;
+    }
+
+    .recommendations-page .progress {
+        overflow: hidden;
+        border-radius: 20px;
+        background: #e9edf5;
+    }
+
+    .recommendations-page .progress-bar {
+        border-radius: 20px;
+        background: linear-gradient(90deg, #3155A6, #6d8ee8);
+    }
+
+    .recommendations-page .btn-primary {
+        border-color: #3155A6;
+        background: #3155A6;
+    }
+
+    .recommendations-page .btn-primary:hover {
+        border-color: #24458F;
+        background: #24458F;
+    }
+
+    /* WHY THIS JOB WAS RECOMMENDED */
+
+    .why-recommended-panel {
+        background: #f4f3ff;
+        border: 1px solid #dedbff;
+        border-radius: 12px;
+        padding: 15px 18px;
+    }
+
+    .why-recommended-panel summary {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        color: #4338a8;
+        font-weight: 700;
+        cursor: pointer;
+        list-style: none;
+    }
+
+    .why-recommended-panel summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .why-recommended-panel summary::after {
+        content: "+";
+        font-size: 21px;
+        line-height: 1;
+    }
+
+    .why-recommended-panel[open] summary::after {
+        content: "−";
+    }
+
+    .why-recommended-content {
+        border-top: 1px solid #dedbff;
+        padding-top: 12px;
+        margin-top: 12px;
+    }
+
+    .recommendation-reasons-list {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .recommendation-reasons-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        color: #334155;
+        font-size: 0.88rem;
+        line-height: 1.6;
+        margin-bottom: 10px;
+    }
+
+    .recommendation-reasons-list li i {
+        color: #16a34a;
+        margin-top: 3px;
+        flex-shrink: 0;
+    }
+
+    .empty-state {
+        padding: 2rem 1.25rem;
+        border: 1px dashed #cbd4e5;
+        border-radius: 1rem;
+        background: #f7f8fc;
+        text-align: center;
+    }
+
+    .empty-state-icon {
+        color: #3155A6;
+        font-size: 2.2rem;
+    }
+
+    .back-link {
+        color: #3155A6;
+        border-color: #3155A6;
+        font-weight: 650;
+    }
+
+    .back-link:hover {
+        color: #fff;
+        background: #3155A6;
+    }
+
+    @media (max-width: 767.98px) {
+        .recommendations-hero {
+            padding: 1.6rem 1.25rem;
+            border-radius: 1rem;
+        }
+
+        .recommendations-hero h1 {
+            font-size: 1.7rem;
+        }
+
+        .match-circle {
+            width: 65px;
+            height: 65px;
+        }
+
+        .job-card .card-body {
+            padding: 1.15rem !important;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .job-card {
+            transition: none;
+        }
+
+        .job-card:hover {
+            transform: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4 py-lg-5 recommendations-page">
+
+    <!-- PAGE HEADER -->
+    <section class="recommendations-hero mb-4 mb-lg-5">
+        <div class="row align-items-center g-3">
+            <div class="col-lg-9">
+                <div class="hero-icon">
+                    <i class="bi bi-stars"></i>
+                </div>
+
+                <h1 class="fw-bold mb-2">AI Job Recommendations</h1>
+
+                <p class="mb-0">
+                    Discover opportunities matched to your skills and profile.
+                    Compare your technical and soft skills, explore your strengths,
+                    and identify the skills you can improve for future placements.
+                </p>
+            </div>
+
+            <div class="col-lg-3 text-lg-end">
+                <span class="badge rounded-pill bg-light text-dark px-3 py-2">
+                    <i class="bi bi-graph-up-arrow me-1"></i>
+                    Personalized matching
+                </span>
+            </div>
+        </div>
+    </section>
+
+    {% if error %}
+        <div class="alert alert-danger border-0 shadow-sm rounded-3" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            {{ error }}
+        </div>
+    {% else %}
+
+        <!-- ELIGIBLE JOBS -->
+        <section class="mb-5">
+            <div class="mb-4">
+                <h2 class="section-heading h4 mb-2">
+                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                    Eligible Jobs
+                </h2>
+
+                <p class="section-subtitle mb-0">
+                    Jobs that pass your current branch and known CGPA eligibility
+                    checks, ranked by your overall skill match.
+                </p>
+            </div>
+
+            {% if recommendations %}
+                <div class="row g-4">
+                    {% for item in recommendations %}
+                        <div class="col-12 col-xl-6">
+                            <article class="card job-card eligible">
+                                <div class="card-body p-4 d-flex flex-column">
+
+                                    <!-- JOB HEADER -->
+                                    <div class="d-flex justify-content-between align-items-start gap-3">
+                                        <div class="flex-grow-1 min-w-0">
+                                            <h3 class="job-title mb-2">
+                                                {{ item.job.title }}
+                                            </h3>
+
+                                            <p class="job-meta mb-2">
+                                                <i class="bi bi-building me-2"></i>
+                                                {{ item.job.company.company_name }}
+                                            </p>
+
+                                            <p class="job-meta mb-0">
+                                                <i class="bi bi-geo-alt me-2"></i>
+                                                {{ item.job.location|default:"Location not specified" }}
+                                            </p>
+                                        </div>
+
+                                        <div class="match-circle">
+                                            <strong>{{ item.match_percentage }}%</strong>
+                                            <small>SKILL MATCH</small>
+                                        </div>
+                                    </div>
+
+                                    <hr class="my-4">
+
+                                    <!-- OVERALL AND CATEGORY MATCH SCORES -->
+                                    <div class="mb-4">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="small fw-bold">
+                                                Overall skill compatibility
+                                            </span>
+                                            <span class="small fw-bold text-primary">
+                                                {{ item.match_percentage }}%
+                                            </span>
+                                        </div>
+
+                                        <div class="progress mb-3" style="height: 9px;">
+                                            <div
+                                                class="progress-bar"
+                                                role="progressbar"
+                                                style="width: {{ item.match_percentage }}%;"
+                                                aria-valuenow="{{ item.match_percentage }}"
+                                                aria-valuemin="0"
+                                                aria-valuemax="100"
+                                                aria-label="Overall skill match percentage">
+                                            </div>
+                                        </div>
+
+                                        {% if item.technical_match_percentage != None %}
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <span class="small text-muted">
+                                                    <i class="bi bi-code-slash me-1"></i>
+                                                    Technical skills
+                                                </span>
+                                                <span class="small fw-semibold">
+                                                    {{ item.technical_match_percentage }}%
+                                                </span>
+                                            </div>
+
+                                            <div class="progress mb-3" style="height: 6px;">
+                                                <div
+                                                    class="progress-bar"
+                                                    role="progressbar"
+                                                    style="width: {{ item.technical_match_percentage }}%;"
+                                                    aria-valuenow="{{ item.technical_match_percentage }}"
+                                                    aria-valuemin="0"
+                                                    aria-valuemax="100"
+                                                    aria-label="Technical skill match percentage">
+                                                </div>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if item.soft_match_percentage != None %}
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <span class="small text-muted">
+                                                    <i class="bi bi-people me-1"></i>
+                                                    Soft skills
+                                                </span>
+                                                <span class="small fw-semibold">
+                                                    {{ item.soft_match_percentage }}%
+                                                </span>
+                                            </div>
+
+                                            <div class="progress" style="height: 6px;">
+                                                <div
+                                                    class="progress-bar"
+                                                    role="progressbar"
+                                                    style="width: {{ item.soft_match_percentage }}%;"
+                                                    aria-valuenow="{{ item.soft_match_percentage }}"
+                                                    aria-valuemin="0"
+                                                    aria-valuemax="100"
+                                                    aria-label="Soft skill match percentage">
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <!-- WHY THIS JOB WAS RECOMMENDED -->
+                                    <details class="why-recommended-panel mb-4">
+                                        <summary>
+                                            <span>
+                                                <i class="bi bi-stars me-2"></i>
+                                                Why this job was recommended
+                                            </span>
+                                        </summary>
+
+                                        <div class="why-recommended-content">
+                                            <p class="small text-muted mb-3">
+                                                These explanations are based on your
+                                                profile and this job's requirements.
+                                            </p>
+
+                                            <ul class="recommendation-reasons-list mb-0">
+                                                {% for reason in item.recommendation_reasons %}
+                                                    <li>
+                                                        <i class="bi bi-check-circle-fill"></i>
+                                                        <span>{{ reason }}</span>
+                                                    </li>
+                                                {% empty %}
+                                                    <li>
+                                                        <i class="bi bi-info-circle-fill"></i>
+                                                        <span>
+                                                            Detailed recommendation
+                                                            explanations are not available.
+                                                        </span>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </details>
+
+                                    <!-- MATCHED TECHNICAL SKILLS -->
+                                    <div class="mb-4">
+                                        <h4 class="skill-section-title">
+                                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                            Matched Technical Skills
+                                        </h4>
+
+                                        {% for skill in item.matched_skills %}
+                                            <span class="skill-badge skill-matched">
+                                                <i class="bi bi-check2 me-1"></i>{{ skill }}
+                                            </span>
+                                        {% empty %}
+                                            <span class="text-muted small">
+                                                No matching technical skills found yet.
+                                            </span>
+                                        {% endfor %}
+                                    </div>
+
+                                    <!-- MISSING TECHNICAL SKILLS -->
+                                    <div class="mb-4">
+                                        <h4 class="skill-section-title">
+                                            <i class="bi bi-tools text-warning me-2"></i>
+                                            Technical Skills to Improve
+                                        </h4>
+
+                                        {% for skill in item.missing_skills %}
+                                            <span class="skill-badge skill-missing">
+                                                <i class="bi bi-plus-circle me-1"></i>{{ skill }}
+                                            </span>
+                                        {% empty %}
+                                            <span class="text-success small">
+                                                <i class="bi bi-check-circle me-1"></i>
+                                                All required technical skills matched,
+                                                or none specified.
+                                            </span>
+                                        {% endfor %}
+                                    </div>
+
+                                    <!-- MATCHED SOFT SKILLS -->
+                                    <div class="mb-4">
+                                        <h4 class="skill-section-title">
+                                            <i class="bi bi-people-fill text-success me-2"></i>
+                                            Matched Soft Skills
+                                        </h4>
+
+                                        {% for skill in item.matched_soft_skills %}
+                                            <span class="skill-badge skill-matched">
+                                                <i class="bi bi-check2 me-1"></i>{{ skill }}
+                                            </span>
+                                        {% empty %}
+                                            <span class="text-muted small">
+                                                No matching soft skills found yet.
+                                            </span>
+                                        {% endfor %}
+                                    </div>
+
+                                    <!-- MISSING SOFT SKILLS -->
+                                    <div class="mb-4">
+                                        <h4 class="skill-section-title">
+                                            <i class="bi bi-lightbulb text-warning me-2"></i>
+                                            Soft Skills to Improve
+                                        </h4>
+
+                                        {% for skill in item.missing_soft_skills %}
+                                            <span class="skill-badge skill-missing">
+                                                <i class="bi bi-plus-circle me-1"></i>{{ skill }}
+                                            </span>
+                                        {% empty %}
+                                            <span class="text-success small">
+                                                <i class="bi bi-check-circle me-1"></i>
+                                                All required soft skills matched,
+                                                or none specified.
+                                            </span>
+                                        {% endfor %}
+                                    </div>
+
+                                    <!-- PROFILE AND ELIGIBILITY NOTICES -->
+                                    {% if item.profile_notice %}
+                                        <div class="alert alert-info border-0 rounded-3 small">
+                                            <i class="bi bi-info-circle me-1"></i>
+                                            {{ item.profile_notice }}
+                                        </div>
+                                    {% endif %}
+
+                                    {% if item.eligibility_notice %}
+                                        <div class="alert alert-warning border-0 rounded-3 small">
+                                            <i class="bi bi-exclamation-circle me-1"></i>
+                                            {{ item.eligibility_notice }}
+                                        </div>
+                                    {% endif %}
+
+                                    <!-- JOB DETAILS -->
+                                    <div class="job-details mb-4 mt-auto">
+                                        <div class="row g-3">
+                                            <div class="col-6">
+                                                <span class="job-detail-label">
+                                                    Minimum CGPA
+                                                </span>
+                                                <span class="job-detail-value">
+                                                    {{ item.job.minimum_cgpa|default:"Not specified" }}
+                                                </span>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <span class="job-detail-label">
+                                                    Salary
+                                                </span>
+                                                <span class="job-detail-value">
+                                                    {{ item.job.salary|default:"Not specified" }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- ACTION -->
+                                    <a
+                                        href="{% url 'job_detail' item.job.id %}"
+                                        class="btn btn-primary w-100 py-2">
+                                        <i class="bi bi-eye me-2"></i>
+                                        View Job
+                                    </a>
+
+                                </div>
+                            </article>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon mb-3">
+                        <i class="bi bi-search"></i>
+                    </div>
+
+                    <h3 class="h5 fw-bold">
+                        No eligible jobs right now
+                    </h3>
+
+                    <p class="text-muted mb-0">
+                        Explore the other jobs below to review their requirements
+                        and discover skills to work on.
+                    </p>
+                </div>
+            {% endif %}
+        </section>
+
+        <!-- JOBS NOT ELIGIBLE DUE TO CGPA -->
+        {% if ineligible_jobs %}
+            <section class="mb-5">
+                <div class="mb-4">
+                    <h2 class="section-heading h4 mb-2">
+                        <i class="bi bi-briefcase-fill me-2" style="color:#c58a16;"></i>
+                        Explore Other Jobs
+                    </h2>
+
+                    <p class="section-subtitle mb-0">
+                        These jobs are available to explore, but your current
+                        CGPA does not meet the listed minimum requirement.
+                        Review the requirements and keep improving your profile.
+                    </p>
+                </div>
+
+                <div class="row g-4">
+                    {% for item in ineligible_jobs %}
+                        <div class="col-12 col-xl-6">
+                            <article class="card job-card ineligible">
+                                <div class="card-body p-4 d-flex flex-column">
+
+                                    <!-- JOB HEADER -->
+                                    <div class="d-flex justify-content-between align-items-start gap-3">
+                                        <div class="flex-grow-1 min-w-0">
+                                            <h3 class="job-title mb-2">
+                                                {{ item.job.title }}
+                                            </h3>
+
+                                            <p class="job-meta mb-2">
+                                                <i class="bi bi-building me-2"></i>
+                                                {{ item.job.company.company_name }}
+                                            </p>
+
+                                            <p class="job-meta mb-0">
+                                                <i class="bi bi-geo-alt me-2"></i>
+                                                {{ item.job.location|default:"Location not specified" }}
+                                            </p>
+                                        </div>
+
+                                        <span class="badge rounded-pill bg-warning text-dark px-3 py-2">
+                                            <i class="bi bi-exclamation-circle me-1"></i>
+                                            CGPA Gap
+                                        </span>
+                                    </div>
+
+                                    <hr class="my-4">
+
+                                    <!-- CGPA ELIGIBILITY INFORMATION -->
+                                    <div class="alert alert-warning border-0 rounded-3 mb-4">
+                                        <h4 class="h6 fw-bold mb-3">
+                                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                            Minimum CGPA Not Met
+                                        </h4>
+
+                                        <div class="row g-2 mb-3">
+                                            <div class="col-6">
+                                                <span class="job-detail-label">
+                                                    Your CGPA
+                                                </span>
+                                                <span class="job-detail-value">
+                                                    {{ student_cgpa }}
+                                                </span>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <span class="job-detail-label">
+                                                    Required CGPA
+                                                </span>
+                                                <span class="job-detail-value">
+                                                    {{ item.job.minimum_cgpa }}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <p class="small mb-0">
+                                            {{ item.eligibility_reason }}
+                                        </p>
+                                    </div>
+
+                                    <!-- OVERALL AND CATEGORY MATCH SCORES -->
+                                    <div class="mb-4">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="small fw-bold">
+                                                Overall skill compatibility
+                                            </span>
+                                            <span class="small fw-bold">
+                                                {{ item.match_percentage }}%
+                                            </span>
+                                        </div>
+
+                                        <div class="progress mb-3" style="height: 9px;">
+                                            <div
+                                                class="progress-bar bg-warning"
+                                                role="progressbar"
+                                                style="width: {{ item.match_percentage }}%;"
+                                                aria-valuenow="{{ item.match_percentage }}"
+                                                aria-valuemin="0"
+                                                aria-valuemax="100"
+                                                aria-label="Overall skill match percentage">
+                                            </div>
+                                        </div>
+
+                                        {% if item.technical_match_percentage != None %}
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <span class="small text-muted">
+                                                    <i class="bi bi-code-slash me-1"></i>
+                                                    Technical skills
+                                                </span>
+                                                <span class="small fw-semibold">
+                                                    {{ item.technical_match_percentage }}%
+                                                </span>
+                                            </div>
+
+                                            <div class="progress mb-3" style="height: 6px;">
+                                                <div
+                                                    class="progress-bar"
+                                                    role="progressbar"
+                                                    style="width: {{ item.technical_match_percentage }}%;"
+                                                    aria-valuenow="{{ item.technical_match_percentage }}"
+                                                    aria-valuemin="0"
+                                                    aria-valuemax="100"
+                                                    aria-label="Technical skill match percentage">
+                                                </div>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if item.soft_match_percentage != None %}
+                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <span class="small text-muted">
+                                                    <i class="bi bi-people me-1"></i>
+                                                    Soft skills
+                                                </span>
+                                                <span class="small fw-semibold">
+                                                    {{ item.soft_match_percentage }}%
+                                                </span>
+                                            </div>
+
+                                            <div class="progress" style="height: 6px;">
+                                                <div
+                                                    class="progress-bar"
+                                                    role="progressbar"
+                                                    style="width: {{ item.soft_match_percentage }}%;"
+                                                    aria-valuenow="{{ item.soft_match_percentage }}"
+                                                    aria-valuemin="0"
+                                                    aria-valuemax="100"
+                                                    aria-label="Soft skill match percentage">
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+
+                                    <!-- WHY THIS JOB WAS RECOMMENDED -->
+                                    <details class="why-recommended-panel mb-4">
+                                        <summary>
+                                            <span>
+                                                <i class="bi bi-stars me-2"></i>
+                                                Why this job was recommended
+                                            </span>
+                                        </summary>
+
+                                        <div class="why-recommended-content">
+                                            <p class="small text-muted mb-3">
+                                                These explanations are based on your
+                                                profile and this job's requirements.
+                                            </p>
+
+                                            <ul class="recommendation-reasons-list mb-0">
+                                                {% for reason in item.recommendation_reasons %}
+                                                    <li>
+                                                        <i class="bi bi-check-circle-fill"></i>
+                                                        <span>{{ reason }}</span>
+                                                    </li>
+                                                {% empty %}
+                                                    <li>
+                                                        <i class="bi bi-info-circle-fill"></i>
+                                                        <span>
+                                                            Detailed recommendation
+                                                            explanations are not available.
+                                                        </span>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    </details>
+
+                                    <!-- MATCHED TECHNICAL SKILLS -->
+                                    <div class="mb-4">
+                                        <h4 class="skill-section-title">
+                                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                            Matched Technical Skills
+                                        </h4>
+
+                                        {% for skill in item.matched_skills %}
+                                            <span class="skill-badge skill-matched">
+                                                <i class="bi bi-check2 me-1"></i>{{ skill }}
+                                            </span>
+                                        {% empty %}
+                                            <span class="text-muted small">
+                                                No matching technical skills found yet.
+                                            </span>
+                                        {% endfor %}
+                                    </div>
+
+                                    <!-- MISSING TECHNICAL SKILLS -->
+                                    <div class="mb-4">
+                                        <h4 class="skill-section-title">
+                                            <i class="bi bi-tools text-warning me-2"></i>
+                                            Technical Skills to Improve
+                                        </h4>
+
+                                        {% for skill in item.missing_skills %}
+                                            <span class="skill-badge skill-missing">
+                                                <i class="bi bi-plus-circle me-1"></i>{{ skill }}
+                                            </span>
+                                        {% empty %}
+                                            <span class="text-success small">
+                                                All required technical skills matched,
+                                                or none specified.
+                                            </span>
+                                        {% endfor %}
+                                    </div>
+
+                                    <!-- MATCHED SOFT SKILLS -->
+                                    <div class="mb-4">
+                                        <h4 class="skill-section-title">
+                                            <i class="bi bi-people-fill text-success me-2"></i>
+                                            Matched Soft Skills
+                                        </h4>
+
+                                        {% for skill in item.matched_soft_skills %}
+                                            <span class="skill-badge skill-matched">
+                                                <i class="bi bi-check2 me-1"></i>{{ skill }}
+                                            </span>
+                                        {% empty %}
+                                            <span class="text-muted small">
+                                                No matching soft skills found yet.
+                                            </span>
+                                        {% endfor %}
+                                    </div>
+
+                                    <!-- MISSING SOFT SKILLS -->
+                                    <div class="mb-4">
+                                        <h4 class="skill-section-title">
+                                            <i class="bi bi-lightbulb text-warning me-2"></i>
+                                            Soft Skills to Improve
+                                        </h4>
+
+                                        {% for skill in item.missing_soft_skills %}
+                                            <span class="skill-badge skill-missing">
+                                                <i class="bi bi-plus-circle me-1"></i>{{ skill }}
+                                            </span>
+                                        {% empty %}
+                                            <span class="text-success small">
+                                                All required soft skills matched,
+                                                or none specified.
+                                            </span>
+                                        {% endfor %}
+                                    </div>
+
+                                    <!-- JOB DETAILS -->
+                                    <div class="job-details mb-4 mt-auto">
+                                        <span class="job-detail-label">
+                                            Salary
+                                        </span>
+                                        <span class="job-detail-value">
+                                            {{ item.job.salary|default:"Not specified" }}
+                                        </span>
+                                    </div>
+
+                                    <!-- VIEW ONLY -->
+                                    <a
+                                        href="{% url 'job_detail' item.job.id %}"
+                                        class="btn btn-outline-secondary w-100 py-2">
+                                        <i class="bi bi-eye me-2"></i>
+                                        View Job Requirements
+                                    </a>
+
+                                    <p class="text-muted small mt-3 mb-0">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        Viewing this job does not mean you are eligible
+                                        to apply. The CGPA requirement still applies.
+                                    </p>
+
+                                </div>
+                            </article>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+
+        <!-- CGPA NOT ENTERED -->
+        {% if student_cgpa is None %}
+            <div class="alert alert-info border-0 shadow-sm rounded-3 mt-4" role="alert">
+                <i class="bi bi-info-circle-fill me-2"></i>
+                Your CGPA has not been entered. Add it to your student profile
+                to check CGPA eligibility accurately.
+            </div>
+        {% endif %}
+
+    {% endif %}
+
+    <!-- BACK TO DASHBOARD -->
+    <div class="text-center mt-5 pt-3">
+        <a href="{% url 'dashboard:student_dashboard' %}" class="btn back-link px-4 py-2">
+            <i class="bi bi-arrow-left me-2"></i>
+            Back to Dashboard
+        </a>
+    </div>
+
+</div>
+{% endblock %}

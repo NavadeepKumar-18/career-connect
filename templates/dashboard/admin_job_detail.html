@@ -1,0 +1,599 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Job Details | Admin{% endblock %}
+
+{% block content %}
+
+<style>
+/* ================= ADMIN JOB DETAILS ================= */
+
+.admin-job-page {
+    background: #0B1535;
+    min-height: 100vh;
+    padding: 30px 20px;
+    color: #FFFFFF;
+}
+
+.admin-job-container {
+    max-width: 1050px;
+    margin: 0 auto;
+}
+
+/* Header */
+
+.job-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 22px;
+}
+
+.job-page-heading h2 {
+    color: #FFFFFF;
+    font-size: 23px;
+    font-weight: 750;
+    margin-bottom: 5px;
+}
+
+.job-page-heading p {
+    color: #B9C6E5;
+    font-size: 13px;
+    margin: 0;
+}
+
+/* Main card */
+
+.admin-job-card {
+    background: #FFFFFF;
+    color: #334155;
+    border: 1px solid #E2E8F0;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 12px 35px rgba(0,0,0,.18);
+}
+
+.admin-job-hero {
+    padding: 30px;
+    background: linear-gradient(120deg, #FFFFFF, #F5F7FF);
+    border-bottom: 1px solid #E8EDF5;
+}
+
+.job-company-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 15px;
+    background: #EAEFFF;
+    color: #5145CD;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    flex-shrink: 0;
+}
+
+.job-title {
+    color: #172554;
+    font-size: 25px;
+    font-weight: 800;
+    margin-bottom: 7px;
+}
+
+.job-company-name {
+    color: #64748B;
+    font-size: 14px;
+    margin: 0;
+}
+
+/* Quick information */
+
+.job-highlights {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.job-highlight {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 12px;
+    border-radius: 9px;
+    background: #F1F5F9;
+    color: #475569;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.job-highlight i {
+    color: #5145CD;
+    font-size: 14px;
+}
+
+/* Content */
+
+.admin-job-body {
+    padding: 28px;
+}
+
+.job-info-section {
+    margin-bottom: 28px;
+}
+
+.job-section-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #172554;
+    font-size: 16px;
+    font-weight: 750;
+    margin-bottom: 17px;
+}
+
+.job-section-heading i {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: #EAEFFF;
+    color: #5145CD;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
+.job-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.job-info-item {
+    background: #F8FAFC;
+    border: 1px solid #E8EDF5;
+    border-radius: 12px;
+    padding: 16px;
+    min-width: 0;
+}
+
+.job-info-label {
+    display: block;
+    color: #8490A5;
+    font-size: 11px;
+    font-weight: 750;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-bottom: 7px;
+}
+
+.job-info-value {
+    color: #263653;
+    font-size: 14px;
+    font-weight: 650;
+    overflow-wrap: anywhere;
+}
+
+/* Description */
+
+.job-description {
+    background: #F8FAFC;
+    border: 1px solid #E8EDF5;
+    border-radius: 12px;
+    padding: 20px;
+    color: #475569;
+    font-size: 14px;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+}
+
+/* Company details */
+
+.company-info-box {
+    background: #F8FAFC;
+    border: 1px solid #E8EDF5;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.company-info-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 12px 0;
+    border-bottom: 1px solid #E2E8F0;
+    font-size: 13px;
+}
+
+.company-info-row:last-child {
+    border-bottom: none;
+}
+
+.company-info-row strong {
+    color: #64748B;
+    font-weight: 600;
+}
+
+.company-info-row span {
+    color: #172554;
+    font-weight: 700;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+/* Status */
+
+.job-status-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    padding: 18px 20px;
+    border-radius: 12px;
+}
+
+.job-status-label {
+    color: #172554;
+    font-size: 14px;
+    font-weight: 750;
+}
+
+.job-status-badge {
+    padding: 7px 14px;
+    border-radius: 30px;
+    font-size: 12px;
+    font-weight: 750;
+}
+
+.status-active {
+    background: #DCFCE7;
+    color: #15803D;
+}
+
+.status-inactive {
+    background: #E2E8F0;
+    color: #475569;
+}
+
+.status-expired {
+    background: #FEE2E2;
+    color: #B91C1C;
+}
+
+.status-approved {
+    background: #DCFCE7;
+    color: #15803D;
+}
+
+.status-pending {
+    background: #FEF3C7;
+    color: #B45309;
+}
+
+/* Buttons */
+
+.job-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #FFFFFF;
+    color: #263B70;
+    border: 1px solid #DCE3F1;
+    padding: 9px 15px;
+    border-radius: 9px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 700;
+    transition: .2s;
+}
+
+.job-back-btn:hover {
+    background: #EAEFFF;
+    color: #5145CD;
+    transform: translateY(-2px);
+}
+
+/* Divider */
+
+.job-divider {
+    border: 0;
+    border-top: 1px solid #E8EDF5;
+    margin: 26px 0;
+}
+
+/* Responsive */
+
+@media (max-width: 600px) {
+    .admin-job-page {
+        padding: 18px 12px;
+    }
+
+    .admin-job-hero {
+        padding: 21px;
+    }
+
+    .admin-job-body {
+        padding: 20px;
+    }
+
+    .job-title {
+        font-size: 21px;
+    }
+
+    .job-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .job-section-heading {
+        font-size: 15px;
+    }
+
+    .company-info-row {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .company-info-row span {
+        text-align: left;
+    }
+}
+</style>
+
+
+<div class="admin-job-page">
+
+    <div class="admin-job-container">
+
+        <!-- PAGE HEADER -->
+        <div class="job-page-header">
+
+            <div class="job-page-heading">
+                <h2>
+                    <i class="bi bi-briefcase-fill me-2"></i>
+                    Job Details
+                </h2>
+                <p>View complete job and company information.</p>
+            </div>
+
+            <a href="{% url 'dashboard:admin_dashboard' %}"
+               class="job-back-btn">
+                <i class="bi bi-arrow-left"></i>
+                Back to Dashboard
+            </a>
+
+        </div>
+
+
+        <!-- MAIN JOB CARD -->
+        <div class="admin-job-card">
+
+            <!-- JOB HEADER -->
+            <div class="admin-job-hero">
+
+                <div class="d-flex align-items-center gap-3">
+
+                    <div class="job-company-icon">
+                        <i class="bi bi-building"></i>
+                    </div>
+
+                    <div class="min-w-0">
+                        <h3 class="job-title">
+                            {{ job.title }}
+                        </h3>
+
+                        <p class="job-company-name">
+                            <i class="bi bi-building me-1"></i>
+                            {{ job.company.company_name }}
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="job-highlights">
+
+                    <span class="job-highlight">
+                        <i class="bi bi-geo-alt-fill"></i>
+                        {{ job.location|default:"Location not specified" }}
+                    </span>
+
+                    <span class="job-highlight">
+                        <i class="bi bi-calendar-event"></i>
+                        {% if job.deadline %}
+                            Deadline: {{ job.deadline|date:"d M Y" }}
+                        {% else %}
+                            No deadline
+                        {% endif %}
+                    </span>
+
+                    <span class="job-highlight">
+                        <i class="bi bi-mortarboard-fill"></i>
+                        Minimum CGPA:
+                        {{ job.minimum_cgpa|default:"Not specified" }}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- JOB CONTENT -->
+            <div class="admin-job-body">
+
+                <!-- JOB INFORMATION -->
+                <section class="job-info-section">
+
+                    <h5 class="job-section-heading">
+                        <i class="bi bi-info-circle-fill"></i>
+                        Job Information
+                    </h5>
+
+                    <div class="job-info-grid">
+
+                        <div class="job-info-item">
+                            <span class="job-info-label">Job Title</span>
+                            <div class="job-info-value">
+                                {{ job.title }}
+                            </div>
+                        </div>
+
+                        <div class="job-info-item">
+                            <span class="job-info-label">Location</span>
+                            <div class="job-info-value">
+                                {{ job.location|default:"Not specified" }}
+                            </div>
+                        </div>
+
+                        <div class="job-info-item">
+                            <span class="job-info-label">Minimum CGPA</span>
+                            <div class="job-info-value">
+                                {{ job.minimum_cgpa|default:"Not specified" }}
+                            </div>
+                        </div>
+
+                        <div class="job-info-item">
+                            <span class="job-info-label">Application Deadline</span>
+                            <div class="job-info-value">
+                                {% if job.deadline %}
+                                    {{ job.deadline|date:"d M Y" }}
+                                {% else %}
+                                    No deadline
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="job-info-item">
+                            <span class="job-info-label">Eligible Branches</span>
+                            <div class="job-info-value">
+                                {{ job.eligible_branches|default:"All branches" }}
+                            </div>
+                        </div>
+
+                        <div class="job-info-item">
+                            <span class="job-info-label">Company</span>
+                            <div class="job-info-value">
+                                {{ job.company.company_name }}
+                            </div>
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <hr class="job-divider">
+
+
+                <!-- JOB DESCRIPTION -->
+                <section class="job-info-section">
+
+                    <h5 class="job-section-heading">
+                        <i class="bi bi-file-text-fill"></i>
+                        Job Description
+                    </h5>
+
+                    <div class="job-description">
+                        {% if job.description %}
+                            {{ job.description|linebreaks }}
+                        {% else %}
+                            No description provided.
+                        {% endif %}
+                    </div>
+
+                </section>
+
+
+                <hr class="job-divider">
+
+
+                <!-- COMPANY INFORMATION -->
+                <section class="job-info-section">
+
+                    <h5 class="job-section-heading">
+                        <i class="bi bi-building-check"></i>
+                        Company Information
+                    </h5>
+
+                    <div class="company-info-box">
+
+                        <div class="company-info-row">
+                            <strong>Company Name</strong>
+                            <span>{{ job.company.company_name }}</span>
+                        </div>
+
+                        <div class="company-info-row">
+                            <strong>Recruiter</strong>
+                            <span>{{ job.company.recruiter.username }}</span>
+                        </div>
+
+                        <div class="company-info-row">
+                            <strong>Company Approval</strong>
+
+                            <span>
+                                {% if job.company.is_approved %}
+                                    <span class="job-status-badge status-approved">
+                                        Approved
+                                    </span>
+                                {% else %}
+                                    <span class="job-status-badge status-pending">
+                                        Pending
+                                    </span>
+                                {% endif %}
+                            </span>
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <hr class="job-divider">
+
+
+                <!-- JOB STATUS -->
+                <section>
+
+                    <div class="job-status-box">
+
+                        <span class="job-status-label">
+                            <i class="bi bi-activity me-2"></i>
+                            Job Status
+                        </span>
+
+                        <div>
+
+                            {% if not job.is_active %}
+                                <span class="job-status-badge status-inactive">
+                                    Inactive
+                                </span>
+
+                            {% elif job.deadline and job.deadline < today %}
+                                <span class="job-status-badge status-expired">
+                                    Expired
+                                </span>
+
+                            {% else %}
+                                <span class="job-status-badge status-active">
+                                    Active
+                                </span>
+                            {% endif %}
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

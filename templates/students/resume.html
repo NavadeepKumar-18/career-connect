@@ -1,0 +1,587 @@
+{% extends 'base.html' %}
+
+{% block title %}My Resume{% endblock %}
+
+{% block extra_css %}
+<style>
+    .resume-page {
+        max-width: 1050px;
+        margin: 0 auto;
+        color: #0D102B;
+    }
+
+    .resume-header {
+        background: linear-gradient(135deg, #0D102B, #1E3A5F);
+        color: #fff;
+        padding: 28px 30px;
+        border-radius: 18px;
+        margin-bottom: 25px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .resume-header::after {
+        content: "";
+        position: absolute;
+        width: 170px;
+        height: 170px;
+        border: 25px solid rgba(255,255,255,.06);
+        border-radius: 50%;
+        right: -35px;
+        top: -65px;
+    }
+
+    .resume-header h2 {
+        font-weight: 750;
+        margin-bottom: 8px;
+    }
+
+    .resume-header p {
+        color: #DCE5F7;
+        margin-bottom: 0;
+        max-width: 650px;
+    }
+
+    .resume-panel {
+        background: #fff;
+        border: 1px solid #E1E6F0;
+        border-radius: 16px;
+        box-shadow: 0 7px 25px rgba(13,16,43,.06);
+        overflow: hidden;
+        margin-bottom: 24px;
+    }
+
+    .panel-heading {
+        padding: 20px 24px;
+        background: #FAFBFE;
+        border-bottom: 1px solid #E8ECF4;
+    }
+
+    .panel-heading h5 {
+        color: #0D102B;
+        font-weight: 750;
+        margin-bottom: 5px;
+    }
+
+    .panel-heading p {
+        color: #748096;
+        font-size: .88rem;
+        margin-bottom: 0;
+    }
+
+    .panel-body {
+        padding: 26px;
+    }
+
+    .resume-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        background: #E9EDFF;
+        color: #1E3A5F;
+        font-size: 1.35rem;
+        flex-shrink: 0;
+    }
+
+    .upload-zone {
+        border: 2px dashed #C9D4E8;
+        border-radius: 13px;
+        padding: 27px 22px;
+        background: #FAFBFE;
+        text-align: center;
+        transition: .2s ease;
+    }
+
+    .upload-zone:focus-within {
+        border-color: #3155A6;
+        background: #F4F6FC;
+    }
+
+    .upload-symbol {
+        font-size: 2.5rem;
+        color: #3155A6;
+        margin-bottom: 10px;
+    }
+
+    .form-label {
+        color: #26334D;
+        font-size: .92rem;
+        font-weight: 650;
+        margin-bottom: 9px;
+    }
+
+    .form-control {
+        border: 1px solid #D9DFEA;
+        border-radius: 9px;
+        padding: 11px 13px;
+        color: #18213A;
+    }
+
+    .form-control:focus {
+        border-color: #3155A6;
+        box-shadow: 0 0 0 .2rem rgba(49,85,166,.12);
+    }
+
+    .form-text {
+        color: #748096;
+        font-size: .82rem;
+    }
+
+    .btn-resume-primary {
+        background: #1E3A5F;
+        border: 1px solid #1E3A5F;
+        color: #fff;
+        padding: 11px 20px;
+        border-radius: 9px;
+        font-weight: 650;
+        transition: .2s ease;
+    }
+
+    .btn-resume-primary:hover {
+        background: #3155A6;
+        border-color: #3155A6;
+        color: #fff;
+        transform: translateY(-1px);
+    }
+
+    .current-resume {
+        border: 1px solid #E0E6F0;
+        border-radius: 13px;
+        padding: 20px;
+        background: #fff;
+    }
+
+    .file-icon {
+        width: 53px;
+        height: 58px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        background: #E9EDFF;
+        color: #1E3A5F;
+        font-size: 1.8rem;
+        flex-shrink: 0;
+    }
+
+    .file-name {
+        font-weight: 750;
+        color: #0D102B;
+        overflow-wrap: anywhere;
+    }
+
+    .file-meta {
+        color: #748096;
+        font-size: .84rem;
+    }
+
+    .btn-view-resume {
+        background: #1E3A5F;
+        color: #fff;
+        border: 1px solid #1E3A5F;
+        border-radius: 8px;
+        padding: 8px 13px;
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .btn-view-resume:hover {
+        background: #3155A6;
+        color: #fff;
+    }
+
+    .btn-delete-resume {
+        background: #fff7f7;
+        color: #B4232D;
+        border: 1px solid #F0C9C9;
+        border-radius: 8px;
+        padding: 8px 13px;
+        font-weight: 600;
+    }
+
+    .btn-delete-resume:hover {
+        background: #B4232D;
+        color: #fff;
+        border-color: #B4232D;
+    }
+
+    .status-box {
+        border-radius: 11px;
+        padding: 17px 18px;
+        display: flex;
+        gap: 13px;
+        align-items: flex-start;
+    }
+
+    .status-box i {
+        font-size: 1.3rem;
+        flex-shrink: 0;
+    }
+
+    .status-success {
+        background: #EDF8F1;
+        border: 1px solid #CBE8D4;
+        color: #245D3A;
+    }
+
+    .status-warning {
+        background: #FFF8E8;
+        border: 1px solid #F0DCA7;
+        color: #795B16;
+    }
+
+    .status-info {
+        background: #F0F4FC;
+        border: 1px solid #DCE5F5;
+        color: #344B70;
+    }
+
+    .status-box p {
+        margin: 4px 0 0;
+        font-size: .87rem;
+        line-height: 1.6;
+    }
+
+    .resume-tip {
+        background: #F0F4FC;
+        border-left: 4px solid #3155A6;
+        padding: 15px 17px;
+        border-radius: 8px;
+        color: #43516B;
+        font-size: .88rem;
+    }
+
+    .btn-back-dashboard {
+        color: #1E3A5F;
+        background: #fff;
+        border: 1px solid #CCD5E5;
+        border-radius: 9px;
+        padding: 10px 17px;
+        font-weight: 650;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-back-dashboard:hover {
+        background: #F0F3FA;
+        color: #0D102B;
+    }
+
+    @media (max-width: 576px) {
+        .resume-header {
+            padding: 23px 20px;
+        }
+
+        .panel-body {
+            padding: 18px;
+        }
+
+        .panel-heading {
+            padding: 18px;
+        }
+
+        .current-resume-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .current-resume-actions > * {
+            flex: 1;
+            text-align: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="resume-page">
+
+        <!-- Page Header -->
+        <div class="resume-header">
+            <div class="position-relative" style="z-index: 1;">
+                <i class="bi bi-file-earmark-person fs-2 mb-2 d-inline-block"></i>
+                <h2>My Resume</h2>
+                <p>
+                    Manage your resume to support AI-powered skill analysis,
+                    career guidance, and relevant job recommendations.
+                </p>
+            </div>
+        </div>
+
+        <!-- Django Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                     role="alert">
+                    {{ message }}
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Upload / Replace Resume -->
+        <div class="resume-panel">
+
+            <div class="panel-heading">
+                <div class="d-flex align-items-center gap-3">
+                    <span class="resume-icon">
+                        <i class="bi bi-cloud-arrow-up"></i>
+                    </span>
+                    <div>
+                        <h5>
+                            {% if resume %}
+                                Replace Your Resume
+                            {% else %}
+                                Upload Your Resume
+                            {% endif %}
+                        </h5>
+                        <p>Upload your latest resume to keep your career profile up to date.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-body">
+                <form method="POST"
+                      enctype="multipart/form-data"
+                      id="resumeUploadForm">
+
+                    {% csrf_token %}
+
+                    <div class="upload-zone mb-4">
+                        <div class="upload-symbol">
+                            <i class="bi bi-file-earmark-arrow-up"></i>
+                        </div>
+
+                        <h6 class="fw-bold mb-2">
+                            Choose your resume file
+                        </h6>
+
+                        <p class="text-secondary small mb-3">
+                            Supported formats: PDF and DOCX · Maximum size: 5 MB
+                        </p>
+
+                        <input
+                            type="file"
+                            name="resume_file"
+                            id="resumeFileInput"
+                            class="form-control"
+                            accept=".pdf,.docx"
+                            required
+                        >
+
+                        <div id="selectedFileName"
+                             class="form-text mt-2">
+                            No file selected.
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+                        <div class="form-text">
+                            <i class="bi bi-shield-check me-1"></i>
+                            Upload a clear, readable document.
+                        </div>
+
+                        <button type="submit" class="btn btn-resume-primary">
+                            <i class="bi bi-upload me-2"></i>
+                            {% if resume %}
+                                Replace Resume
+                            {% else %}
+                                Upload Resume
+                            {% endif %}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if resume %}
+
+            <!-- Current Resume -->
+            <div class="resume-panel">
+
+                <div class="panel-heading">
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="resume-icon">
+                            <i class="bi bi-file-earmark-check"></i>
+                        </span>
+                        <div>
+                            <h5>Current Resume</h5>
+                            <p>Your latest uploaded resume and analysis status.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-body">
+
+                    <div class="current-resume">
+                        <div class="d-flex flex-wrap align-items-center gap-3">
+
+                            <div class="file-icon">
+                                <i class="bi bi-file-earmark-pdf"></i>
+                            </div>
+
+                            <div class="flex-grow-1">
+                                <div class="file-name">
+                                    {{ resume.resume_file.name|cut:"resumes/" }}
+                                </div>
+
+                                <div class="file-meta mt-1">
+                                    <i class="bi bi-calendar3 me-1"></i>
+                                    Uploaded:
+                                    {{ resume.uploaded_at|date:"d M Y, h:i A" }}
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="current-resume-actions d-flex flex-wrap gap-2 mt-4">
+
+<a
+    href="{% url 'student_resume_download' resume.id %}"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="btn-view-resume"
+>
+    <i class="bi bi-eye me-1"></i>
+    View Resume
+</a>
+
+                            <form
+                                method="POST"
+                                action="{% url 'delete_resume' %}"
+                                onsubmit="return confirm('Are you sure you want to delete your resume?');"
+                            >
+                                {% csrf_token %}
+
+                                <button type="submit" class="btn-delete-resume">
+                                    <i class="bi bi-trash3 me-1"></i>
+                                    Delete Resume
+                                </button>
+                            </form>
+
+                        </div>
+                    </div>
+
+                    <!-- Resume Extraction Status -->
+                    <div class="mt-4">
+
+                        {% if resume.extracted_text %}
+                            <div class="status-box status-success">
+                                <i class="bi bi-check-circle-fill"></i>
+                                <div>
+                                    <strong>Resume text extracted successfully</strong>
+                                    <p>
+                                        Readable resume text is available for use in
+                                        supported career analysis and skill-matching features.
+                                    </p>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="status-box status-warning">
+                                <i class="bi bi-exclamation-triangle-fill"></i>
+                                <div>
+                                    <strong>Resume text is not available</strong>
+                                    <p>
+                                        The file is uploaded, but readable text was not
+                                        extracted. Try uploading a text-based PDF or DOCX file.
+                                    </p>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+
+        {% else %}
+
+            <div class="status-box status-info mb-4">
+                <i class="bi bi-info-circle-fill"></i>
+                <div>
+                    <strong>You haven't uploaded a resume yet</strong>
+                    <p>
+                        Upload your resume to make it available to the career
+                        analysis and job recommendation features that use resume data.
+                    </p>
+                </div>
+            </div>
+
+        {% endif %}
+
+        <!-- Career Tip -->
+        <div class="resume-tip mb-4">
+            <i class="bi bi-lightbulb-fill me-2"></i>
+            <strong>Placement tip:</strong>
+            Include your education, technical skills, projects, internships,
+            and relevant achievements. Keep your resume concise and up to date.
+        </div>
+
+        <!-- Back to Dashboard -->
+        <div class="mb-3">
+            <a href="{% url 'dashboard:student_dashboard' %}" class="btn-back-dashboard">
+                <i class="bi bi-arrow-left me-2"></i>
+                Back to Dashboard
+            </a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const resumeFileInput = document.getElementById("resumeFileInput");
+    const selectedFileName = document.getElementById("selectedFileName");
+    const resumeUploadForm = document.getElementById("resumeUploadForm");
+
+    resumeFileInput.addEventListener("change", function () {
+        const file = this.files && this.files[0];
+
+        if (!file) {
+            selectedFileName.textContent = "No file selected.";
+            return;
+        }
+
+        const allowedExtensions = [".pdf", ".docx"];
+        const fileName = file.name.toLowerCase();
+        const isAllowed = allowedExtensions.some(function (extension) {
+            return fileName.endsWith(extension);
+        });
+
+        if (!isAllowed) {
+            alert("Please select a PDF or DOCX file.");
+            this.value = "";
+            selectedFileName.textContent = "No file selected.";
+            return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+            alert("The resume file must be 5 MB or smaller.");
+            this.value = "";
+            selectedFileName.textContent = "No file selected.";
+            return;
+        }
+
+        selectedFileName.textContent =
+            "Selected: " + file.name +
+            " (" + (file.size / (1024 * 1024)).toFixed(2) + " MB)";
+    });
+
+    resumeUploadForm.addEventListener("submit", function (event) {
+        if (!resumeFileInput.files || !resumeFileInput.files.length) {
+            event.preventDefault();
+            alert("Please choose a resume file before uploading.");
+        }
+    });
+</script>
+{% endblock %}

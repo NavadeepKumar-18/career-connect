@@ -1,0 +1,570 @@
+
+{% extends 'base.html' %}
+
+{% block title %}My Skills{% endblock %}
+
+{% block extra_css %}
+<style>
+    .skills-page {
+        max-width: 1050px;
+        margin: 0 auto;
+        color: #0D102B;
+    }
+
+    .skills-header {
+        background: linear-gradient(135deg, #0D102B, #1E3A5F);
+        color: #fff;
+        border-radius: 18px;
+        padding: 28px 30px;
+        margin-bottom: 24px;
+    }
+
+    .skills-header h2 {
+        font-weight: 750;
+        margin-bottom: 8px;
+    }
+
+    .skills-header p {
+        color: #DCE5F7;
+        margin-bottom: 0;
+    }
+
+    .skills-panel {
+        background: #fff;
+        border: 1px solid #E1E6F0;
+        border-radius: 16px;
+        box-shadow: 0 7px 25px rgba(13, 16, 43, .06);
+        overflow: hidden;
+        margin-bottom: 24px;
+    }
+
+    .panel-heading {
+        background: #FAFBFE;
+        border-bottom: 1px solid #E8ECF4;
+        padding: 20px 24px;
+    }
+
+    .panel-heading h5 {
+        font-weight: 750;
+        color: #0D102B;
+        margin-bottom: 5px;
+    }
+
+    .panel-heading p {
+        color: #748096;
+        font-size: .88rem;
+        margin-bottom: 0;
+    }
+
+    .panel-body {
+        padding: 25px;
+    }
+
+    .skill-icon {
+        width: 44px;
+        height: 44px;
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        background: #E9EDFF;
+        color: #1E3A5F;
+        font-size: 1.3rem;
+    }
+
+    .form-label {
+        color: #26334D;
+        font-size: .9rem;
+        font-weight: 650;
+        margin-bottom: 8px;
+    }
+
+    .form-control,
+    .form-select {
+        min-height: 45px;
+        border: 1px solid #D9DFEA;
+        border-radius: 9px;
+        padding: 10px 13px;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #3155A6;
+        box-shadow: 0 0 0 .2rem rgba(49, 85, 166, .12);
+    }
+
+    .btn-add-skill {
+        background: #1E3A5F;
+        color: #fff;
+        border: 1px solid #1E3A5F;
+        border-radius: 9px;
+        padding: 11px 20px;
+        font-weight: 650;
+    }
+
+    .btn-add-skill:hover {
+        background: #3155A6;
+        color: #fff;
+        border-color: #3155A6;
+    }
+
+    .skill-count {
+        background: #E9EDFF;
+        color: #1E3A5F;
+        padding: 5px 12px;
+        border-radius: 30px;
+        font-size: .85rem;
+        font-weight: 750;
+        white-space: nowrap;
+    }
+
+    .skill-item {
+        border: 1px solid #E2E7F0;
+        border-radius: 12px;
+        padding: 16px;
+        height: 100%;
+        background: #fff;
+        transition: .2s ease;
+    }
+
+    .skill-item:hover {
+        border-color: #B8C7E2;
+        box-shadow: 0 5px 15px rgba(13, 16, 43, .05);
+    }
+
+    .skill-name {
+        color: #0D102B;
+        font-weight: 750;
+        font-size: 1rem;
+        overflow-wrap: anywhere;
+    }
+
+    .category-badge {
+        display: inline-block;
+        border-radius: 6px;
+        padding: 5px 9px;
+        font-size: .76rem;
+        font-weight: 700;
+    }
+
+    .category-technical {
+        background: #E5F0FF;
+        color: #244B88;
+    }
+
+    .category-soft {
+        background: #F0E8FF;
+        color: #6741A5;
+    }
+
+    .proficiency-badge {
+        display: inline-block;
+        border-radius: 6px;
+        padding: 5px 9px;
+        font-size: .78rem;
+        font-weight: 700;
+    }
+
+    .level-beginner {
+        background: #FFF3D6;
+        color: #805B13;
+    }
+
+    .level-intermediate {
+        background: #E5F0FF;
+        color: #244B88;
+    }
+
+    .level-advanced {
+        background: #DDF5E6;
+        color: #21653B;
+    }
+
+    .btn-delete-skill {
+        background: #FFF7F7;
+        color: #B4232D;
+        border: 1px solid #F0C9C9;
+        border-radius: 8px;
+        padding: 7px 11px;
+        font-size: .84rem;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .btn-delete-skill:hover {
+        background: #B4232D;
+        border-color: #B4232D;
+        color: #fff;
+    }
+
+    .empty-state {
+        background: #FAFBFE;
+        border: 1px dashed #CCD5E5;
+        border-radius: 12px;
+        padding: 38px 20px;
+        text-align: center;
+    }
+
+    .empty-state i {
+        font-size: 2.8rem;
+        color: #9AAAC7;
+    }
+
+    .empty-state h6 {
+        font-weight: 750;
+        margin-top: 12px;
+    }
+
+    .empty-state p {
+        color: #748096;
+        margin-bottom: 0;
+    }
+
+    .skills-tip {
+        background: #F0F4FC;
+        border-left: 4px solid #3155A6;
+        border-radius: 8px;
+        padding: 15px 17px;
+        color: #43516B;
+        font-size: .88rem;
+    }
+
+    .btn-back-dashboard {
+        display: inline-block;
+        background: #fff;
+        color: #1E3A5F;
+        border: 1px solid #CCD5E5;
+        border-radius: 9px;
+        padding: 10px 17px;
+        text-decoration: none;
+        font-weight: 650;
+    }
+
+    .btn-back-dashboard:hover {
+        background: #F0F3FA;
+        color: #0D102B;
+    }
+
+    .skill-section-title {
+        font-size: 1rem;
+        font-weight: 750;
+        color: #26334D;
+        margin-bottom: 14px;
+    }
+
+    @media (max-width: 576px) {
+        .skills-header {
+            padding: 22px 19px;
+        }
+
+        .panel-heading {
+            padding: 17px;
+        }
+
+        .panel-body {
+            padding: 17px;
+        }
+
+        .skill-item {
+            padding: 14px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="skills-page">
+
+        <!-- Header -->
+        <div class="skills-header">
+            <div class="d-flex align-items-center gap-3">
+                <i class="bi bi-lightbulb fs-1"></i>
+                <div>
+                    <h2>My Skills</h2>
+                    <p>
+                        Track your technical abilities and soft skills
+                        to improve your career and placement opportunities.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Django Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show"
+                     role="alert">
+                    {{ message }}
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Add Skill -->
+        <div class="skills-panel">
+            <div class="panel-heading">
+                <div class="d-flex align-items-center gap-3">
+                    <span class="skill-icon">
+                        <i class="bi bi-plus-circle"></i>
+                    </span>
+                    <div>
+                        <h5>Add a Skill</h5>
+                        <p>
+                            Select the skill category and your proficiency level.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-body">
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="row g-3 align-items-end">
+
+                        <div class="col-12 col-md-5">
+                            <label for="skill" class="form-label">
+                                Skill Name <span class="text-danger">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                name="skill"
+                                id="skill"
+                                class="form-control"
+                                placeholder="e.g. Python or Communication"
+                                maxlength="100"
+                                required
+                            >
+                        </div>
+
+                        <div class="col-12 col-md-3">
+                            <label for="skill_type" class="form-label">
+                                Skill Category
+                            </label>
+                            <select
+                                name="skill_type"
+                                id="skill_type"
+                                class="form-select"
+                                required
+                            >
+                                <option value="TECHNICAL">Technical Skill</option>
+                                <option value="SOFT">Soft Skill</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 col-md-2">
+                            <label for="proficiency" class="form-label">
+                                Proficiency
+                            </label>
+                            <select
+                                name="proficiency"
+                                id="proficiency"
+                                class="form-select"
+                                required
+                            >
+                                <option value="BEGINNER">Beginner</option>
+                                <option value="INTERMEDIATE">Intermediate</option>
+                                <option value="ADVANCED">Advanced</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12 col-md-2 d-grid">
+                            <button type="submit" class="btn btn-add-skill">
+                                <i class="bi bi-plus-lg me-1"></i>
+                                Add Skill
+                            </button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Skill Portfolio -->
+        <div class="skills-panel">
+            <div class="panel-heading">
+                <div class="d-flex justify-content-between align-items-center gap-3">
+                    <div class="d-flex align-items-center gap-3">
+                        <span class="skill-icon">
+                            <i class="bi bi-collection"></i>
+                        </span>
+                        <div>
+                            <h5>My Skill Portfolio</h5>
+                            <p>Your skills, categories, and proficiency levels.</p>
+                        </div>
+                    </div>
+
+                    <span class="skill-count">
+                        {{ skills|length }} skill{{ skills|length|pluralize }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="panel-body">
+
+                <!-- Technical Skills -->
+                <section class="mb-4">
+                    <h6 class="skill-section-title">
+                        <i class="bi bi-code-slash me-2"></i>
+                        Technical Skills
+                    </h6>
+
+                    {% if skills %}
+                        <div class="row g-3">
+                            {% for item in skills %}
+                                {% if item.skill_type == 'TECHNICAL' %}
+                                    <div class="col-12 col-md-6 col-xl-4">
+                                        <div class="skill-item">
+                                            <div class="d-flex align-items-start gap-2 mb-3">
+                                                <span class="skill-icon">
+                                                    <i class="bi bi-code-square"></i>
+                                                </span>
+                                                <div class="flex-grow-1">
+                                                    <div class="skill-name mb-2">
+                                                        {{ item.skill }}
+                                                    </div>
+                                                    <span class="category-badge category-technical">
+                                                        Technical
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+                                                <span class="proficiency-badge
+                                                    {% if item.proficiency == 'BEGINNER' %}
+                                                        level-beginner
+                                                    {% elif item.proficiency == 'INTERMEDIATE' %}
+                                                        level-intermediate
+                                                    {% elif item.proficiency == 'ADVANCED' %}
+                                                        level-advanced
+                                                    {% endif %}">
+                                                    {{ item.get_proficiency_display }}
+                                                </span>
+
+                                         <form
+    method="POST"
+    action="{% url 'delete_skill' item.id %}"
+    onsubmit="return confirm('Are you sure you want to delete this skill?');"
+>
+    {% csrf_token %}
+
+    <button
+        type="submit"
+        class="btn btn-delete-skill"
+        aria-label="Delete {{ item.skill }}"
+    >
+        <i class="bi bi-trash3 me-1"></i> Delete
+    </button>
+</form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                        {% if not skills|length %}
+                            <p class="text-muted">No technical skills added yet.</p>
+                        {% endif %}
+                    {% else %}
+                        <div class="empty-state">
+                            <i class="bi bi-code-slash"></i>
+                            <h6>No Technical Skills Yet</h6>
+                            <p>Add technical skills such as Python, SQL, Java, or AutoCAD.</p>
+                        </div>
+                    {% endif %}
+                </section>
+
+                <hr class="my-4">
+
+                <!-- Soft Skills -->
+                <section>
+                    <h6 class="skill-section-title">
+                        <i class="bi bi-people me-2"></i>
+                        Soft Skills
+                    </h6>
+
+                    {% if skills %}
+                        <div class="row g-3">
+                            {% for item in skills %}
+                                {% if item.skill_type == 'SOFT' %}
+                                    <div class="col-12 col-md-6 col-xl-4">
+                                        <div class="skill-item">
+                                            <div class="d-flex align-items-start gap-2 mb-3">
+                                                <span class="skill-icon">
+                                                    <i class="bi bi-people"></i>
+                                                </span>
+                                                <div class="flex-grow-1">
+                                                    <div class="skill-name mb-2">
+                                                        {{ item.skill }}
+                                                    </div>
+                                                    <span class="category-badge category-soft">
+                                                        Soft Skill
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
+                                                <span class="proficiency-badge
+                                                    {% if item.proficiency == 'BEGINNER' %}
+                                                        level-beginner
+                                                    {% elif item.proficiency == 'INTERMEDIATE' %}
+                                                        level-intermediate
+                                                    {% elif item.proficiency == 'ADVANCED' %}
+                                                        level-advanced
+                                                    {% endif %}">
+                                                    {{ item.get_proficiency_display }}
+                                                </span>
+
+                                                <a href="{% url 'delete_skill' item.id %}"
+                                                   class="btn btn-delete-skill"
+                                                   onclick="return confirm('Are you sure you want to delete this skill?');"
+                                                   aria-label="Delete {{ item.skill }}">
+                                                    <i class="bi bi-trash3 me-1"></i> Delete
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-state">
+                            <i class="bi bi-people"></i>
+                            <h6>No Soft Skills Yet</h6>
+                            <p>
+                                Add skills such as communication, teamwork,
+                                leadership, adaptability, or problem-solving.
+                            </p>
+                        </div>
+                    {% endif %}
+                </section>
+
+            </div>
+        </div>
+
+        <!-- Career Tip -->
+        <div class="skills-tip mb-4">
+            <i class="bi bi-lightbulb-fill me-2"></i>
+            <strong>Placement tip:</strong>
+            Add skills you can demonstrate through projects, coursework,
+            internships, teamwork, or practical experience. Choose realistic
+            proficiency levels for more useful job matching.
+        </div>
+
+        <!-- Dashboard Navigation -->
+        <div class="mb-3">
+            <a href="{% url 'dashboard:student_dashboard' %}" class="btn-back-dashboard">
+                <i class="bi bi-arrow-left me-2"></i>
+                Back to Dashboard
+            </a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

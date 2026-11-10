@@ -1,0 +1,34 @@
+# Environment variables and secrets
+.env
+.env.*
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# Django
+db.sqlite3
+media/
+private_media/
+staticfiles/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+
+# Database backups and exported data
+*.sqlite3
+data_backup.json
+
+# Uploaded profile images
+profile_images/
+
+# Vercel
+.vercel/

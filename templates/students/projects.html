@@ -1,0 +1,476 @@
+{% extends 'base.html' %}
+
+{% block title %}My Projects{% endblock %}
+
+{% block extra_css %}
+<style>
+    .projects-page {
+        max-width: 1100px;
+        margin: 0 auto;
+        color: #0D102B;
+    }
+
+    .projects-header {
+        background: linear-gradient(135deg, #0D102B, #1E3A5F);
+        color: #fff;
+        padding: 28px 30px;
+        border-radius: 18px;
+        margin-bottom: 25px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .projects-header::after {
+        content: "";
+        position: absolute;
+        width: 170px;
+        height: 170px;
+        border: 25px solid rgba(255,255,255,.06);
+        border-radius: 50%;
+        right: -35px;
+        top: -65px;
+    }
+
+    .projects-header h2 {
+        font-weight: 750;
+        margin-bottom: 8px;
+    }
+
+    .projects-header p {
+        color: #DCE5F7;
+        margin-bottom: 0;
+    }
+
+    .project-panel {
+        background: #fff;
+        border: 1px solid #E1E6F0;
+        border-radius: 16px;
+        box-shadow: 0 7px 25px rgba(13,16,43,.06);
+        overflow: hidden;
+        margin-bottom: 25px;
+    }
+
+    .panel-heading {
+        background: #FAFBFE;
+        border-bottom: 1px solid #E8ECF4;
+        padding: 20px 24px;
+    }
+
+    .panel-heading h5 {
+        color: #0D102B;
+        font-weight: 750;
+        margin-bottom: 5px;
+    }
+
+    .panel-heading p {
+        color: #748096;
+        font-size: .88rem;
+        margin-bottom: 0;
+    }
+
+    .panel-body {
+        padding: 25px;
+    }
+
+    .section-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: #E9EDFF;
+        color: #1E3A5F;
+        font-size: 1.2rem;
+        margin-right: 12px;
+    }
+
+    .form-label {
+        font-size: .9rem;
+        font-weight: 650;
+        color: #26334D;
+        margin-bottom: 8px;
+    }
+
+    .form-control {
+        border: 1px solid #D9DFEA;
+        border-radius: 9px;
+        padding: 11px 13px;
+        color: #18213A;
+    }
+
+    .form-control:focus {
+        border-color: #3155A6;
+        box-shadow: 0 0 0 .2rem rgba(49,85,166,.12);
+    }
+
+    .form-control::placeholder {
+        color: #9AA4B5;
+    }
+
+    .btn-add-project {
+        background: #1E3A5F;
+        border: 1px solid #1E3A5F;
+        color: #fff;
+        border-radius: 9px;
+        padding: 11px 20px;
+        font-weight: 650;
+        transition: .2s ease;
+    }
+
+    .btn-add-project:hover {
+        background: #3155A6;
+        border-color: #3155A6;
+        color: #fff;
+        transform: translateY(-1px);
+    }
+
+    .project-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 34px;
+        height: 30px;
+        padding: 0 10px;
+        background: #E9EDFF;
+        color: #1E3A5F;
+        font-size: .85rem;
+        font-weight: 750;
+        border-radius: 20px;
+    }
+
+    .project-card {
+        border: 1px solid #E2E7F0;
+        border-radius: 13px;
+        padding: 21px;
+        margin-bottom: 16px;
+        background: #fff;
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .project-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 22px rgba(13,16,43,.07);
+    }
+
+    .project-title {
+        color: #0D102B;
+        font-size: 1.08rem;
+        font-weight: 750;
+        overflow-wrap: anywhere;
+    }
+
+    .project-description {
+        color: #5E6A80;
+        line-height: 1.7;
+        white-space: pre-line;
+        overflow-wrap: anywhere;
+    }
+
+    .technology-label {
+        color: #1E3A5F;
+        font-size: .85rem;
+        font-weight: 750;
+        margin-bottom: 9px;
+    }
+
+    .technology-tag {
+        display: inline-block;
+        background: #EEF2FA;
+        color: #263E68;
+        border: 1px solid #DFE6F3;
+        border-radius: 6px;
+        padding: 5px 10px;
+        margin: 0 5px 5px 0;
+        font-size: .8rem;
+        overflow-wrap: anywhere;
+    }
+
+    .btn-delete-project {
+        border: 1px solid #F0C9C9;
+        color: #B4232D;
+        background: #FFF7F7;
+        border-radius: 8px;
+        padding: 7px 11px;
+        font-size: .85rem;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .btn-delete-project:hover {
+        background: #B4232D;
+        border-color: #B4232D;
+        color: #fff;
+    }
+
+    .empty-projects {
+        text-align: center;
+        padding: 45px 20px;
+        background: #FAFBFE;
+        border: 1px dashed #CCD5E5;
+        border-radius: 12px;
+    }
+
+    .empty-projects i {
+        font-size: 3rem;
+        color: #9AAAC7;
+    }
+
+    .empty-projects h6 {
+        margin-top: 15px;
+        color: #26334D;
+        font-weight: 750;
+    }
+
+    .empty-projects p {
+        color: #748096;
+        margin-bottom: 0;
+    }
+
+    .project-tip {
+        background: #F0F4FC;
+        border-left: 4px solid #3155A6;
+        padding: 14px 16px;
+        border-radius: 8px;
+        color: #43516B;
+        font-size: .88rem;
+    }
+
+    .btn-back-dashboard {
+        color: #1E3A5F;
+        background: #fff;
+        border: 1px solid #CCD5E5;
+        border-radius: 9px;
+        padding: 10px 17px;
+        font-weight: 650;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-back-dashboard:hover {
+        background: #F0F3FA;
+        color: #0D102B;
+    }
+
+    @media (max-width: 576px) {
+        .projects-header {
+            padding: 23px 20px;
+        }
+
+        .panel-body {
+            padding: 18px;
+        }
+
+        .panel-heading {
+            padding: 18px;
+        }
+
+        .project-card {
+            padding: 16px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="projects-page">
+
+        <!-- Page Header -->
+        <div class="projects-header">
+            <div class="position-relative" style="z-index: 1;">
+                <i class="bi bi-kanban fs-2 mb-2 d-inline-block"></i>
+                <h2>My Projects</h2>
+                <p>Showcase your practical skills and build a stronger placement profile.</p>
+            </div>
+        </div>
+
+        <!-- Add Project Form -->
+        <div class="project-panel">
+
+            <div class="panel-heading">
+                <div class="d-flex align-items-center">
+                    <span class="section-icon">
+                        <i class="bi bi-plus-lg"></i>
+                    </span>
+                    <div>
+                        <h5>Add a New Project</h5>
+                        <p>Describe your work, contribution, and technologies used.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-body">
+                <form method="POST">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="projectTitle" class="form-label">
+                            Project Title <span class="text-danger">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="projectTitle"
+                            name="title"
+                            class="form-control"
+                            placeholder="e.g. Student Attendance Management System"
+                            maxlength="200"
+                            required
+                        >
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="projectDescription" class="form-label">
+                            Project Description <span class="text-danger">*</span>
+                        </label>
+                        <textarea
+                            id="projectDescription"
+                            name="description"
+                            class="form-control"
+                            rows="5"
+                            placeholder="Explain the problem, your solution, and your contribution..."
+                            required
+                        ></textarea>
+                        <div class="form-text">
+                            Highlight the project's purpose and the features you implemented.
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="projectTechnologies" class="form-label">
+                            Technologies Used <span class="text-danger">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="projectTechnologies"
+                            name="technologies"
+                            class="form-control"
+                            placeholder="e.g. Python, Django, HTML, CSS, MySQL"
+                            required
+                        >
+                        <div class="form-text">
+                            Separate technologies with commas.
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <button type="submit" class="btn btn-add-project">
+                            <i class="bi bi-plus-circle me-2"></i>
+                            Add Project
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Project List -->
+        <div class="project-panel">
+
+            <div class="panel-heading">
+                <div class="d-flex justify-content-between align-items-center gap-3">
+                    <div class="d-flex align-items-center">
+                        <span class="section-icon">
+                            <i class="bi bi-folder2-open"></i>
+                        </span>
+                        <div>
+                            <h5>My Project Portfolio</h5>
+                            <p>Your projects and technical experience.</p>
+                        </div>
+                    </div>
+
+                    <span class="project-count">
+                        {{ projects|length }}
+                    </span>
+                </div>
+            </div>
+
+            <div class="panel-body">
+
+                {% if projects %}
+                    {% for project in projects %}
+                        <div class="project-card">
+
+                            <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                                <div class="d-flex align-items-start gap-3">
+                                    <span class="section-icon flex-shrink-0">
+                                        <i class="bi bi-code-slash"></i>
+                                    </span>
+
+                                    <div>
+                                        <h6 class="project-title mb-1">
+                                            {{ project.title }}
+                                        </h6>
+                                        <span class="text-secondary small">
+                                            <i class="bi bi-check-circle me-1"></i>
+                                            Personal Project
+                                        </span>
+                                    </div>
+                                </div>
+
+                       <form
+    method="POST"
+    action="{% url 'delete_project' project.id %}"
+    onsubmit="return confirm('Are you sure you want to delete this project?');"
+>
+    {% csrf_token %}
+
+    <button
+        type="submit"
+        class="btn btn-delete-project"
+        aria-label="Delete {{ project.title }}"
+    >
+        <i class="bi bi-trash3 me-sm-1"></i>
+        <span class="d-none d-sm-inline">Delete</span>
+    </button>
+</form>
+                            </div>
+
+                            <p class="project-description mb-3">
+                                {{ project.description }}
+                            </p>
+
+                            <div class="technology-label">
+                                <i class="bi bi-tools me-1"></i>
+                                TECHNOLOGIES USED
+                            </div>
+
+                            <div>
+                                {% for technology in project.technologies.split %}
+                                    {% if technology %}
+                                        <span class="technology-tag">{{ technology }}</span>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+
+                        </div>
+                    {% endfor %}
+
+                {% else %}
+                    <div class="empty-projects">
+                        <i class="bi bi-folder-plus"></i>
+                        <h6>No Projects Added Yet</h6>
+                        <p>Add your first project above to start building your technical portfolio.</p>
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+
+        <!-- Career Tip -->
+        <div class="project-tip mb-4">
+            <i class="bi bi-lightbulb-fill me-2"></i>
+            <strong>Placement tip:</strong>
+            Add projects that demonstrate problem-solving, technical skills, and your individual contribution. These details can strengthen your resume and interview preparation.
+        </div>
+
+        <!-- Back Button -->
+        <div class="mb-3">
+            <a href="{% url 'dashboard:student_dashboard' %}" class="btn-back-dashboard">
+                <i class="bi bi-arrow-left me-2"></i>
+                Back to Dashboard
+            </a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,925 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+
+<style>
+/* ================= ADMIN DASHBOARD THEME ================= */
+
+.admin-dashboard {
+    --navy: #0B1535;
+    --navy-light: #142449;
+    --white: #FFFFFF;
+    --heading: #172554;
+    --text: #475569;
+    --muted: #8490A5;
+    --border: #E2E8F0;
+    --accent: #5145CD;
+
+    background: var(--navy);
+    color: var(--white);
+    min-height: 100vh;
+    padding: 25px;
+    border-radius: 12px;
+}
+
+.admin-section {
+    margin-bottom: 28px;
+}
+
+.admin-section-title {
+    color: #FFFFFF;
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+
+/* ================= HEADER ================= */
+
+.admin-header {
+    background: linear-gradient(120deg, #172A55, #293F79);
+    color: #FFFFFF;
+    padding: 26px 28px;
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 18px;
+    margin-bottom: 28px;
+    box-shadow: 0 10px 28px rgba(0,0,0,.18);
+}
+
+.admin-header h2 {
+    font-size: 25px;
+    font-weight: 750;
+    margin-bottom: 7px;
+}
+
+.admin-header p {
+    color: #DCE5FF;
+    margin: 0;
+    font-size: 14px;
+}
+
+/* ================= WHITE STAT CARDS ================= */
+
+.admin-stat-card {
+    height: 100%;
+    min-height: 112px;
+    background: #FFFFFF;
+    color: var(--heading);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 7px 20px rgba(0,0,0,.12);
+    transition: .2s ease;
+}
+
+.admin-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 26px rgba(0,0,0,.19);
+}
+
+.admin-stat-icon {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    font-size: 23px;
+}
+
+.icon-blue {
+    background: #E8EFFF;
+    color: #3155A6;
+}
+
+.icon-purple {
+    background: #F0EAFF;
+    color: #7046C7;
+}
+
+.icon-green {
+    background: #E4F7ED;
+    color: #16864B;
+}
+
+.icon-orange {
+    background: #FFF1DF;
+    color: #D77B16;
+}
+
+.icon-red {
+    background: #FFE8E8;
+    color: #D34B4B;
+}
+
+.icon-cyan {
+    background: #E1F7FB;
+    color: #168CA3;
+}
+
+.admin-stat-label {
+    font-size: 13px;
+    color: #778198;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.admin-stat-number {
+    font-size: 26px;
+    line-height: 1.2;
+    font-weight: 800;
+    color: #172554;
+}
+
+.admin-stat-detail {
+    font-size: 12px;
+    color: #8992A5;
+    margin-top: 5px;
+}
+
+/* ================= WHITE CONTENT CARDS ================= */
+
+.admin-card {
+    background: #FFFFFF;
+    color: #334155;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    overflow: hidden;
+    height: 100%;
+    box-shadow: 0 7px 20px rgba(0,0,0,.12);
+}
+
+.admin-card-header {
+    padding: 18px 21px;
+    background: #FFFFFF;
+    border-bottom: 1px solid #E8EDF5;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-card-header h3 {
+    font-size: 16px;
+    font-weight: 750;
+    margin: 0;
+    color: #172554;
+}
+
+.admin-card-body {
+    padding: 21px;
+}
+
+/* ================= APPROVAL BADGES ================= */
+
+.admin-approval-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 25px;
+    padding: 6px 11px;
+    border-radius: 20px;
+    background: #FFF0DF;
+    color: #C77718;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.admin-pending {
+    background: #FFF3DF;
+    color: #B96B0D;
+}
+
+.admin-approved {
+    background: #E5F7ED;
+    color: #16834B;
+}
+
+.admin-status {
+    display: inline-block;
+    padding: 5px 11px;
+    border-radius: 20px;
+    background: #EDF1FF;
+    color: #3855A3;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* ================= TABLES ================= */
+
+.admin-table {
+    margin-bottom: 0;
+    min-width: 600px;
+    --bs-table-bg: #FFFFFF;
+    --bs-table-color: #334155;
+    --bs-table-border-color: #E8EDF5;
+}
+
+.admin-table thead th {
+    background: #F1F5F9 !important;
+    color: #475569 !important;
+    font-size: 11px;
+    font-weight: 750;
+    text-transform: uppercase;
+    letter-spacing: .45px;
+    padding: 14px 16px;
+    border-bottom: 1px solid #E2E8F0;
+    white-space: nowrap;
+}
+
+.admin-table tbody td {
+    background: #FFFFFF !important;
+    color: #334155 !important;
+    font-size: 13px;
+    padding: 14px 16px;
+    vertical-align: middle;
+}
+
+.admin-table tbody tr:hover td {
+    background: #F5F7FF !important;
+    color: #172554 !important;
+}
+
+.admin-table a {
+    color: #5145CD;
+}
+
+.admin-empty {
+    text-align: center;
+    padding: 32px 15px;
+    color: #8791A6;
+    font-size: 13px;
+}
+
+.admin-empty i {
+    display: block;
+    font-size: 30px;
+    margin-bottom: 10px;
+    color: #B5BFD3;
+}
+
+/* ================= BUTTONS ================= */
+
+.admin-btn-outline {
+    border: 1px solid #DCE3F1;
+    color: #3855A3;
+    background: #FFFFFF;
+    border-radius: 9px;
+    padding: 7px 13px;
+    font-size: 12px;
+    font-weight: 650;
+    text-decoration: none;
+    transition: .2s;
+}
+
+.admin-btn-outline:hover {
+    background: #EDF1FF;
+    color: #243E87;
+    border-color: #C9D4F4;
+}
+
+/* ================= QUICK ACTIONS ================= */
+
+.admin-quick-link {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 17px;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 13px;
+    text-decoration: none;
+    color: #26324D;
+    transition: .2s;
+    height: 100%;
+    box-shadow: 0 5px 16px rgba(0,0,0,.10);
+}
+
+.admin-quick-link:hover {
+    background: #F5F7FF;
+    border-color: #C9D4F4;
+    color: #3155A6;
+    transform: translateY(-3px);
+}
+
+.admin-quick-link > i:first-child {
+    font-size: 23px;
+    color: #536BC0;
+}
+
+.admin-quick-link strong {
+    display: block;
+    font-size: 13px;
+    color: #172554;
+}
+
+.admin-quick-link small {
+    color: #8992A5;
+    font-size: 11px;
+}
+
+.admin-quick-link > i:last-child {
+    color: #8490A5;
+}
+
+/* ================= CHART ================= */
+
+.admin-chart-container {
+    position: relative;
+    height: 290px;
+    width: 100%;
+    max-width: 550px;
+    margin: 0 auto;
+}
+
+/* ================= RESPONSIVE ================= */
+
+@media (max-width: 767px) {
+    .admin-dashboard {
+        padding: 15px;
+    }
+
+    .admin-header {
+        padding: 20px;
+    }
+
+    .admin-header h2 {
+        font-size: 21px;
+    }
+
+    .admin-stat-card {
+        padding: 15px;
+    }
+
+    .admin-stat-number {
+        font-size: 22px;
+    }
+
+    .admin-card-header {
+        padding: 15px;
+    }
+
+    .admin-card-body {
+        padding: 15px;
+    }
+
+    .admin-chart-container {
+        height: 250px;
+    }
+
+    .admin-section-title {
+        font-size: 17px;
+    }
+}
+
+@media (max-width: 400px) {
+    .admin-stat-icon {
+        width: 43px;
+        height: 43px;
+        min-width: 43px;
+        font-size: 19px;
+    }
+
+    .admin-stat-number {
+        font-size: 20px;
+    }
+}
+</style>
+
+
+<div class="admin-dashboard">
+
+    <!-- HEADER -->
+    <div class="admin-header">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div>
+                <h2>
+                    <i class="bi bi-speedometer2 me-2"></i>
+                    Admin Dashboard
+                </h2>
+                <p>Manage users, recruiters, companies and placement activities.</p>
+            </div>
+
+            <div>
+                <span class="badge rounded-pill bg-light text-dark px-3 py-2">
+                    <i class="bi bi-shield-check me-1"></i>
+                    Administrator
+                </span>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- PLATFORM OVERVIEW -->
+    <section class="admin-section">
+
+        <h3 class="admin-section-title">Platform Overview</h3>
+
+        <div class="row g-3">
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon icon-blue">
+                        <i class="bi bi-people-fill"></i>
+                    </div>
+                    <div>
+                        <div class="admin-stat-label">Total Students</div>
+                        <div class="admin-stat-number">{{ total_students|default:0 }}</div>
+                        <div class="admin-stat-detail">Registered students</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon icon-purple">
+                        <i class="bi bi-person-badge-fill"></i>
+                    </div>
+                    <div>
+                        <div class="admin-stat-label">Total Recruiters</div>
+                        <div class="admin-stat-number">{{ total_recruiters|default:0 }}</div>
+                        <div class="admin-stat-detail">Recruiter accounts</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon icon-green">
+                        <i class="bi bi-briefcase-fill"></i>
+                    </div>
+                    <div>
+                        <div class="admin-stat-label">Total Jobs</div>
+                        <div class="admin-stat-number">{{ total_jobs|default:0 }}</div>
+                        <div class="admin-stat-detail">Job opportunities</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon icon-orange">
+                        <i class="bi bi-file-earmark-check-fill"></i>
+                    </div>
+                    <div>
+                        <div class="admin-stat-label">Applications</div>
+                        <div class="admin-stat-number">{{ total_applications|default:0 }}</div>
+                        <div class="admin-stat-detail">Submitted applications</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- COMPANY APPROVAL OVERVIEW -->
+    <section class="admin-section">
+
+        <h3 class="admin-section-title">Company Approval Overview</h3>
+
+        <div class="row g-3">
+
+            <div class="col-12 col-md-6">
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon icon-orange">
+                        <i class="bi bi-hourglass-split"></i>
+                    </div>
+                    <div>
+                        <div class="admin-stat-label">Pending Companies</div>
+                        <div class="admin-stat-number">{{ pending_companies|default:0 }}</div>
+                        <div class="admin-stat-detail">Awaiting administrator approval</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6">
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon icon-green">
+                        <i class="bi bi-patch-check-fill"></i>
+                    </div>
+                    <div>
+                        <div class="admin-stat-label">Approved Companies</div>
+                        <div class="admin-stat-number">{{ approved_companies|default:0 }}</div>
+                        <div class="admin-stat-detail">Approved company accounts</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- QUICK ACTIONS -->
+    <section class="admin-section">
+
+        <h3 class="admin-section-title">Quick Actions</h3>
+
+        <div class="row g-3">
+
+            <div class="col-12 col-md-6 col-xl-4">
+                <a href="{% url 'dashboard:admin_recruiter_approvals' %}"
+                   class="admin-quick-link">
+                    <i class="bi bi-person-check-fill"></i>
+                    <div>
+                        <strong>Recruiter Approvals</strong>
+                        <small>Review recruiter requests</small>
+                    </div>
+                    <i class="bi bi-arrow-right ms-auto"></i>
+                </a>
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-4">
+                <a href="{% url 'dashboard:admin_recruiter_approvals' %}"
+                   class="admin-quick-link">
+                    <i class="bi bi-building-check"></i>
+                    <div>
+                        <strong>Company Approvals</strong>
+                        <small>Review pending companies</small>
+                    </div>
+                    <i class="bi bi-arrow-right ms-auto"></i>
+                </a>
+            </div>
+
+            <div class="col-12 col-md-6 col-xl-4">
+                <a href="#applications" class="admin-quick-link">
+                    <i class="bi bi-clipboard-data"></i>
+                    <div>
+                        <strong>Recent Applications</strong>
+                        <small>View application activity</small>
+                    </div>
+                    <i class="bi bi-arrow-right ms-auto"></i>
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+
+<!-- APPLICATION ANALYTICS -->
+<section id="analytics" class="admin-section">
+
+        <h3 class="admin-section-title">Application Analytics</h3>
+
+        <div class="admin-card">
+
+            <div class="admin-card-header">
+                <h3>
+                    <i class="bi bi-pie-chart-fill me-2" style="color:#5145CD;"></i>
+                    Application Status Overview
+                </h3>
+            </div>
+
+            <div class="admin-card-body">
+
+                {% if status_labels and status_values %}
+                    <div class="admin-chart-container">
+                        <canvas id="applicationChart"></canvas>
+                    </div>
+                {% else %}
+                    <div class="admin-empty">
+                        <i class="bi bi-bar-chart"></i>
+                        Application analytics will appear when data is available.
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </section>
+
+
+    <!-- RECENT POSTED JOBS -->
+    <section id="posted-jobs" class="admin-section">
+
+        <div class="admin-card">
+
+            <div class="admin-card-header">
+                <h3>
+                    <i class="bi bi-briefcase-fill me-2" style="color:#5145CD;"></i>
+                    Recent Posted Jobs
+                </h3>
+
+                <span class="admin-approval-count">
+                    {{ total_jobs|default:0 }} Total Jobs
+                </span>
+            </div>
+
+            {% if recent_jobs %}
+                <div class="table-responsive">
+
+                    <table class="table table-hover admin-table">
+
+                        <thead>
+                            <tr>
+                                <th>Job Title</th>
+                                <th>Company</th>
+                                <th>Deadline</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for job in recent_jobs %}
+                                <tr>
+
+                                    <td>
+                                        <a href="{% url 'dashboard:admin_job_detail' job.id %}"
+                                           class="text-decoration-none fw-bold">
+                                            {{ job.title }}
+                                        </a>
+                                    </td>
+
+                                    <td>
+                                        {{ job.company.company_name|default:"—" }}
+                                    </td>
+
+                                    <td>
+                                        {% if job.deadline %}
+                                            {{ job.deadline|date:"d M Y" }}
+                                        {% else %}
+                                            No deadline
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {% if not job.is_active %}
+                                            <span class="admin-status admin-pending">
+                                                Inactive
+                                            </span>
+                                        {% elif job.deadline and job.deadline < today %}
+                                            <span class="admin-status admin-pending">
+                                                Expired
+                                            </span>
+                                        {% else %}
+                                            <span class="admin-status admin-approved">
+                                                Active
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+
+            {% else %}
+                <div class="admin-empty">
+                    <i class="bi bi-briefcase"></i>
+                    No posted jobs found.
+                </div>
+            {% endif %}
+
+        </div>
+    </section>
+
+
+    <!-- PENDING COMPANY APPROVALS -->
+    <section class="admin-section">
+
+        <div class="admin-card">
+
+            <div class="admin-card-header">
+                <h3>
+                    <i class="bi bi-building me-2" style="color:#5145CD;"></i>
+                    Pending Company Approvals
+                </h3>
+
+                <span class="admin-approval-count">
+                    {{ pending_companies|default:0 }} Pending
+                </span>
+            </div>
+
+            {% if pending_company_list %}
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover admin-table">
+
+                        <thead>
+                            <tr>
+                                <th>Company</th>
+                                <th>Recruiter</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for company in pending_company_list %}
+                                <tr>
+
+                                    <td>
+                                        <strong>
+                                            {{ company.company_name|default:"—" }}
+                                        </strong>
+                                    </td>
+
+                                    <td>
+                                        {{ company.recruiter.username|default:"—" }}
+                                    </td>
+
+                                    <td>
+                                        <span class="admin-status admin-pending">
+                                            Pending
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        <a href="{% url 'dashboard:admin_recruiter_approvals' %}"
+                                           class="admin-btn-outline">
+                                            Review
+                                            <i class="bi bi-arrow-right ms-1"></i>
+                                        </a>
+                                    </td>
+
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+
+            {% else %}
+                <div class="admin-empty">
+                    <i class="bi bi-check-circle"></i>
+                    No pending company approvals.
+                </div>
+            {% endif %}
+
+        </div>
+    </section>
+
+
+    <!-- RECENT APPLICATIONS -->
+    <section id="applications" class="admin-section">
+
+        <div class="admin-card">
+
+            <div class="admin-card-header">
+                <h3>
+                    <i class="bi bi-file-earmark-text me-2" style="color:#5145CD;"></i>
+                    Recent Applications
+                </h3>
+            </div>
+
+            {% if recent_applications %}
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover admin-table">
+
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Job</th>
+                                <th>Company</th>
+                                <th>Status</th>
+                                <th>Applied On</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for application in recent_applications %}
+                                <tr>
+
+                                    <td>
+    <a href="{% url 'dashboard:admin_student_detail' application.student.id %}"
+       class="text-decoration-none fw-bold">
+        {{ application.student.full_name|default:application.student.user.username }}
+        <i class="bi bi-box-arrow-up-right ms-1"></i>
+    </a>
+</td>
+
+                                    <td>
+                                        {{ application.job.title|default:"—" }}
+                                    </td>
+
+                                    <td>
+                                        {{ application.job.company.company_name|default:"—" }}
+                                    </td>
+
+                                    <td>
+                                        <span class="admin-status">
+                                            {{ application.get_status_display|default:application.status|default:"Pending" }}
+                                        </span>
+                                    </td>
+
+                                    <td>
+                                        {% if application.applied_at %}
+                                            {{ application.applied_at|date:"d M Y" }}
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+                </div>
+
+            {% else %}
+                <div class="admin-empty">
+                    <i class="bi bi-inbox"></i>
+                    No applications found.
+                </div>
+            {% endif %}
+
+        </div>
+    </section>
+
+</div>
+
+
+<!-- CHART.JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{% if status_labels and status_values %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const canvas = document.getElementById("applicationChart");
+
+    if (!canvas || typeof Chart === "undefined") {
+        return;
+    }
+
+    const labels = {{ status_labels|safe }};
+    const values = {{ status_values|safe }};
+
+    new Chart(canvas, {
+
+        type: "doughnut",
+
+        data: {
+            labels: labels,
+
+            datasets: [{
+                label: "Applications",
+                data: values,
+
+                backgroundColor: [
+                    "#526FD0",
+                    "#8B65D6",
+                    "#22A06B",
+                    "#E6A23C",
+                    "#DF6262",
+                    "#36A3B8"
+                ],
+
+                borderColor: "#FFFFFF",
+                borderWidth: 4,
+                hoverOffset: 8
+            }]
+        },
+
+        options: {
+
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: "65%",
+
+            plugins: {
+
+                legend: {
+                    position: "bottom",
+
+                    labels: {
+                        color: "#475569",
+                        padding: 20,
+                        usePointStyle: true,
+                        pointStyle: "circle",
+                        font: {
+                            size: 12,
+                            weight: "600"
+                        }
+                    }
+                },
+
+                tooltip: {
+                    backgroundColor: "#172554",
+                    titleColor: "#FFFFFF",
+                    bodyColor: "#FFFFFF",
+                    padding: 12,
+                    cornerRadius: 8
+                }
+            }
+        }
+    });
+
+});
+</script>
+{% endif %}
+
+{% endblock %}

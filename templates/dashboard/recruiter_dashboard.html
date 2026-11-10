@@ -1,0 +1,914 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Recruiter Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+/* =====================================================
+   RECRUITER DASHBOARD
+   Scoped styles - does not modify base.html
+===================================================== */
+
+.recruiter-dashboard {
+    --rd-navy: #101832;
+    --rd-navy-light: #1b294b;
+    --rd-blue: #3155a6;
+    --rd-purple: #7051b8;
+    --rd-card: #ffffff;
+    --rd-text: #202b45;
+    --rd-muted: #718096;
+    --rd-border: #e7ebf3;
+
+    color: #ffffff;
+    width: 100%;
+    min-width: 0;
+    padding: 24px;
+}
+
+.recruiter-dashboard * {
+    box-sizing: border-box;
+}
+
+/* Header */
+
+.rd-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.rd-heading h1 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 750;
+    margin: 0 0 7px;
+    color: #ffffff;
+}
+
+.rd-heading p {
+    color: #b9c5dc;
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.rd-header-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #3155a6, #7051b8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    color: white;
+    box-shadow: 0 8px 20px rgba(49, 85, 166, 0.3);
+}
+
+/* Company banner */
+
+.rd-company-banner {
+    background: linear-gradient(120deg, #1b294b, #263d70);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 18px;
+    padding: 22px 25px;
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 18px;
+}
+
+.rd-company-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.rd-company-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.13);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.rd-company-info h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0 0 5px;
+    color: #ffffff;
+}
+
+.rd-company-info p {
+    color: #c4cde0;
+    margin: 0;
+    font-size: 0.87rem;
+}
+
+.rd-company-status {
+    padding: 8px 13px;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    background: rgba(34,197,94,0.15);
+    color: #86efac;
+}
+
+.rd-company-status.pending {
+    background: rgba(245,158,11,0.15);
+    color: #fcd34d;
+}
+
+/* Approval notice */
+
+.rd-notice {
+    padding: 15px 18px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: rgba(245,158,11,0.12);
+    border: 1px solid rgba(245,158,11,0.3);
+    color: #fde68a;
+    font-size: 0.9rem;
+}
+
+.rd-notice i {
+    font-size: 1.2rem;
+    margin-top: 1px;
+}
+
+/* Section headings */
+
+.rd-section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 28px 0 16px;
+}
+
+.rd-section-heading h2 {
+    color: #ffffff;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.rd-section-heading p {
+    color: #aebbd3;
+    margin: 5px 0 0;
+    font-size: 0.84rem;
+}
+
+/* Statistics */
+
+.rd-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.rd-stat-card {
+    background: var(--rd-card);
+    color: var(--rd-text);
+    border-radius: 15px;
+    padding: 19px;
+    border: 1px solid var(--rd-border);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    min-width: 0;
+    box-shadow: 0 5px 16px rgba(0,0,0,0.12);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rd-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.16);
+}
+
+.rd-stat-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    border-radius: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
+}
+
+.rd-stat-icon.blue {
+    background: #e9efff;
+    color: #3155a6;
+}
+
+.rd-stat-icon.purple {
+    background: #f0eaff;
+    color: #7051b8;
+}
+
+.rd-stat-icon.green {
+    background: #e4f8ec;
+    color: #16864b;
+}
+
+.rd-stat-icon.orange {
+    background: #fff2df;
+    color: #d97706;
+}
+
+.rd-stat-icon.red {
+    background: #fde8e8;
+    color: #c62828;
+}
+
+.rd-stat-content {
+    min-width: 0;
+}
+
+.rd-stat-content h3 {
+    color: #17233e;
+    font-size: 1.55rem;
+    font-weight: 750;
+    margin: 0 0 3px;
+}
+
+.rd-stat-content p {
+    color: var(--rd-muted);
+    font-size: 0.82rem;
+    margin: 0;
+}
+
+/* Content panel */
+
+.rd-panel {
+    background: #ffffff;
+    color: var(--rd-text);
+    border-radius: 16px;
+    border: 1px solid var(--rd-border);
+    padding: 21px;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.12);
+    min-width: 0;
+}
+
+.rd-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.rd-panel-header h3 {
+    font-size: 1.05rem;
+    font-weight: 750;
+    color: #17233e;
+    margin: 0;
+}
+
+.rd-panel-header p {
+    color: var(--rd-muted);
+    font-size: 0.83rem;
+    margin: 5px 0 0;
+}
+
+/* Job table */
+
+.rd-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.rd-table {
+    width: 100%;
+    min-width: 620px;
+    border-collapse: collapse;
+}
+
+.rd-table th {
+    color: #718096;
+    background: #f7f8fc;
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    font-weight: 700;
+    padding: 13px 14px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.rd-table td {
+    padding: 15px 14px;
+    border-bottom: 1px solid #edf0f5;
+    font-size: 0.86rem;
+    color: #46536b;
+    vertical-align: middle;
+}
+
+.rd-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.rd-table tbody tr:hover {
+    background: #f8faff;
+}
+
+.rd-job-title {
+    color: #1b294b;
+    font-weight: 700;
+}
+
+.rd-job-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 11px;
+    border-radius: 30px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.rd-job-status.active {
+    background: #e4f8ec;
+    color: #16864b;
+}
+
+.rd-job-status.inactive {
+    background: #edf0f5;
+    color: #64748b;
+}
+
+.rd-job-status.expired {
+    background: #fde8e8;
+    color: #c62828;
+}
+
+.rd-application-count {
+    font-weight: 700;
+    color: #3155a6;
+}
+
+/* Empty state */
+
+.rd-empty-state {
+    text-align: center;
+    padding: 35px 15px;
+}
+
+.rd-empty-state i {
+    display: block;
+    font-size: 2.5rem;
+    color: #9aa8bf;
+    margin-bottom: 12px;
+}
+
+.rd-empty-state h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #26344f;
+    margin-bottom: 6px;
+}
+
+.rd-empty-state p {
+    color: #718096;
+    font-size: 0.87rem;
+    margin: 0;
+}
+
+/* Buttons */
+
+.rd-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 10px 16px;
+    border-radius: 9px;
+    background: linear-gradient(135deg, #3155a6, #7051b8);
+    color: #ffffff !important;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 650;
+    border: none;
+    transition: 0.2s ease;
+}
+
+.rd-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 14px rgba(49,85,166,0.25);
+}
+
+.rd-btn-outline {
+    background: #ffffff;
+    color: #3155a6 !important;
+    border: 1px solid #d9e1f0;
+}
+
+.rd-btn-outline:hover {
+    background: #f3f6ff;
+}
+
+/* Responsive */
+/* Recruitment Management Quick Action Cards */
+
+.rd-management-panel {
+    background: #ffffff;
+    border: 1px solid #e7ebf3;
+    border-radius: 16px;
+    padding: 24px;
+    margin-top: 28px;
+    box-shadow: 0 5px 18px rgba(0,0,0,0.12);
+}
+
+.rd-management-panel .rd-management-title {
+    color: #17233e;
+    font-size: 1.15rem;
+    font-weight: 750;
+    margin: 0 0 16px;
+}
+
+.rd-management-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.rd-management-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+    padding: 17px;
+    border: 1px solid #dce3f0;
+    border-radius: 12px;
+    background: #ffffff;
+    text-decoration: none !important;
+    transition: all 0.2s ease;
+}
+
+.rd-management-card:hover {
+    background: #f5f7ff;
+    border-color: navy;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(49,85,166,0.10);
+}
+
+.rd-management-icon {
+    width: 34px;
+    min-width: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 21px;
+    color: #17233e;
+}
+
+.rd-management-content {
+    min-width: 0;
+}
+
+.rd-management-content h4 {
+    color: #17233e;
+    font-size: 0.95rem;
+    font-weight: 650;
+    margin: 0 0 5px;
+}
+
+.rd-management-content p {
+    color: #718096;
+    font-size: 0.82rem;
+    margin: 0;
+}
+
+@media (max-width: 900px) {
+    .rd-management-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 550px) {
+    .rd-management-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rd-management-panel {
+        padding: 17px;
+    }
+}
+
+@media (max-width: 1100px) {
+    .rd-stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 650px) {
+    .recruiter-dashboard {
+        padding: 15px;
+    }
+
+    .rd-header {
+        align-items: flex-start;
+    }
+
+    .rd-company-banner {
+        padding: 17px;
+    }
+
+    .rd-stats-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .rd-stat-card {
+        padding: 16px;
+    }
+
+    .rd-panel {
+        padding: 15px;
+    }
+
+    .rd-section-heading {
+        align-items: flex-start;
+    }
+
+    .rd-btn {
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="recruiter-dashboard">
+
+    <!-- Dashboard Header -->
+    <div class="rd-header">
+        <div class="rd-heading">
+            <h1>Recruiter Dashboard</h1>
+            <p>Manage your job postings and monitor recruitment activities.</p>
+        </div>
+
+        <div class="rd-header-icon">
+            <i class="bi bi-building"></i>
+        </div>
+    </div>
+
+
+    <!-- Company Information -->
+    {% if company %}
+
+    <div class="rd-company-banner">
+        <div class="rd-company-info">
+            <div class="rd-company-icon">
+                <i class="bi bi-buildings"></i>
+            </div>
+
+            <div>
+                <h3>{{ company.name }}</h3>
+                <p>Company Recruitment Workspace</p>
+            </div>
+        </div>
+
+        {% if company.is_approved %}
+            <span class="rd-company-status">
+                <i class="bi bi-patch-check-fill me-1"></i>
+                Company Approved
+            </span>
+        {% else %}
+            <span class="rd-company-status pending">
+                <i class="bi bi-clock-history me-1"></i>
+                Approval Pending
+            </span>
+        {% endif %}
+    </div>
+
+    {% else %}
+
+    <div class="rd-notice">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <div>
+            <strong>Company profile not found.</strong>
+            Please complete your company registration before posting jobs.
+        </div>
+    </div>
+
+    {% endif %}
+
+
+    <!-- Approval Notice -->
+    {% if not request.user.is_recruiter_approved %}
+
+    <div class="rd-notice">
+        <i class="bi bi-shield-exclamation"></i>
+        <div>
+            <strong>Recruiter approval pending.</strong>
+            Your recruiter account must be approved by the administrator
+            before you can post jobs.
+        </div>
+    </div>
+
+    {% elif company and not company.is_approved %}
+
+    <div class="rd-notice">
+        <i class="bi bi-clock-history"></i>
+        <div>
+            <strong>Company approval pending.</strong>
+            Your company must be approved by the administrator before
+            you can publish job postings.
+        </div>
+    </div>
+
+    {% endif %}
+
+
+    <!-- Recruitment Overview -->
+    <div class="rd-section-heading">
+        <div>
+            <h2>Recruitment Overview</h2>
+            <p>Summary of your recruitment activities</p>
+        </div>
+    </div>
+
+
+    <div class="rd-stats-grid">
+
+        <!-- Total Jobs -->
+        <div class="rd-stat-card">
+            <div class="rd-stat-icon blue">
+                <i class="bi bi-briefcase"></i>
+            </div>
+
+            <div class="rd-stat-content">
+                <h3>{{ jobs_count|default:0 }}</h3>
+                <p>Total Job Postings</p>
+            </div>
+        </div>
+
+        <!-- Active Jobs -->
+        <div class="rd-stat-card">
+            <div class="rd-stat-icon green">
+                <i class="bi bi-check-circle"></i>
+            </div>
+
+            <div class="rd-stat-content">
+                <h3>{{ active_jobs_count|default:0 }}</h3>
+                <p>Active Jobs</p>
+            </div>
+        </div>
+
+        <!-- Total Applications -->
+        <div class="rd-stat-card">
+            <div class="rd-stat-icon purple">
+                <i class="bi bi-people"></i>
+            </div>
+
+            <div class="rd-stat-content">
+                <h3>{{ total_applications|default:0 }}</h3>
+                <p>Total Applications</p>
+            </div>
+        </div>
+
+        <!-- Pending Applications -->
+        <div class="rd-stat-card">
+            <div class="rd-stat-icon orange">
+                <i class="bi bi-hourglass-split"></i>
+            </div>
+
+            <div class="rd-stat-content">
+                <h3>{{ pending_applications|default:0 }}</h3>
+                <p>Pending Applications</p>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Recent Job Postings -->
+    <div class="rd-section-heading">
+        <div>
+            <h2>Recent Job Postings</h2>
+            <p>Monitor the status of your latest job opportunities</p>
+        </div>
+
+        <a href="{% url 'recruiter_jobs' %}" class="rd-btn rd-btn-outline">
+            <i class="bi bi-eye"></i>
+            View All Jobs
+        </a>
+    </div>
+
+
+    <div class="rd-panel">
+
+        <div class="rd-panel-header">
+            <div>
+                <h3>Job Posting Activity</h3>
+                <p>Your recently created job opportunities</p>
+            </div>
+
+            {% if request.user.is_recruiter_approved and company and company.is_approved %}
+                <a href="{% url 'post_job' %}" class="rd-btn">
+                    <i class="bi bi-plus-lg"></i>
+                    Post New Job
+                </a>
+            {% endif %}
+        </div>
+
+
+        {% if recent_jobs %}
+
+        <div class="rd-table-wrapper">
+            <table class="rd-table">
+
+                <thead>
+                    <tr>
+                        <th>Job Title</th>
+                        <th>Status</th>
+                        <th>Posted Date</th>
+                        <th>Applications</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for job in recent_jobs %}
+
+                    <tr>
+                        <td>
+                            <span class="rd-job-title">
+                                {{ job.title }}
+                            </span>
+                        </td>
+
+                        <!-- Job Status -->
+                        <td>
+                            {% if job.deadline < today %}
+
+                                <span class="rd-job-status expired">
+                                    <i class="bi bi-calendar-x"></i>
+                                    Expired
+                                </span>
+
+                            {% elif job.is_active %}
+
+                                <span class="rd-job-status active">
+                                    <i class="bi bi-check-circle"></i>
+                                    Active
+                                </span>
+
+                            {% else %}
+
+                                <span class="rd-job-status inactive">
+                                    <i class="bi bi-pause-circle"></i>
+                                    Inactive
+                                </span>
+
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {{ job.created_at|date:"d M Y" }}
+                        </td>
+
+                        <td>
+                            <span class="rd-application-count">
+                                {{ job.application_count|default:0 }}
+                            </span>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+        {% else %}
+
+        <div class="rd-empty-state">
+            <i class="bi bi-briefcase"></i>
+            <h4>No Job Postings Yet</h4>
+            <p>
+                Your posted jobs will appear here once you create them.
+            </p>
+        </div>
+
+        {% endif %}
+
+    </div>
+
+<!-- Recruitment Management -->
+<div class="rd-management-panel">
+
+    <h2 class="rd-management-title">
+        Recruitment Management
+    </h2>
+
+    <div class="rd-management-grid">
+
+        <!-- Company Profile -->
+        <a href="{% url 'company_profile' %}"
+           class="rd-management-card">
+
+            <div class="rd-management-icon">
+                <i class="bi bi-building"></i>
+            </div>
+
+            <div class="rd-management-content">
+                <h4>Company Profile</h4>
+                <p>Update company information</p>
+            </div>
+
+        </a>
+
+
+        <!-- My Posted Jobs -->
+        <a href="{% url 'recruiter_jobs' %}"
+           class="rd-management-card">
+
+            <div class="rd-management-icon">
+                <i class="bi bi-briefcase"></i>
+            </div>
+
+            <div class="rd-management-content">
+                <h4>My Posted Jobs</h4>
+                <p>View and manage job listings</p>
+            </div>
+
+        </a>
+
+
+        <!-- Received Applications -->
+        <a href="{% url 'recruiter_applications' %}"
+           class="rd-management-card">
+
+            <div class="rd-management-icon">
+                <i class="bi bi-people"></i>
+            </div>
+
+            <div class="rd-management-content">
+                <h4>Received Applications</h4>
+                <p>Review candidate applications</p>
+            </div>
+
+        </a>
+
+
+        <!-- AI Career Copilot -->
+        <a href="{% url 'career_copilot_page' %}"
+           class="rd-management-card">
+
+            <div class="rd-management-icon">
+                <i class="bi bi-robot"></i>
+            </div>
+
+            <div class="rd-management-content">
+                <h4>AI Career Copilot</h4>
+                <p>Explore AI career assistance</p>
+            </div>
+
+        </a>
+
+
+        <!-- Post a Job -->
+        {% if request.user.is_recruiter_approved and company and company.is_approved %}
+
+        <a href="{% url 'post_job' %}"
+           class="rd-management-card">
+
+            <div class="rd-management-icon">
+                <i class="bi bi-plus-circle"></i>
+            </div>
+
+            <div class="rd-management-content">
+                <h4>Post a Job</h4>
+                <p>Create a new opportunity</p>
+            </div>
+
+        </a>
+
+        {% endif %}
+
+    </div>
+
+</div>
+    </div>
+
+</div>
+
+{% endblock %}

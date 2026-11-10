@@ -1,0 +1,627 @@
+
+{% extends 'base.html' %}
+
+{% block title %}My Notifications{% endblock %}
+
+{% block extra_css %}
+<style>
+    .notifications-page {
+        max-width: 1150px;
+        margin: 0 auto;
+        padding: 28px 0 40px;
+        color: #17233f;
+    }
+
+    .notifications-hero {
+        position: relative;
+        overflow: hidden;
+        padding: 32px;
+        border-radius: 22px;
+        color: #fff;
+        background: linear-gradient(125deg, #0D102B, #14213D 65%, #3155A6);
+        box-shadow: 0 10px 28px rgba(13, 16, 43, .12);
+    }
+
+    .notifications-hero::after {
+        content: "";
+        position: absolute;
+        width: 210px;
+        height: 210px;
+        border: 32px solid rgba(255,255,255,.06);
+        border-radius: 50%;
+        right: -55px;
+        top: -100px;
+        pointer-events: none;
+    }
+
+    .notifications-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 58px;
+        height: 58px;
+        margin-bottom: 16px;
+        border-radius: 17px;
+        background: rgba(255,255,255,.13);
+        border: 1px solid rgba(255,255,255,.2);
+        font-size: 26px;
+    }
+
+    .notifications-hero h1 {
+        font-size: clamp(1.7rem, 3vw, 2.2rem);
+        font-weight: 750;
+        letter-spacing: -.5px;
+    }
+
+    .notifications-hero p {
+        max-width: 540px;
+        color: rgba(255,255,255,.78);
+        line-height: 1.7;
+    }
+
+    .notification-summary {
+        min-width: 140px;
+        padding: 16px 18px;
+        text-align: center;
+        border: 1px solid rgba(255,255,255,.2);
+        background: rgba(255,255,255,.09);
+        border-radius: 15px;
+    }
+
+    .notification-summary strong {
+        display: block;
+        font-size: 30px;
+        line-height: 1.2;
+    }
+
+    .notification-summary span {
+        display: block;
+        color: rgba(255,255,255,.75);
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    .btn-mark-all {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 10px 14px;
+        color: #fff;
+        background: transparent;
+        border: 1px solid rgba(255,255,255,.55);
+        border-radius: 10px;
+        font-size: 13px;
+        font-weight: 650;
+        cursor: pointer;
+    }
+
+    .btn-mark-all:hover {
+        color: #0D102B;
+        background: #fff;
+        border-color: #fff;
+    }
+
+    .notification-section-title {
+        color: #0D102B;
+        font-size: 19px;
+        font-weight: 750;
+    }
+
+    .notification-section-subtitle {
+        color: #7a8499;
+        font-size: 13px;
+        margin-top: 5px;
+    }
+
+    .notification-card {
+        border: 1px solid #e4e8f1;
+        border-radius: 17px;
+        background: #fff;
+        box-shadow: 0 4px 16px rgba(13,16,43,.04);
+        transition: box-shadow .2s ease, transform .2s ease;
+    }
+
+    .notification-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 9px 22px rgba(13,16,43,.075);
+    }
+
+    .notification-card.unread {
+        border-left: 4px solid #3155A6;
+        background: #fbfcff;
+    }
+
+    .notification-card .card-body {
+        padding: 23px;
+    }
+
+    .notification-title {
+        color: #0D102B;
+        font-size: 16px;
+        font-weight: 750;
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+    }
+
+    .notification-title a {
+        color: #0D102B;
+        text-decoration: none;
+    }
+
+    .notification-title a:hover {
+        color: #3155A6;
+    }
+
+    .notification-message {
+        color: #536079;
+        font-size: 14px;
+        line-height: 1.75;
+        overflow-wrap: anywhere;
+    }
+
+    .notification-time {
+        color: #7b8498;
+        font-size: 12px;
+    }
+
+    .notification-new {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 9px;
+        color: #3155A6;
+        background: #e9edff;
+        border-radius: 20px;
+        font-size: 10px;
+        font-weight: 750;
+        text-transform: uppercase;
+        letter-spacing: .4px;
+    }
+
+    .notification-new span {
+        width: 6px;
+        height: 6px;
+        background: #3155A6;
+        border-radius: 50%;
+    }
+
+    .notification-read {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        color: #198754;
+        font-size: 12px;
+        font-weight: 650;
+    }
+
+    .btn-view-job {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 12px;
+        color: #fff;
+        background: #3155A6;
+        border: 1px solid #3155A6;
+        border-radius: 9px;
+        font-size: 12px;
+        font-weight: 650;
+        text-decoration: none;
+        transition: background .2s ease;
+    }
+
+    .btn-view-job:hover {
+        color: #fff;
+        background: #24458F;
+        border-color: #24458F;
+    }
+
+    .btn-mark-read {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 11px;
+        color: #3155A6;
+        background: #fff;
+        border: 1px solid #d8dfef;
+        border-radius: 9px;
+        font-size: 12px;
+        font-weight: 650;
+        cursor: pointer;
+    }
+
+    .btn-mark-read:hover {
+        color: #24458F;
+        background: #f0f3ff;
+        border-color: #aebde4;
+    }
+
+    .empty-notifications {
+        padding: 55px 24px;
+        border: 1px dashed #cbd4e5;
+        border-radius: 20px;
+        background: #f8f9fd;
+        text-align: center;
+    }
+
+    .empty-notifications-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 84px;
+        height: 84px;
+        margin-bottom: 20px;
+        border-radius: 25px;
+        color: #3155A6;
+        background: #e9edff;
+        font-size: 36px;
+    }
+
+    .empty-notifications h2 {
+        color: #0D102B;
+        font-weight: 750;
+    }
+
+    .empty-notifications p {
+        max-width: 450px;
+        margin: 10px auto 0;
+        color: #6b7280;
+        font-size: 14px;
+        line-height: 1.75;
+    }
+
+    .dashboard-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 15px;
+        color: #3155A6;
+        background: #fff;
+        border: 1px solid #dce2f0;
+        border-radius: 10px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .dashboard-back:hover {
+        color: #24458F;
+        background: #f4f6fc;
+    }
+
+    .notification-alert {
+        border-radius: 12px;
+        font-size: 14px;
+    }
+
+    @media (max-width: 767.98px) {
+        .notifications-page {
+            padding-top: 18px;
+        }
+
+        .notifications-hero {
+            padding: 23px 20px;
+            border-radius: 18px;
+        }
+
+        .notification-summary {
+            min-width: 110px;
+            padding: 11px 14px;
+        }
+
+        .notification-summary strong {
+            font-size: 24px;
+        }
+
+        .notification-card .card-body {
+            padding: 17px;
+        }
+
+        .notification-card-header {
+            flex-direction: column;
+        }
+
+        .notification-card-header form,
+        .notification-card-header > .notification-read {
+            align-self: flex-start;
+        }
+
+        .empty-notifications {
+            padding: 40px 18px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .notification-card {
+            transition: none;
+        }
+
+        .notification-card:hover {
+            transform: none;
+        }
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="container-fluid px-3 px-md-4 px-xl-5">
+    <div class="notifications-page">
+
+        <!-- PAGE HEADER -->
+        <section class="notifications-hero mb-4 mb-lg-5">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-4">
+
+                <div>
+                    <div class="notifications-icon">
+                        <i class="bi bi-bell-fill"></i>
+                    </div>
+
+                    <h1 class="mb-2">My Notifications</h1>
+
+                    <p class="mb-0">
+                        Stay informed about your job applications and placement updates.
+                    </p>
+                </div>
+
+                {% if unread_count %}
+                    <div class="d-flex flex-column align-items-start gap-3">
+
+                        <div class="notification-summary">
+                            <strong>{{ unread_count }}</strong>
+                            <span>Unread notification{{ unread_count|pluralize }}</span>
+                        </div>
+
+                        <form method="post"
+                              action="{% url 'mark_all_notifications_read' %}"
+                              onsubmit="return confirm('Mark all notifications as read?');">
+                            {% csrf_token %}
+
+                            <button type="submit" class="btn-mark-all">
+                                <i class="bi bi-check2-all"></i>
+                                Mark all as read
+                            </button>
+                        </form>
+
+                    </div>
+                {% endif %}
+
+            </div>
+        </section>
+
+
+        <!-- DJANGO MESSAGES -->
+        {% if messages %}
+            <div class="mb-4">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show notification-alert"
+                         role="alert">
+
+                        <i class="bi bi-info-circle me-2"></i>
+                        {{ message }}
+
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="alert"
+                                aria-label="Close">
+                        </button>
+
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+
+        <!-- NOTIFICATION LIST -->
+        {% if notifications %}
+
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+
+                <div>
+                    <h2 class="notification-section-title mb-0">
+                        <i class="bi bi-inbox me-2" style="color:#3155A6;"></i>
+                        Recent Updates
+                    </h2>
+
+                    <p class="notification-section-subtitle mb-0">
+                        Your application and placement activity in one place.
+                    </p>
+                </div>
+
+                <span class="badge rounded-pill px-3 py-2"
+                      style="background:#e9edff;color:#3155A6;">
+                    {{ notifications|length }}
+                    notification{{ notifications|length|pluralize }}
+                </span>
+
+            </div>
+
+
+            <div class="d-flex flex-column gap-3">
+
+                {% for notification in notifications %}
+
+                    <article class="card notification-card {% if not notification.is_read %}unread{% endif %}">
+
+                        <div class="card-body">
+
+                            <div class="d-flex justify-content-between align-items-start gap-3 notification-card-header">
+
+                                <div class="flex-grow-1" style="min-width:0;">
+
+                                    <!-- TITLE AND STATUS -->
+                                    <div class="d-flex align-items-center flex-wrap gap-2 mb-3">
+
+                                        <h3 class="notification-title mb-0">
+
+                                            {% if notification.job_id %}
+
+                                                <a href="{% url 'job_detail' notification.job_id %}">
+                                                    {{ notification.title }}
+                                                </a>
+
+                                            {% elif notification.application_id %}
+
+                                                <a href="{% url 'job_detail' notification.application.job_id %}">
+                                                    {{ notification.title }}
+                                                </a>
+
+                                            {% else %}
+
+                                                {{ notification.title }}
+
+                                            {% endif %}
+
+                                        </h3>
+
+
+                                        {% if not notification.is_read %}
+                                            <span class="notification-new">
+                                                <span></span>
+                                                New
+                                            </span>
+                                        {% endif %}
+
+                                    </div>
+
+
+                                    <!-- MESSAGE -->
+                                    <p class="notification-message mb-3">
+                                        {{ notification.message }}
+                                    </p>
+
+
+                                    <!-- VIEW JOB ACTION -->
+                                    {% if notification.job_id %}
+
+                                        <div class="mb-3">
+                                            <a href="{% url 'job_detail' notification.job_id %}"
+                                               class="btn-view-job">
+
+                                                <i class="bi bi-eye"></i>
+                                                View Job
+
+                                            </a>
+                                        </div>
+
+                                    {% elif notification.application_id %}
+
+                                        <div class="mb-3">
+                                            <a href="{% url 'job_detail' notification.application.job_id %}"
+                                               class="btn-view-job">
+
+                                                <i class="bi bi-eye"></i>
+                                                View Job
+
+                                            </a>
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    <!-- DATE -->
+                                    <div class="notification-time">
+                                        <i class="bi bi-clock me-1"></i>
+                                        {{ notification.created_at|date:"d M Y, h:i A" }}
+                                    </div>
+
+                                </div>
+
+
+                                <!-- MARK AS READ -->
+                                <div class="flex-shrink-0">
+
+                                    {% if not notification.is_read %}
+
+                                        <form method="post"
+                                              action="{% url 'mark_notification_read' notification.id %}">
+
+                                            {% csrf_token %}
+
+                                            <button type="submit"
+                                                    class="btn-mark-read"
+                                                    title="Mark this notification as read"
+                                                    aria-label="Mark notification as read">
+
+                                                <i class="bi bi-check2"></i>
+                                                <span class="d-none d-sm-inline">
+                                                    Mark as read
+                                                </span>
+
+                                            </button>
+
+                                        </form>
+
+                                    {% else %}
+
+                                        <span class="notification-read"
+                                              title="This notification has been read">
+
+                                            <i class="bi bi-check-circle-fill"></i>
+
+                                            <span class="d-none d-sm-inline">
+                                                Read
+                                            </span>
+
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <!-- EMPTY STATE -->
+            <section class="empty-notifications">
+
+                <div class="empty-notifications-icon">
+                    <i class="bi bi-bell-slash"></i>
+                </div>
+
+                <h2 class="h4 mb-2">You're all caught up!</h2>
+
+                <p>
+                    You don't have any notifications yet. Updates about your
+                    job applications and placement opportunities will appear here.
+                </p>
+
+                <a href="{% url 'dashboard:student_dashboard' %}"
+                   class="btn-view-job mt-4">
+
+                    <i class="bi bi-speedometer2"></i>
+                    Go to Dashboard
+
+                </a>
+
+            </section>
+
+        {% endif %}
+
+
+        <!-- BACK TO DASHBOARD -->
+        <div class="text-center mt-5">
+
+            <a href="{% url 'dashboard:student_dashboard' %}"
+               class="dashboard-back">
+
+                <i class="bi bi-arrow-left"></i>
+                Back to Dashboard
+
+            </a>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}

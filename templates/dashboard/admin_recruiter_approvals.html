@@ -1,0 +1,631 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Recruiters | Admin Dashboard{% endblock %}
+
+{% block extra_css %}
+<style>
+    .recruiter-management {
+        --rm-navy: #0D102B;
+        --rm-blue: #3155A6;
+        --rm-muted: #64748B;
+        --rm-border: #DDE3EF;
+        color: #1E293B;
+    }
+
+    .recruiter-management .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 18px;
+        padding: 25px 28px;
+        margin-bottom: 25px;
+        color: #fff;
+        background: linear-gradient(115deg, #080B20, #14213D);
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(13, 16, 43, 0.12);
+    }
+
+    .recruiter-management .page-header h2 {
+        color: #fff;
+        font-size: clamp(1.35rem, 2.5vw, 1.8rem);
+        margin-bottom: 5px;
+    }
+
+    .recruiter-management .page-header p {
+        color: #C5D2E5;
+        margin: 0;
+        font-size: 0.92rem;
+    }
+
+    .recruiter-management .header-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        height: 48px;
+        flex-shrink: 0;
+        border-radius: 13px;
+        color: #fff;
+        background: rgba(255, 255, 255, 0.12);
+        font-size: 1.5rem;
+    }
+
+    .recruiter-management .summary-card {
+        height: 100%;
+        padding: 19px;
+        background: #fff;
+        border: 1px solid var(--rm-border);
+        border-radius: 14px;
+        box-shadow: 0 4px 15px rgba(15, 35, 65, 0.04);
+    }
+
+    .recruiter-management .summary-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 43px;
+        height: 43px;
+        border-radius: 12px;
+        background: #E9EDFF;
+        color: var(--rm-blue);
+        font-size: 1.2rem;
+    }
+
+    .recruiter-management .summary-label {
+        color: var(--rm-muted);
+        font-size: 0.83rem;
+        margin-bottom: 5px;
+    }
+
+    .recruiter-management .summary-number {
+        color: var(--rm-navy);
+        font-size: 1.7rem;
+        line-height: 1.2;
+        font-weight: 750;
+    }
+
+    .recruiter-management .management-card {
+        border: 1px solid var(--rm-border);
+        border-radius: 15px;
+        background: #fff;
+        overflow: hidden;
+        box-shadow: 0 5px 18px rgba(15, 35, 65, 0.045);
+        margin-bottom: 24px;
+    }
+
+    .recruiter-management .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+        padding: 19px 22px;
+        background: #fff;
+        border-bottom: 1px solid var(--rm-border);
+    }
+
+    .recruiter-management .section-title {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+    }
+
+    .recruiter-management .section-title h5 {
+        color: var(--rm-navy);
+        font-size: 1rem;
+        margin: 0 0 3px;
+    }
+
+    .recruiter-management .section-title p {
+        color: var(--rm-muted);
+        font-size: 0.8rem;
+        margin: 0;
+    }
+
+    .recruiter-management .section-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        flex-shrink: 0;
+        border-radius: 11px;
+        font-size: 1.15rem;
+    }
+
+    .recruiter-management .icon-pending {
+        color: #946200;
+        background: #FFF4D6;
+    }
+
+    .recruiter-management .icon-company {
+        color: #3155A6;
+        background: #E9EDFF;
+    }
+
+    .recruiter-management .icon-approved {
+        color: #16764A;
+        background: #DDF7E9;
+    }
+
+    .recruiter-management .section-count {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 30px;
+        height: 30px;
+        padding: 0 9px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 700;
+    }
+
+    .recruiter-management .count-pending {
+        color: #805600;
+        background: #FFF0C2;
+    }
+
+    .recruiter-management .count-company {
+        color: #24458F;
+        background: #E9EDFF;
+    }
+
+    .recruiter-management .count-approved {
+        color: #166534;
+        background: #DCFCE7;
+    }
+
+    .recruiter-management .table-responsive {
+        margin: 0;
+    }
+
+    .recruiter-management .table {
+        margin-bottom: 0;
+        min-width: 620px;
+        vertical-align: middle;
+    }
+
+    .recruiter-management .table thead th {
+        padding: 13px 20px;
+        color: #52627A;
+        background: #F5F7FC;
+        border-bottom: 1px solid var(--rm-border);
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.45px;
+        white-space: nowrap;
+    }
+
+    .recruiter-management .table tbody td {
+        padding: 15px 20px;
+        border-color: #EDF0F6;
+        color: #334155;
+        font-size: 0.86rem;
+    }
+
+    .recruiter-management .table tbody tr:last-child td {
+        border-bottom: 0;
+    }
+
+    .recruiter-management .table tbody tr:hover td {
+        background: #FAFBFF;
+    }
+
+    .recruiter-management .primary-cell {
+        color: var(--rm-navy);
+        font-weight: 650;
+    }
+
+    .recruiter-management .secondary-cell {
+        display: block;
+        margin-top: 3px;
+        color: var(--rm-muted);
+        font-size: 0.77rem;
+        font-weight: 400;
+        overflow-wrap: anywhere;
+    }
+
+    .recruiter-management .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 650;
+        white-space: nowrap;
+    }
+
+    .recruiter-management .status-pending {
+        color: #805600;
+        background: #FFF4D6;
+    }
+
+    .recruiter-management .status-approved {
+        color: #166534;
+        background: #DCFCE7;
+    }
+
+    .recruiter-management .btn-approve {
+        padding: 7px 12px;
+        color: #fff;
+        background: var(--rm-blue);
+        border: 1px solid var(--rm-blue);
+        border-radius: 8px;
+        font-size: 0.79rem;
+        font-weight: 650;
+        white-space: nowrap;
+    }
+
+    .recruiter-management .btn-approve:hover {
+        color: #fff;
+        background: #24458F;
+        border-color: #24458F;
+    }
+
+    .recruiter-management .empty-state {
+        padding: 34px 20px;
+        text-align: center;
+    }
+
+    .recruiter-management .empty-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 52px;
+        height: 52px;
+        margin-bottom: 12px;
+        color: #3155A6;
+        background: #E9EDFF;
+        border-radius: 50%;
+        font-size: 1.35rem;
+    }
+
+    .recruiter-management .empty-state h6 {
+        color: var(--rm-navy);
+        margin-bottom: 5px;
+    }
+
+    .recruiter-management .empty-state p {
+        color: var(--rm-muted);
+        font-size: 0.85rem;
+        margin: 0;
+    }
+
+    @media (max-width: 575.98px) {
+        .recruiter-management .page-header {
+            padding: 20px;
+        }
+
+        .recruiter-management .section-header {
+            padding: 16px;
+        }
+
+        .recruiter-management .table thead th,
+        .recruiter-management .table tbody td {
+            padding: 12px 14px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="recruiter-management">
+
+    <!-- Page header -->
+    <div class="page-header">
+        <div class="d-flex align-items-center gap-3">
+            <div class="header-icon">
+                <i class="bi bi-building-check"></i>
+            </div>
+            <div>
+                <h2>Manage Recruiters</h2>
+                <p>Review recruiter accounts and manage company approvals.</p>
+            </div>
+        </div>
+
+        <a href="{% url 'dashboard:admin_dashboard' %}"
+           class="btn btn-light">
+            <i class="bi bi-arrow-left me-1"></i>
+            Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Django messages -->
+    {% if messages %}
+        <div class="mb-4" aria-live="polite">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show site-alert"
+                     role="alert">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    {{ message }}
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Summary cards -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="summary-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="summary-icon">
+                        <i class="bi bi-person-plus"></i>
+                    </div>
+                    <div>
+                        <div class="summary-label">Pending Recruiter Accounts</div>
+                        <div class="summary-number">
+                            {{ pending_recruiters|length }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="summary-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="summary-icon">
+                        <i class="bi bi-building"></i>
+                    </div>
+                    <div>
+                        <div class="summary-label">Pending Company Approvals</div>
+                        <div class="summary-number">
+                            {{ pending_companies|length }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="summary-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="summary-icon">
+                        <i class="bi bi-patch-check"></i>
+                    </div>
+                    <div>
+                        <div class="summary-label">Approved Companies</div>
+                        <div class="summary-number">
+                            {{ approved_companies|length }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Pending recruiter accounts -->
+    <section class="management-card">
+        <div class="section-header">
+            <div class="section-title">
+                <div class="section-icon icon-pending">
+                    <i class="bi bi-person-check"></i>
+                </div>
+                <div>
+                    <h5>Pending Recruiter Accounts</h5>
+                    <p>Recruiters awaiting account approval</p>
+                </div>
+            </div>
+
+            <span class="section-count count-pending">
+                {{ pending_recruiters|length }}
+            </span>
+        </div>
+
+        {% if pending_recruiters %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Recruiter</th>
+                            <th>Email</th>
+                            <th>Registered On</th>
+                            <th>Account Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for recruiter in pending_recruiters %}
+                            <tr>
+                                <td>
+                                    <span class="primary-cell">
+                                        {{ recruiter.get_full_name|default:recruiter.username }}
+                                    </span>
+                                    <span class="secondary-cell">
+                                        @{{ recruiter.username }}
+                                    </span>
+                                </td>
+                                <td>{{ recruiter.email|default:"Not provided" }}</td>
+                                <td>{{ recruiter.date_joined|date:"d M Y" }}</td>
+                                <td>
+                                    <span class="status-pill status-pending">
+                                        <i class="bi bi-clock-history"></i>
+                                        Pending
+                                    </span>
+                                </td>
+                                <td>
+                                    <form method="post"
+                                          action="{% url 'dashboard:approve_recruiter_account' recruiter.id %}"
+                                          onsubmit="return confirm('Approve this recruiter account?');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-approve">
+                                            <i class="bi bi-check-lg me-1"></i>
+                                            Approve
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="bi bi-check2-circle"></i>
+                </div>
+                <h6>All recruiter accounts are reviewed</h6>
+                <p>There are no pending recruiter accounts right now.</p>
+            </div>
+        {% endif %}
+    </section>
+
+    <!-- Pending company approvals -->
+    <section class="management-card">
+        <div class="section-header">
+            <div class="section-title">
+                <div class="section-icon icon-company">
+                    <i class="bi bi-buildings"></i>
+                </div>
+                <div>
+                    <h5>Pending Company Approvals</h5>
+                    <p>Review companies before recruiters post jobs</p>
+                </div>
+            </div>
+
+            <span class="section-count count-company">
+                {{ pending_companies|length }}
+            </span>
+        </div>
+
+        {% if pending_companies %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Company</th>
+                            <th>Recruiter</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for company in pending_companies %}
+                            <tr>
+                                <td>
+                                    <span class="primary-cell">
+                                        {{ company.company_name }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="primary-cell">
+                                        {{ company.recruiter.username }}
+                                    </span>
+                                    <span class="secondary-cell">
+                                        {{ company.recruiter.email|default:"No email" }}
+                                    </span>
+                                </td>
+                                <td>{{ company.location|default:"Not specified" }}</td>
+                                <td>
+                                    <span class="status-pill status-pending">
+                                        <i class="bi bi-clock-history"></i>
+                                        Pending
+                                    </span>
+                                </td>
+                                <td>
+                                    <form method="post"
+                                          action="{% url 'dashboard:approve_company_recruiter' company.id %}"
+                                          onsubmit="return confirm('Approve this company?');">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-approve">
+                                            <i class="bi bi-check-lg me-1"></i>
+                                            Approve Company
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="bi bi-building-check"></i>
+                </div>
+                <h6>No pending company approvals</h6>
+                <p>All submitted company profiles have been reviewed.</p>
+            </div>
+        {% endif %}
+    </section>
+
+    <!-- Approved companies -->
+    <section class="management-card">
+        <div class="section-header">
+            <div class="section-title">
+                <div class="section-icon icon-approved">
+                    <i class="bi bi-patch-check-fill"></i>
+                </div>
+                <div>
+                    <h5>Approved Companies</h5>
+                    <p>Companies approved to participate in placements</p>
+                </div>
+            </div>
+
+            <span class="section-count count-approved">
+                {{ approved_companies|length }}
+            </span>
+        </div>
+
+        {% if approved_companies %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Company</th>
+                            <th>Recruiter</th>
+                            <th>Location</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for company in approved_companies %}
+                            <tr>
+                                <td>
+                                    <span class="primary-cell">
+                                        {{ company.company_name }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="primary-cell">
+                                        {{ company.recruiter.username }}
+                                    </span>
+                                    <span class="secondary-cell">
+                                        {{ company.recruiter.email|default:"No email" }}
+                                    </span>
+                                </td>
+                                <td>{{ company.location|default:"Not specified" }}</td>
+                                <td>
+                                    <span class="status-pill status-approved">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                        Approved
+                                    </span>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="bi bi-buildings"></i>
+                </div>
+                <h6>No approved companies yet</h6>
+                <p>Approved companies will appear here.</p>
+            </div>
+        {% endif %}
+    </section>
+
+</div>
+{% endblock %}

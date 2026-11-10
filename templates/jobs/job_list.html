@@ -1,0 +1,659 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Available Jobs | Smart Career & Placement{% endblock %}
+
+{% block extra_css %}
+<style>
+    .available-jobs-page {
+        color: #17233f;
+    }
+
+    .jobs-hero {
+        position: relative;
+        overflow: hidden;
+        padding: 2.25rem;
+        border-radius: 1.1rem;
+        color: #fff;
+        background: linear-gradient(135deg, #0D102B, #14213D 60%, #3155A6);
+        box-shadow: 0 10px 28px rgba(13, 16, 43, 0.12);
+    }
+
+    .jobs-hero h1 {
+        font-weight: 800;
+        letter-spacing: -0.5px;
+    }
+
+    .jobs-hero p {
+        color: rgba(255, 255, 255, 0.78);
+    }
+
+    .jobs-hero-icon {
+        display: inline-flex;
+        width: 54px;
+        height: 54px;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.12);
+        font-size: 1.6rem;
+    }
+
+    .jobs-search-card {
+        border: 1px solid #e2e7f0;
+        border-radius: 1rem;
+        background: #fff;
+        box-shadow: 0 5px 20px rgba(13, 16, 43, 0.05);
+    }
+
+    .jobs-search-card .form-label {
+        color: #17233f;
+        font-size: 0.88rem;
+        font-weight: 700;
+    }
+
+    .jobs-search-card .form-control,
+    .jobs-search-card .input-group-text {
+        min-height: 46px;
+        border-color: #dce3ef;
+    }
+
+    .jobs-search-card .input-group-text {
+        color: #3155A6;
+        background: #f4f6fc;
+    }
+
+    .jobs-search-card .form-control:focus {
+        border-color: #3155A6;
+        box-shadow: 0 0 0 0.2rem rgba(49, 85, 166, 0.12);
+    }
+
+    .jobs-search-card .btn-primary,
+    .job-card .btn-primary {
+        border-color: #3155A6;
+        background: #3155A6;
+    }
+
+    .jobs-search-card .btn-primary:hover,
+    .job-card .btn-primary:hover {
+        border-color: #24458F;
+        background: #24458F;
+    }
+
+    .jobs-section-heading {
+        color: #0D102B;
+        font-size: 1.25rem;
+        font-weight: 800;
+    }
+
+    .jobs-result-count {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.45rem 0.75rem;
+        border-radius: 999px;
+        color: #29457f;
+        background: #e9edff;
+        font-size: 0.82rem;
+        font-weight: 700;
+    }
+
+    .job-card {
+        height: 100%;
+        overflow: hidden;
+        border: 1px solid #e2e7f0;
+        border-radius: 1rem;
+        background: #fff;
+        box-shadow: 0 5px 18px rgba(13, 16, 43, 0.045);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .job-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 28px rgba(13, 16, 43, 0.1);
+    }
+
+    .job-card-top {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.85rem;
+    }
+
+    .job-company-icon {
+        display: inline-flex;
+        flex: 0 0 46px;
+        width: 46px;
+        height: 46px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 13px;
+        color: #3155A6;
+        background: #e9edff;
+        font-size: 1.3rem;
+    }
+
+    .job-card-title {
+        color: #0D102B;
+        font-size: 1.12rem;
+        font-weight: 800;
+        line-height: 1.45;
+        overflow-wrap: anywhere;
+    }
+
+    .job-company-name {
+        color: #3155A6;
+        font-size: 0.9rem;
+        font-weight: 650;
+        overflow-wrap: anywhere;
+    }
+
+    .job-active-badge {
+        flex-shrink: 0;
+        padding: 0.4rem 0.65rem;
+        border-radius: 999px;
+        color: #137547;
+        background: #e5f7ed;
+        font-size: 0.72rem;
+        font-weight: 750;
+    }
+
+    .job-closed-badge {
+        flex-shrink: 0;
+        padding: 0.4rem 0.65rem;
+        border-radius: 999px;
+        color: #a52d38;
+        background: #fdebed;
+        font-size: 0.72rem;
+        font-weight: 750;
+    }
+
+    .job-inactive-badge {
+        flex-shrink: 0;
+        padding: 0.4rem 0.65rem;
+        border-radius: 999px;
+        color: #626b79;
+        background: #eceff3;
+        font-size: 0.72rem;
+        font-weight: 750;
+    }
+
+    .job-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+    }
+
+    .job-meta-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.45rem 0.6rem;
+        border: 1px solid #e2e7f0;
+        border-radius: 0.55rem;
+        color: #4d5b75;
+        background: #f8f9fd;
+        font-size: 0.79rem;
+        overflow-wrap: anywhere;
+    }
+
+    .job-meta-item i {
+        color: #3155A6;
+    }
+
+    .job-card-section-title {
+        margin-bottom: 0.55rem;
+        color: #17233f;
+        font-size: 0.86rem;
+        font-weight: 750;
+    }
+
+    .job-skills-text {
+        display: block;
+        padding: 0.75rem;
+        border-radius: 0.65rem;
+        color: #43516c;
+        background: #f8f9fd;
+        font-size: 0.84rem;
+        line-height: 1.7;
+        overflow-wrap: anywhere;
+        white-space: pre-line;
+    }
+
+    .job-description {
+        color: #65718a;
+        font-size: 0.88rem;
+        line-height: 1.75;
+        overflow-wrap: anywhere;
+    }
+
+    .job-deadline {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.55rem;
+        padding-top: 0.85rem;
+        border-top: 1px solid #edf0f6;
+        color: #6c7890;
+        font-size: 0.82rem;
+    }
+
+    .job-deadline i {
+        color: #3155A6;
+    }
+
+    .job-card-footer {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: auto;
+        padding-top: 1rem;
+    }
+
+    .job-card .btn {
+        border-radius: 0.65rem;
+        font-weight: 650;
+    }
+
+    .jobs-empty-state {
+        padding: 3.5rem 1.5rem;
+        border: 1px dashed #cbd4e5;
+        border-radius: 1rem;
+        background: #fff;
+        text-align: center;
+    }
+
+    .jobs-empty-icon {
+        display: inline-flex;
+        width: 76px;
+        height: 76px;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.2rem;
+        border-radius: 22px;
+        color: #3155A6;
+        background: #e9edff;
+        font-size: 2rem;
+    }
+
+    .jobs-dashboard-link {
+        border-radius: 0.65rem;
+        font-weight: 650;
+    }
+
+    @media (max-width: 575.98px) {
+        .jobs-hero {
+            padding: 1.5rem;
+        }
+
+        .jobs-hero h1 {
+            font-size: 1.7rem;
+        }
+
+        .job-card .card-body {
+            padding: 1.15rem !important;
+        }
+
+        .job-card-top {
+            flex-wrap: wrap;
+        }
+
+        .job-active-badge,
+        .job-closed-badge,
+        .job-inactive-badge {
+            margin-left: auto;
+        }
+
+        .job-card-footer .btn {
+            width: 100%;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .job-card {
+            transition: none;
+        }
+
+        .job-card:hover {
+            transform: none;
+        }
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="container py-4 py-lg-5 available-jobs-page">
+
+    <!-- PAGE HEADER -->
+    <section class="jobs-hero mb-4">
+        <div class="jobs-hero-icon">
+            <i class="bi bi-briefcase-fill"></i>
+        </div>
+
+        <h1 class="mb-2">Explore Job Opportunities</h1>
+
+        <p class="mb-0">
+            Discover opportunities, explore employers, and take the next step
+            toward your career.
+        </p>
+    </section>
+
+
+    <!-- SEARCH AND FILTER -->
+    <section class="jobs-search-card mb-4">
+        <div class="card-body p-3 p-md-4">
+
+            <div class="d-flex align-items-center gap-2 mb-3">
+                <i class="bi bi-search text-primary fs-5"></i>
+                <h2 class="h5 fw-bold mb-0">Find Your Next Opportunity</h2>
+            </div>
+
+            <form method="GET">
+                <div class="row g-3">
+
+                    <div class="col-12 col-md-5">
+                        <label for="jobSearch" class="form-label">
+                            Search Jobs
+                        </label>
+
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-search"></i>
+                            </span>
+
+                            <input
+                                id="jobSearch"
+                                type="text"
+                                name="search"
+                                class="form-control"
+                                placeholder="Job title or skill"
+                                value="{{ search|default:'' }}"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-4">
+                        <label for="jobLocation" class="form-label">
+                            Location
+                        </label>
+
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-geo-alt"></i>
+                            </span>
+
+                            <input
+                                id="jobLocation"
+                                type="text"
+                                name="location"
+                                class="form-control"
+                                placeholder="Enter location"
+                                value="{{ location|default:'' }}"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-3 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100 py-2">
+                            <i class="bi bi-search me-2"></i>
+                            Search Jobs
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </section>
+
+
+    <!-- JOB RESULTS -->
+    <section>
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+
+            <h2 class="jobs-section-heading mb-0">
+                Available Opportunities
+            </h2>
+
+            {% if jobs %}
+                <span class="jobs-result-count">
+                    <i class="bi bi-briefcase"></i>
+                    {{ jobs|length }} job{{ jobs|length|pluralize }} found
+                </span>
+            {% endif %}
+
+        </div>
+
+
+        {% if jobs %}
+
+            <div class="row g-3 g-lg-4">
+
+                {% for job in jobs %}
+
+                    <div class="col-12 col-md-6">
+
+                        <article class="card job-card">
+
+                            <div class="card-body d-flex flex-column p-4">
+
+                                <!-- JOB TITLE AND COMPANY -->
+                                <div class="job-card-top mb-3">
+
+                                    <div class="job-company-icon">
+                                        <i class="bi bi-building"></i>
+                                    </div>
+
+                                    <div class="flex-grow-1">
+
+                                        <h3 class="job-card-title mb-1">
+                                            {{ job.title }}
+                                        </h3>
+
+                                        <p class="job-company-name mb-0">
+                                            {{ job.company.company_name }}
+                                        </p>
+
+                                    </div>
+
+
+                                    <!-- APPLICATION STATUS -->
+                                    {% if job.application_closed %}
+
+                                        {% if job.deadline_passed %}
+
+                                            <span class="job-closed-badge">
+                                                <i class="bi bi-calendar-x me-1"></i>
+                                                Deadline Passed
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="job-inactive-badge">
+                                                <i class="bi bi-lock-fill me-1"></i>
+                                                Applications Closed
+                                            </span>
+
+                                        {% endif %}
+
+                                    {% else %}
+
+                                        <span class="job-active-badge">
+                                            <i class="bi bi-check-circle-fill me-1"></i>
+                                            Applications Open
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <!-- JOB DETAILS -->
+                                <div class="job-meta mb-4">
+
+                                    {% if job.location %}
+                                        <span class="job-meta-item">
+                                            <i class="bi bi-geo-alt"></i>
+                                            {{ job.location }}
+                                        </span>
+                                    {% endif %}
+
+                                    {% if job.salary %}
+                                        <span class="job-meta-item">
+                                            <i class="bi bi-currency-rupee"></i>
+                                            {{ job.salary }}
+                                        </span>
+                                    {% endif %}
+
+                                    {% if job.minimum_cgpa != None %}
+                                        <span class="job-meta-item">
+                                            <i class="bi bi-mortarboard"></i>
+                                            CGPA {{ job.minimum_cgpa }}
+                                        </span>
+                                    {% endif %}
+
+                                </div>
+
+
+                                <!-- REQUIRED SKILLS -->
+                                <div class="mb-3">
+
+                                    <h4 class="job-card-section-title">
+                                        <i class="bi bi-code-slash text-primary me-1"></i>
+                                        Required Skills
+                                    </h4>
+
+                                    {% if job.required_skills %}
+
+                                        <span class="job-skills-text">
+                                            {{ job.required_skills }}
+                                        </span>
+
+                                    {% else %}
+
+                                        <p class="text-muted small mb-0">
+                                            No specific skills listed.
+                                        </p>
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <!-- DESCRIPTION -->
+                                <div class="mb-3">
+
+                                    <h4 class="job-card-section-title">
+                                        <i class="bi bi-file-text text-primary me-1"></i>
+                                        About This Role
+                                    </h4>
+
+                                    <p class="job-description mb-0">
+                                        {{ job.description|truncatewords:25 }}
+                                    </p>
+
+                                </div>
+
+
+                                <!-- DEADLINE -->
+                                <div class="job-deadline mt-auto">
+
+                                    <i class="bi bi-calendar-event"></i>
+
+                                    <div>
+
+                                        <span>Application Deadline</span>
+
+                                        <div class="fw-bold mt-1
+                                            {% if job.deadline_passed %}
+                                                text-danger
+                                            {% else %}
+                                                text-dark
+                                            {% endif %}">
+
+                                            {{ job.deadline|default:"Not specified" }}
+
+                                        </div>
+
+                                        {% if job.application_closed %}
+                                            <small class="text-danger d-block mt-1">
+                                                Applications are no longer accepted.
+                                            </small>
+                                        {% endif %}
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- VIEW JOB -->
+                                <div class="job-card-footer">
+
+                                    <a
+                                        href="{% url 'job_detail' job.id %}"
+                                        class="btn btn-primary px-4 py-2">
+
+                                        View Details
+                                        <i class="bi bi-arrow-right ms-2"></i>
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </article>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+            <!-- EMPTY STATE -->
+            <div class="jobs-empty-state">
+
+                <div class="jobs-empty-icon">
+                    <i class="bi bi-search"></i>
+                </div>
+
+                <h3 class="h4 fw-bold mb-2">No Jobs Found</h3>
+
+                <p class="text-muted mb-4">
+                    We couldn't find jobs matching your search.
+                    Try another job title, skill, or location.
+                </p>
+
+                <a href="{% url 'job_list' %}" class="btn btn-primary px-4">
+
+                    <i class="bi bi-arrow-clockwise me-2"></i>
+                    View All Jobs
+
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- DASHBOARD NAVIGATION -->
+    <div class="text-center mt-4 mt-lg-5">
+
+        <a
+            href="{% url 'dashboard:student_dashboard' %}"
+            class="btn btn-outline-secondary jobs-dashboard-link px-4 py-2">
+
+            <i class="bi bi-arrow-left me-2"></i>
+            Back to Dashboard
+
+        </a>
+
+    </div>
+
+</div>
+{% endblock %}

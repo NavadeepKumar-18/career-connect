@@ -1,0 +1,938 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Student Dashboard | AI Career & Placement System{% endblock %}
+
+{% block extra_css %}
+<style>
+/* =====================================================
+   STUDENT DASHBOARD - NAVY BACKGROUND + WHITE CARDS
+   All styles are isolated to this page.
+===================================================== */
+
+.student-dashboard {
+    --sd-bg: #101832;
+    --sd-card: #ffffff;
+    --sd-card-hover: #f7f8ff;
+    --sd-navy: #172548;
+    --sd-blue: #5278D1;
+    --sd-purple: #8967D8;
+    --sd-text: #26334d;
+    --sd-muted: #64748b;
+    --sd-border: #e2e8f0;
+    --sd-green: #159b68;
+
+    width: 100%;
+    min-width: 0;
+    min-height: 85vh;
+    padding: 25px 0 40px;
+    background: var(--sd-bg) !important;
+    color: #ffffff;
+    overflow-wrap: break-word;
+}
+
+.student-dashboard * {
+    box-sizing: border-box;
+}
+
+/* Headings */
+
+.student-dashboard h1,
+.student-dashboard h2,
+.student-dashboard h3,
+.student-dashboard h4,
+.student-dashboard h5,
+.student-dashboard h6 {
+    color: var(--sd-navy);
+}
+
+.student-dashboard p {
+    line-height: 1.6;
+}
+
+.student-dashboard .dashboard-muted,
+.student-dashboard .text-muted {
+    color: var(--sd-muted) !important;
+}
+
+/* Welcome banner */
+
+.student-dashboard .dashboard-welcome {
+    position: relative;
+    overflow: hidden;
+    padding: 30px;
+    border: 1px solid #354B78;
+    border-radius: 18px;
+    color: #fff !important;
+    background: linear-gradient(120deg, #182344, #263F70 65%, #493B80) !important;
+    box-shadow: 0 9px 25px rgba(0, 0, 0, .2);
+}
+
+.student-dashboard .dashboard-welcome::after {
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    right: -65px;
+    top: -105px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.055);
+    pointer-events: none;
+}
+
+.student-dashboard .dashboard-welcome-content {
+    position: relative;
+    z-index: 1;
+}
+
+.student-dashboard .dashboard-welcome h1 {
+    color: #fff !important;
+    font-size: 26px;
+    font-weight: 750;
+    margin-bottom: 9px;
+}
+
+.student-dashboard .dashboard-welcome p {
+    color: #D2DCF2 !important;
+    font-size: 13px;
+    margin-bottom: 0;
+}
+
+.student-dashboard .dashboard-eyebrow {
+    color: #BFCDF4 !important;
+    font-size: 11px;
+    font-weight: 750;
+    letter-spacing: 1.3px;
+    text-transform: uppercase;
+    margin-bottom: 9px;
+}
+
+.student-dashboard .welcome-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 11px 18px;
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 9px;
+    background: #E9EEFF !important;
+    color: #172548 !important;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: .2s ease;
+}
+
+.student-dashboard .welcome-button:hover {
+    background: #fff !important;
+    transform: translateY(-2px);
+}
+
+/* Section headings */
+
+.student-dashboard .dashboard-section {
+    margin-top: 27px;
+}
+
+.student-dashboard .dashboard-heading {
+    color: #F1F4FC !important;
+    font-size: 18px;
+    font-weight: 750;
+    margin-bottom: 16px;
+}
+
+.student-dashboard .dashboard-section-description {
+    color: #A8B4CC !important;
+    font-size: 12px;
+    margin-top: -9px;
+    margin-bottom: 16px;
+}
+
+/* White cards */
+
+.student-dashboard .dashboard-card,
+.student-dashboard .roadmap-dashboard-card {
+    height: 100%;
+    min-width: 0;
+    border: 1px solid var(--sd-border) !important;
+    border-radius: 15px;
+    background: var(--sd-card) !important;
+    color: var(--sd-text) !important;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, .13);
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+.student-dashboard .dashboard-card:hover,
+.student-dashboard .roadmap-dashboard-card:hover {
+    border-color: #b9c8ed !important;
+    background: var(--sd-card-hover) !important;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, .2);
+}
+
+.student-dashboard .dashboard-card .card-body {
+    padding: 20px;
+}
+
+/* White card typography */
+
+.student-dashboard .dashboard-card h1,
+.student-dashboard .dashboard-card h2,
+.student-dashboard .dashboard-card h3,
+.student-dashboard .dashboard-card h4,
+.student-dashboard .dashboard-card h5,
+.student-dashboard .dashboard-card h6,
+.student-dashboard .roadmap-dashboard-card h1,
+.student-dashboard .roadmap-dashboard-card h2,
+.student-dashboard .roadmap-dashboard-card h3,
+.student-dashboard .roadmap-dashboard-card h4,
+.student-dashboard .roadmap-dashboard-card h5 {
+    color: var(--sd-navy) !important;
+}
+
+.student-dashboard .dashboard-card p,
+.student-dashboard .roadmap-dashboard-card p {
+    color: var(--sd-text);
+}
+
+/* Icons */
+
+.student-dashboard .dashboard-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    min-width: 45px;
+    border-radius: 13px;
+    background: #e9efff !important;
+    color: #4268bd !important;
+    font-size: 20px;
+}
+
+.student-dashboard .icon-purple {
+    background: #f0eaff !important;
+    color: #7954c6 !important;
+}
+
+.student-dashboard .icon-green {
+    background: #e4f7ee !important;
+    color: #159b68 !important;
+}
+
+.student-dashboard .icon-orange {
+    background: #fff1df !important;
+    color: #d47b21 !important;
+}
+
+.student-dashboard .icon-cyan {
+    background: #e2f7fb !important;
+    color: #1593a8 !important;
+}
+
+/* Statistics */
+
+.student-dashboard .dashboard-stat-label {
+    color: var(--sd-muted) !important;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.student-dashboard .dashboard-stat {
+    color: var(--sd-navy) !important;
+    font-size: 27px;
+    font-weight: 800;
+    line-height: 1.25;
+    margin-top: 5px;
+}
+
+.student-dashboard .dashboard-stat-detail {
+    color: var(--sd-muted) !important;
+    font-size: 11px;
+    margin-top: 5px;
+}
+
+/* Profile progress */
+
+.student-dashboard .dashboard-progress {
+    height: 8px;
+    overflow: hidden;
+    border-radius: 20px;
+    background: #e5eaf3 !important;
+}
+
+.student-dashboard .dashboard-progress .progress-bar {
+    border-radius: 20px;
+    background: linear-gradient(90deg, #5278D1, #9475E5) !important;
+}
+
+/* Dashboard links */
+
+.student-dashboard .dashboard-link {
+    color: #4268bd !important;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.student-dashboard .dashboard-link:hover {
+    color: #7651c5 !important;
+    text-decoration: underline;
+}
+
+/* AI Copilot */
+
+.student-dashboard .copilot-card {
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #485B8B !important;
+    border-radius: 18px;
+    background: linear-gradient(120deg, #182344, #263D69 70%, #493B80) !important;
+    color: #fff !important;
+    box-shadow: 0 9px 25px rgba(0, 0, 0, .2);
+}
+
+.student-dashboard .copilot-card .card-body {
+    padding: 26px;
+}
+
+.student-dashboard .copilot-card h2 {
+    color: #fff !important;
+}
+
+.student-dashboard .copilot-card p {
+    color: #D2DCF2 !important;
+    font-size: 12px;
+}
+
+.student-dashboard .copilot-card .dashboard-eyebrow {
+    color: #C3D0F6 !important;
+}
+
+.student-dashboard .copilot-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 55px;
+    height: 55px;
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 15px;
+    background: rgba(255,255,255,.1);
+    color: #fff !important;
+    font-size: 25px;
+}
+
+.student-dashboard .btn-copilot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 11px 17px;
+    border: 0;
+    border-radius: 9px;
+    background: #EEF1FF !important;
+    color: #182344 !important;
+    font-size: 12px;
+    font-weight: 750;
+    text-decoration: none;
+    transition: .2s ease;
+}
+
+.student-dashboard .btn-copilot:hover {
+    background: #fff !important;
+    transform: translateY(-2px);
+}
+
+/* Learning roadmap */
+
+.student-dashboard .roadmap-dashboard-card .card-body {
+    padding: 22px;
+}
+
+.student-dashboard .roadmap-dashboard-card h2 {
+    color: var(--sd-navy) !important;
+}
+
+.student-dashboard .roadmap-dashboard-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 49px;
+    height: 49px;
+    border-radius: 14px;
+    background: #e9efff !important;
+    color: #4268bd !important;
+    font-size: 22px;
+}
+
+.student-dashboard .roadmap-feature {
+    color: var(--sd-muted) !important;
+    font-size: 12px;
+    line-height: 2;
+}
+
+.student-dashboard .roadmap-feature i {
+    color: #159b68 !important;
+}
+
+/* Buttons */
+
+.student-dashboard .btn-navy {
+    border: 1px solid #4966A6 !important;
+    border-radius: 9px;
+    padding: 11px 13px;
+    background: linear-gradient(100deg, #3155A6, #6651AD) !important;
+    color: #fff !important;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: .2s ease;
+}
+
+.student-dashboard .btn-navy:hover {
+    background: linear-gradient(100deg, #416AC5, #8068CB) !important;
+    color: #fff !important;
+    transform: translateY(-2px);
+}
+
+/* Empty state */
+
+.student-dashboard .dashboard-empty {
+    padding: 13px 15px;
+    border: 1px dashed #cbd5e1;
+    border-radius: 10px;
+    background: #f8fafc !important;
+    color: #64748b !important;
+    font-size: 12px;
+}
+
+/* Career overview */
+
+.student-dashboard .overview-card-title {
+    color: var(--sd-navy) !important;
+    font-size: 14px;
+    font-weight: 750;
+}
+
+/* Shortcuts */
+
+.student-dashboard .dashboard-shortcut {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 100%;
+    min-height: 78px;
+    padding: 14px;
+    border: 1px solid var(--sd-border);
+    border-radius: 13px;
+    background: var(--sd-card) !important;
+    color: var(--sd-text) !important;
+    text-decoration: none;
+    transition: .2s ease;
+}
+
+.student-dashboard .dashboard-shortcut:hover {
+    border-color: #b9c8ed;
+    background: var(--sd-card-hover) !important;
+    color: #4268bd !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .2);
+}
+
+.student-dashboard .dashboard-shortcut .dashboard-icon {
+    flex-shrink: 0;
+}
+
+.student-dashboard .dashboard-shortcut strong {
+    display: block;
+    color: var(--sd-navy) !important;
+    font-size: 12px;
+    font-weight: 750;
+    margin-bottom: 4px;
+}
+
+.student-dashboard .dashboard-shortcut small {
+    display: block;
+    color: var(--sd-muted) !important;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+.student-dashboard .shortcut-arrow {
+    margin-left: auto;
+    color: #71809b !important;
+}
+
+/* Bootstrap badge */
+
+.student-dashboard .badge.text-bg-success {
+    background: #d9f5e7 !important;
+    color: #14784e !important;
+    border: 1px solid #a7e5c5;
+}
+
+/* Messages */
+
+.student-dashboard .alert {
+    border-radius: 11px;
+    font-size: 12px;
+}
+
+/* Responsive */
+
+@media (max-width: 991.98px) {
+    .student-dashboard {
+        padding-top: 21px;
+    }
+
+    .student-dashboard .dashboard-welcome h1 {
+        font-size: 23px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .student-dashboard {
+        padding: 17px 0 28px;
+    }
+
+    .student-dashboard .dashboard-welcome {
+        padding: 22px;
+    }
+
+    .student-dashboard .dashboard-card .card-body {
+        padding: 16px;
+    }
+
+    .student-dashboard .copilot-card .card-body {
+        padding: 20px;
+    }
+
+    .student-dashboard .dashboard-stat {
+        font-size: 23px;
+    }
+
+    .student-dashboard .dashboard-section {
+        margin-top: 21px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .student-dashboard .dashboard-welcome {
+        padding: 19px;
+        border-radius: 14px;
+    }
+
+    .student-dashboard .dashboard-welcome h1 {
+        font-size: 20px;
+    }
+
+    .student-dashboard .dashboard-welcome p {
+        font-size: 12px;
+    }
+
+    .student-dashboard .welcome-button {
+        width: 100%;
+    }
+
+    .student-dashboard .dashboard-heading {
+        font-size: 16px;
+    }
+
+    .student-dashboard .dashboard-stat {
+        font-size: 21px;
+    }
+
+    .student-dashboard .dashboard-icon {
+        width: 41px;
+        height: 41px;
+        min-width: 41px;
+        font-size: 18px;
+    }
+
+    .student-dashboard .dashboard-shortcut {
+        padding: 12px;
+    }
+
+    .student-dashboard .copilot-card .card-body {
+        padding: 17px;
+    }
+
+    .student-dashboard .btn-copilot {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .student-dashboard *,
+    .student-dashboard *::before,
+    .student-dashboard *::after {
+        transition: none !important;
+        transform: none !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="student-dashboard">
+    <div class="container-fluid px-3 px-lg-4">
+
+        <!-- Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div
+                    class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show"
+                    role="alert"
+                >
+                    {{ message }}
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close"
+                    ></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Welcome -->
+        <section class="dashboard-welcome mb-4">
+            <div class="dashboard-welcome-content">
+                <div class="row align-items-center g-3">
+                    <div class="col-md">
+                        <div class="dashboard-eyebrow">
+                            <i class="bi bi-stars me-1"></i>
+                            Your Career Journey
+                        </div>
+
+                        <h1>Welcome back, {{ request.user.username }}!</h1>
+
+                        <p>
+                            Keep building your skills, preparing for placements,
+                            and exploring opportunities that match your goals.
+                        </p>
+                    </div>
+
+                    <div class="col-12 col-md-auto">
+                        <a href="{% url 'job_list' %}" class="welcome-button">
+                            <i class="bi bi-search"></i>
+                            Browse Jobs
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Summary Cards -->
+        {% if profile_completion is not None or skills_count is not None or projects_count is not None or unread_notification_count is not None or application_count is not None %}
+            <section class="mb-4">
+                <h2 class="dashboard-heading">
+                    <i class="bi bi-bar-chart-line me-2"></i>
+                    Your Overview
+                </h2>
+
+                <div class="row g-3">
+
+                    {% if profile_completion is not None %}
+                        <div class="col-6 col-xl-3">
+                            <div class="dashboard-card">
+                                <div class="card-body">
+                                    <div class="dashboard-icon mb-2">
+                                        <i class="bi bi-person-check"></i>
+                                    </div>
+                                    <div class="dashboard-stat-label">Profile Completion</div>
+                                    <div class="dashboard-stat">{{ profile_completion }}%</div>
+
+                                    <div class="progress dashboard-progress mt-3"
+                                         role="progressbar"
+                                         aria-label="Profile completion"
+                                         aria-valuenow="{{ profile_completion }}"
+                                         aria-valuemin="0"
+                                         aria-valuemax="100">
+                                        <div class="progress-bar"
+                                             style="width: {{ profile_completion }}%;"></div>
+                                    </div>
+
+                                    <a href="{% url 'student_profile' %}"
+                                       class="dashboard-link d-inline-block mt-3">
+                                        Update profile <i class="bi bi-arrow-right"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if skills_count is not None %}
+                        <div class="col-6 col-xl-3">
+                            <div class="dashboard-card">
+                                <div class="card-body">
+                                    <div class="dashboard-icon icon-purple mb-2">
+                                        <i class="bi bi-tools"></i>
+                                    </div>
+                                    <div class="dashboard-stat-label">Skills Added</div>
+                                    <div class="dashboard-stat">{{ skills_count }}</div>
+                                    <div class="dashboard-stat-detail">Skills in your profile</div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if projects_count is not None %}
+                        <div class="col-6 col-xl-3">
+                            <div class="dashboard-card">
+                                <div class="card-body">
+                                    <div class="dashboard-icon icon-green mb-2">
+                                        <i class="bi bi-kanban"></i>
+                                    </div>
+                                    <div class="dashboard-stat-label">Projects Added</div>
+                                    <div class="dashboard-stat">{{ projects_count }}</div>
+                                    <div class="dashboard-stat-detail">Projects in your profile</div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if unread_notification_count is not None %}
+                        <div class="col-6 col-xl-3">
+                            <div class="dashboard-card">
+                                <div class="card-body">
+                                    <div class="dashboard-icon icon-orange mb-2">
+                                        <i class="bi bi-bell"></i>
+                                    </div>
+                                    <div class="dashboard-stat-label">Unread Notifications</div>
+                                    <div class="dashboard-stat">{{ unread_notification_count }}</div>
+                                    <div class="dashboard-stat-detail">Updates to review</div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if application_count is not None %}
+                        <div class="col-6 col-xl-3">
+                            <div class="dashboard-card">
+                                <div class="card-body">
+                                    <div class="dashboard-icon icon-cyan mb-2">
+                                        <i class="bi bi-file-earmark-check"></i>
+                                    </div>
+                                    <div class="dashboard-stat-label">Applications</div>
+                                    <div class="dashboard-stat">{{ application_count }}</div>
+                                    <div class="dashboard-stat-detail">Applications submitted</div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                </div>
+            </section>
+        {% endif %}
+
+        <!-- Learning Roadmap -->
+        <section class="dashboard-section mb-4">
+            <h2 class="dashboard-heading">
+                <i class="bi bi-signpost-split me-2"></i>
+                Career Development
+            </h2>
+
+            <div class="row g-3">
+                <div class="col-12 col-md-6 col-xl-4">
+                    <div class="roadmap-dashboard-card">
+                        <div class="card-body">
+                            <div class="roadmap-dashboard-icon mb-3">
+                                <i class="bi bi-signpost-split-fill"></i>
+                            </div>
+
+                            <h2 class="h5 fw-bold mb-2">Learning Roadmap</h2>
+
+                            <p class="dashboard-muted small mb-3">
+                                Discover suitable career paths, identify skills
+                                to develop, and get a learning plan tailored to
+                                your career goals.
+                            </p>
+
+                            <div class="roadmap-feature mb-3">
+                                <div><i class="bi bi-check-circle me-1"></i> Career recommendations</div>
+                                <div><i class="bi bi-check-circle me-1"></i> Missing skill identification</div>
+                                <div><i class="bi bi-check-circle me-1"></i> Prioritized learning steps</div>
+                            </div>
+
+                            <a href="{% url 'career_recommendation' %}"
+                               class="btn btn-navy w-100">
+                                <i class="bi bi-compass me-2"></i>
+                                View My Learning Roadmap
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Career Copilot -->
+        <section class="mb-4">
+            <div class="copilot-card">
+                <div class="card-body">
+                    <div class="row align-items-center g-3">
+                        <div class="col-auto">
+                            <div class="copilot-icon">
+                                <i class="bi bi-robot"></i>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="dashboard-eyebrow">Your AI Career Assistant</div>
+                            <h2 class="h4 fw-bold mt-1 mb-2">AI Career Copilot</h2>
+                            <p class="mb-0">
+                                Get career guidance, interview preparation,
+                                and practical suggestions to improve your
+                                skills and placement readiness.
+                            </p>
+                        </div>
+
+                        <div class="col-12 col-lg-auto">
+                            <a href="{% url 'career_copilot_page' %}" class="btn-copilot">
+                                <i class="bi bi-chat-dots me-2"></i>
+                                Open AI Career Copilot
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Career Overview -->
+        <section class="dashboard-section">
+            <h2 class="dashboard-heading">
+                <i class="bi bi-person-lines-fill me-2"></i>
+                Career Overview
+            </h2>
+
+            <div class="row g-3">
+
+                <!-- Career Interest -->
+                <div class="col-12 col-md-6">
+                    <div class="dashboard-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                <div class="dashboard-icon">
+                                    <i class="bi bi-bullseye"></i>
+                                </div>
+                                <div>
+                                    <h3 class="overview-card-title mb-1">Career Interest</h3>
+                                    <div class="dashboard-muted small">Your preferred career direction</div>
+                                </div>
+                            </div>
+
+                            {% if profile and profile.career_interest %}
+                                <p class="fw-semibold mb-3">{{ profile.career_interest }}</p>
+                            {% else %}
+                                <div class="dashboard-empty mb-3">
+                                    Your career interest has not been added yet.
+                                </div>
+                            {% endif %}
+
+                            <a href="{% url 'student_profile' %}" class="dashboard-link">
+                                Update profile <i class="bi bi-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resume Status -->
+                <div class="col-12 col-md-6">
+                    <div class="dashboard-card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                <div class="dashboard-icon icon-purple">
+                                    <i class="bi bi-file-earmark-person"></i>
+                                </div>
+                                <div>
+                                    <h3 class="overview-card-title mb-1">Resume Status</h3>
+                                    <div class="dashboard-muted small">
+                                        Keep your resume ready for opportunities
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% if resume %}
+                                <p class="mb-3">
+                                    <span class="badge text-bg-success">
+                                        <i class="bi bi-check-circle me-1"></i>
+                                        Resume Available
+                                    </span>
+                                </p>
+                            {% else %}
+                                <div class="dashboard-empty mb-3">
+                                    No resume information is available.
+                                    Add or update your resume when ready.
+                                </div>
+                            {% endif %}
+
+                            {% url 'student_resume' as resume_url %}
+                            {% if resume_url %}
+                                <a href="{{ resume_url }}" class="dashboard-link">
+                                    Manage resume <i class="bi bi-arrow-right ms-1"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Recommended Next Steps -->
+        <section class="dashboard-section">
+            <h2 class="dashboard-heading">
+                <i class="bi bi-lightning-charge me-2"></i>
+                Recommended Next Steps
+            </h2>
+
+            <p class="dashboard-section-description">
+                Quickly access the tools that support your placement preparation.
+            </p>
+
+            <div class="row g-3">
+
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <a href="{% url 'job_list' %}" class="dashboard-shortcut">
+                        <span class="dashboard-icon">
+                            <i class="bi bi-briefcase"></i>
+                        </span>
+                        <span>
+                            <strong>Browse Jobs</strong>
+                            <small>Explore available opportunities</small>
+                        </span>
+                        <i class="bi bi-arrow-right shortcut-arrow"></i>
+                    </a>
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <a href="{% url 'recommended_jobs' %}" class="dashboard-shortcut">
+                        <span class="dashboard-icon icon-purple">
+                            <i class="bi bi-stars"></i>
+                        </span>
+                        <span>
+                            <strong>Job Recommendations</strong>
+                            <small>Explore suitable job matches</small>
+                        </span>
+                        <i class="bi bi-arrow-right shortcut-arrow"></i>
+                    </a>
+                </div>
+
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <a href="{% url 'career_readiness' %}" class="dashboard-shortcut">
+                        <span class="dashboard-icon icon-green">
+                            <i class="bi bi-graph-up-arrow"></i>
+                        </span>
+                        <span>
+                            <strong>Career Readiness</strong>
+                            <small>Review your preparation</small>
+                        </span>
+                        <i class="bi bi-arrow-right shortcut-arrow"></i>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+    </div>
+</div>
+{% endblock %}

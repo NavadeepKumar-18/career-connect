@@ -1,0 +1,807 @@
+
+{% extends "base.html" %}
+
+{% block title %}AI Career Copilot{% endblock %}
+
+{% block extra_css %}
+<style>
+    .copilot-page {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    .copilot-card {
+        border: 1px solid #e2e7f1;
+        border-radius: 18px;
+        overflow: hidden;
+    }
+
+    .copilot-header {
+        background: linear-gradient(135deg, #0D102B, #1E3A5F);
+        color: #fff;
+        padding: 22px 24px;
+    }
+
+    .copilot-avatar {
+        width: 48px;
+        height: 48px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255, 255, 255, .13);
+        border-radius: 14px;
+        font-size: 1.5rem;
+    }
+
+    .chat-messages {
+        height: min(58vh, 620px);
+        min-height: 350px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background: #f3f5fa;
+        scroll-behavior: smooth;
+        overscroll-behavior: contain;
+    }
+
+    .chat-message {
+        display: flex;
+        margin-bottom: 20px;
+        min-width: 0;
+    }
+
+    .chat-message.user {
+        justify-content: flex-end;
+    }
+
+    .chat-message.assistant {
+        justify-content: flex-start;
+    }
+
+    .chat-bubble {
+        max-width: 88%;
+        min-width: 0;
+        padding: 15px 18px;
+        border-radius: 15px;
+        line-height: 1.7;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .user .chat-bubble {
+        background: #e2e9ff;
+        color: #182342;
+        border: 1px solid #d4ddfb;
+        border-bottom-right-radius: 4px;
+    }
+
+    .assistant .chat-bubble {
+        background: #fff;
+        color: #334155;
+        border: 1px solid #e2e7f0;
+        border-bottom-left-radius: 4px;
+        box-shadow: 0 2px 6px rgba(13, 16, 43, .04);
+    }
+
+    .chat-label {
+        display: block;
+        font-size: .82rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: #3155A6;
+    }
+
+    .user .chat-label {
+        color: #24458F;
+    }
+
+    .chat-answer p {
+        margin-bottom: 12px;
+    }
+
+    .chat-answer p:last-child {
+        margin-bottom: 0;
+    }
+
+    .chat-answer h1,
+    .chat-answer h2,
+    .chat-answer h3,
+    .chat-answer h4 {
+        font-size: 1.05rem;
+        font-weight: 700;
+        margin: 20px 0 9px;
+        color: #0D102B;
+    }
+
+    .chat-answer h1:first-child,
+    .chat-answer h2:first-child,
+    .chat-answer h3:first-child {
+        margin-top: 0;
+    }
+
+    .chat-answer ul,
+    .chat-answer ol {
+        padding-left: 24px;
+        margin-bottom: 15px;
+    }
+
+    .chat-answer li {
+        margin-bottom: 6px;
+    }
+
+    .chat-answer strong {
+        color: #17213e;
+    }
+
+    .chat-answer code {
+        background: #edf0f8;
+        padding: 2px 5px;
+        border-radius: 4px;
+        color: #6d28a8;
+        overflow-wrap: anywhere;
+    }
+
+    .chat-answer pre {
+        background: #0D102B;
+        color: #e2e8f0;
+        padding: 14px;
+        border-radius: 9px;
+        overflow-x: auto;
+        max-width: 100%;
+    }
+
+    .chat-answer pre code {
+        background: transparent;
+        color: inherit;
+        padding: 0;
+        overflow-wrap: normal;
+    }
+
+    .chat-answer blockquote {
+        border-left: 4px solid #5278D1;
+        padding-left: 12px;
+        color: #64748b;
+        margin: 12px 0;
+    }
+
+    .chat-answer table {
+        display: block;
+        max-width: 100%;
+        overflow-x: auto;
+        border-collapse: collapse;
+    }
+
+    .chat-answer th,
+    .chat-answer td {
+        border: 1px solid #dce2ed;
+        padding: 8px 10px;
+    }
+
+    .chat-answer a {
+        overflow-wrap: anywhere;
+    }
+
+    .chat-typing {
+        color: #64748b;
+        font-style: italic;
+    }
+
+    .chat-status {
+        font-size: .86rem;
+        margin-top: 12px;
+        padding: 10px 12px;
+        border-radius: 8px;
+        overflow-wrap: anywhere;
+    }
+
+    .chat-status.warning {
+        color: #854d0e;
+        background: #fef3c7;
+        border: 1px solid #fde68a;
+    }
+
+    .chat-status.error {
+        color: #991b1b;
+        background: #fee2e2;
+        border: 1px solid #fecaca;
+    }
+
+    .copilot-footer {
+        background: #fff;
+        border-top: 1px solid #e5e9f2;
+    }
+
+    .question-input {
+        resize: vertical;
+        min-height: 54px;
+        max-height: 180px;
+        border-color: #d6dceb;
+        border-radius: 11px;
+    }
+
+    .question-input:focus {
+        border-color: #3155A6;
+        box-shadow: 0 0 0 .2rem rgba(49, 85, 166, .12);
+    }
+
+    .btn-copilot {
+        background: #0D102B;
+        border-color: #0D102B;
+        color: #fff;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+    .btn-copilot:hover {
+        background: #24458F;
+        border-color: #24458F;
+        color: #fff;
+    }
+
+    .btn-copilot:disabled {
+        opacity: .65;
+        cursor: not-allowed;
+    }
+
+    .copilot-hint {
+        font-size: .78rem;
+        color: #758096;
+    }
+
+    @media (max-width: 576px) {
+        .copilot-header {
+            padding: 18px 16px;
+        }
+
+        .chat-messages {
+            height: 55vh;
+            min-height: 300px;
+        }
+
+        .chat-bubble {
+            max-width: 96%;
+            padding: 12px 14px;
+        }
+
+        .copilot-footer {
+            padding: 14px !important;
+        }
+
+        .send-label {
+            display: none;
+        }
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="container py-4">
+    <div class="copilot-page">
+
+        <div class="card copilot-card shadow-sm">
+
+            <!-- Header -->
+            <div class="copilot-header">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="copilot-avatar">
+                        <i class="bi bi-robot"></i>
+                    </div>
+
+                    <div class="min-w-0">
+                        <h1 class="h4 fw-bold mb-1">
+                            AI Career Copilot
+                        </h1>
+
+                        <p class="small text-white-50 mb-0">
+                            Your personal AI assistant for career guidance,
+                            skills and placements.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat Messages -->
+            <div id="chatMessages"
+                 class="chat-messages p-3 p-md-4"
+                 aria-live="polite"
+                 aria-label="Career Copilot conversation">
+
+                <div class="chat-message assistant">
+                    <div class="chat-bubble">
+                        <div class="chat-label">
+                            AI Career Copilot
+                        </div>
+
+                        <div class="chat-answer">
+                            <p class="mb-2">
+                                Hello! 👋 Welcome to your AI Career Copilot.
+                            </p>
+
+                            <p class="mb-2">
+                                I can help you with:
+                            </p>
+
+                            <ul class="mb-2">
+                                <li>Career guidance and career paths</li>
+                                <li>Skill gap analysis and learning roadmaps</li>
+                                <li>Resume and interview preparation</li>
+                                <li>Job recommendations and placement readiness</li>
+                            </ul>
+
+                            <p class="mb-0">
+                                Ask me a question to get started!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Input Area -->
+            <div class="card-footer copilot-footer p-3 p-md-4">
+                <form id="copilotForm" method="post">
+                    {% csrf_token %}
+
+                    <label for="question"
+                           class="form-label fw-semibold">
+                        <i class="bi bi-chat-left-text me-1"></i>
+                        Ask your career question
+                    </label>
+
+                    <div class="d-flex flex-column flex-sm-row gap-2 align-items-stretch">
+                        <textarea
+                            id="question"
+                            name="question"
+                            class="form-control question-input flex-grow-1"
+                            rows="2"
+                            maxlength="2000"
+                            placeholder="Example: What skills should I learn for my career?"
+                            aria-describedby="inputHelp charCount"
+                            required
+                        ></textarea>
+
+                        <button
+                            type="submit"
+                            id="sendButton"
+                            class="btn btn-copilot px-3 align-self-sm-stretch"
+                        >
+                            <i class="bi bi-send me-sm-1"></i>
+                            <span class="send-label">Send</span>
+                        </button>
+                    </div>
+
+                    <div class="d-flex justify-content-between flex-wrap gap-2 mt-2">
+                        <small id="inputHelp" class="copilot-hint">
+                            Press Enter to send; Shift + Enter for a new line.
+                        </small>
+
+                        <small id="charCount" class="copilot-hint">
+                            0/2000
+                        </small>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+   <div class="text-center mt-3">
+
+    {% if user.is_staff or user.role == 'ADMIN' %}
+        <a href="{% url 'dashboard:admin_dashboard' %}"
+           class="btn btn-outline-secondary btn-sm rounded-3">
+
+    {% elif user.role == 'RECRUITER' %}
+        <a href="{% url 'dashboard:recruiter_dashboard' %}"
+           class="btn btn-outline-secondary btn-sm rounded-3">
+
+    {% else %}
+        <a href="{% url 'dashboard:student_dashboard' %}"
+           class="btn btn-outline-secondary btn-sm rounded-3">
+    {% endif %}
+
+        <i class="bi bi-arrow-left me-1"></i>
+        Back to Dashboard
+    </a>
+
+</div>
+
+    </div>
+</div>
+
+<!-- Markdown and HTML sanitization -->
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+{% endblock %}
+
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("copilotForm");
+    const questionInput = document.getElementById("question");
+    const chatMessages = document.getElementById("chatMessages");
+    const sendButton = document.getElementById("sendButton");
+    const charCount = document.getElementById("charCount");
+
+    const API_URL = "{% url 'career_copilot_api' %}";
+
+    if (
+        !form ||
+        !questionInput ||
+        !chatMessages ||
+        !sendButton ||
+        !charCount
+    ) {
+        console.error("Career Copilot elements are missing.");
+        return;
+    }
+
+    const csrfInput = form.querySelector(
+        '[name="csrfmiddlewaretoken"]'
+    );
+
+    const markdownAvailable =
+        typeof marked !== "undefined" &&
+        typeof DOMPurify !== "undefined";
+
+    if (markdownAvailable) {
+        marked.setOptions({
+            gfm: true,
+            breaks: true
+        });
+    }
+
+    let isSending = false;
+
+    function scrollToBottom() {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function renderMarkdown(element, text) {
+        if (markdownAvailable) {
+            element.innerHTML = DOMPurify.sanitize(
+                marked.parse(text || "")
+            );
+        } else {
+            element.textContent = text || "";
+        }
+    }
+
+    function addMessage(label, message, isUser = false) {
+        const wrapper = document.createElement("div");
+
+        wrapper.className =
+            "chat-message " + (isUser ? "user" : "assistant");
+
+        const bubble = document.createElement("div");
+        bubble.className = "chat-bubble";
+
+        const heading = document.createElement("span");
+        heading.className = "chat-label";
+        heading.textContent = label;
+
+        const content = document.createElement("div");
+        content.className = "chat-answer";
+
+        if (isUser) {
+            content.textContent = message;
+        } else {
+            renderMarkdown(content, message);
+        }
+
+        bubble.appendChild(heading);
+        bubble.appendChild(content);
+        wrapper.appendChild(bubble);
+        chatMessages.appendChild(wrapper);
+
+        scrollToBottom();
+
+        return content;
+    }
+
+    function addStatus(element, message, type = "warning") {
+        const status = document.createElement("div");
+
+        status.className = "chat-status " + type;
+        status.setAttribute("role", "status");
+        status.textContent = message;
+
+        element.appendChild(status);
+        scrollToBottom();
+    }
+
+    function updateCharacterCount() {
+        charCount.textContent =
+            questionInput.value.length + "/2000";
+    }
+
+    function setSendingState(sending) {
+        isSending = sending;
+        sendButton.disabled = sending;
+        questionInput.disabled = sending;
+
+        if (sending) {
+            sendButton.innerHTML =
+                '<span class="spinner-border spinner-border-sm me-sm-1" ' +
+                'aria-hidden="true"></span>' +
+                '<span class="send-label">Generating...</span>';
+        } else {
+            sendButton.innerHTML =
+                '<i class="bi bi-send me-sm-1"></i>' +
+                '<span class="send-label">Send</span>';
+        }
+    }
+
+    questionInput.addEventListener(
+        "input",
+        updateCharacterCount
+    );
+
+    questionInput.addEventListener(
+        "keydown",
+        function (event) {
+            if (
+                event.key === "Enter" &&
+                !event.shiftKey &&
+                !event.isComposing
+            ) {
+                event.preventDefault();
+
+                if (!isSending) {
+                    form.requestSubmit();
+                }
+            }
+        }
+    );
+
+    form.addEventListener(
+        "submit",
+        async function (event) {
+            event.preventDefault();
+
+            if (isSending) {
+                return;
+            }
+
+            const question = questionInput.value.trim();
+
+            if (!question) {
+                questionInput.focus();
+                return;
+            }
+
+            if (question.length > 2000) {
+                addMessage(
+                    "Notice",
+                    "Please keep your question within 2000 characters."
+                );
+                return;
+            }
+
+            if (!csrfInput) {
+                addMessage(
+                    "Notice",
+                    "The security token is missing. Refresh the page and try again."
+                );
+                return;
+            }
+
+            addMessage("You", question, true);
+
+            const answerElement = addMessage(
+                "AI Career Copilot",
+                "Preparing your answer..."
+            );
+
+            answerElement.classList.add("chat-typing");
+
+            setSendingState(true);
+
+            let fullAnswer = "";
+            let streamCompleted = false;
+            let streamError = null;
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type":
+                            "application/x-www-form-urlencoded;charset=UTF-8",
+                        "X-Requested-With": "XMLHttpRequest",
+                        "Accept": "application/x-ndjson"
+                    },
+                    body: new URLSearchParams({
+                        question: question,
+                        csrfmiddlewaretoken: csrfInput.value
+                    })
+                });
+
+                if (!response.ok) {
+                    let message =
+                        "Unable to get an AI response. HTTP " +
+                        response.status + ".";
+
+                    try {
+                        const data = await response.json();
+
+                        message =
+                            data.answer ||
+                            data.error ||
+                            message;
+                    } catch (_) {
+                        // The server may return an HTML error page.
+                    }
+
+                    throw new Error(message);
+                }
+
+                if (!response.body) {
+                    throw new Error(
+                        "Streaming is not supported by this browser."
+                    );
+                }
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+
+                let buffer = "";
+
+                function renderCurrentAnswer() {
+                    answerElement.classList.remove("chat-typing");
+                    renderMarkdown(answerElement, fullAnswer);
+                    scrollToBottom();
+                }
+
+                function processLine(line) {
+                    if (!line.trim()) {
+                        return;
+                    }
+
+                    let data;
+
+                    try {
+                        data = JSON.parse(line);
+                    } catch (_) {
+                        throw new Error(
+                            "Received an invalid response from the AI service."
+                        );
+                    }
+
+                    if (data.type === "token") {
+                        fullAnswer += data.content || "";
+                        renderCurrentAnswer();
+                    } else if (data.type === "done") {
+                        streamCompleted = true;
+                    } else if (data.type === "error") {
+                        streamError = new Error(
+                            data.content ||
+                            "The AI service encountered an error."
+                        );
+                    }
+                }
+
+                try {
+                    while (true) {
+                        const result = await reader.read();
+
+                        if (result.done) {
+                            break;
+                        }
+
+                        buffer += decoder.decode(
+                            result.value,
+                            { stream: true }
+                        );
+
+                        const lines = buffer.split("\n");
+                        buffer = lines.pop() || "";
+
+                        for (const line of lines) {
+                            processLine(line);
+
+                            if (streamError) {
+                                break;
+                            }
+                        }
+
+                        if (streamError) {
+                            break;
+                        }
+                    }
+
+                    buffer += decoder.decode();
+
+                    if (buffer.trim()) {
+                        processLine(buffer);
+                    }
+                } finally {
+                    reader.releaseLock();
+                }
+
+                answerElement.classList.remove("chat-typing");
+
+                if (streamError) {
+                    throw streamError;
+                }
+
+                if (!fullAnswer.trim()) {
+                    throw new Error(
+                        "The AI returned an empty response. Please try again."
+                    );
+                }
+
+                if (!streamCompleted) {
+                    renderCurrentAnswer();
+
+                    addStatus(
+                        answerElement,
+                        "The connection ended without a completion signal. " +
+                        "This answer may be incomplete. Please try again.",
+                        "warning"
+                    );
+
+                    console.warn(
+                        "Career Copilot stream ended without a done event."
+                    );
+
+                    return;
+                }
+
+                renderCurrentAnswer();
+
+                // Clear the question only after a completed response.
+                questionInput.value = "";
+                updateCharacterCount();
+
+            } catch (error) {
+                answerElement.classList.remove("chat-typing");
+
+                const errorMessage =
+                    error.message ||
+                    "Something went wrong. Please try again.";
+
+                if (fullAnswer.trim()) {
+                    renderMarkdown(answerElement, fullAnswer);
+
+                    addStatus(
+                        answerElement,
+                        "The response may be incomplete: " +
+                        errorMessage,
+                        "warning"
+                    );
+                } else {
+                    answerElement.textContent = "";
+
+                    const errorParagraph =
+                        document.createElement("p");
+
+                    errorParagraph.className = "mb-0";
+                    errorParagraph.textContent = errorMessage;
+
+                    answerElement.appendChild(errorParagraph);
+
+                    addStatus(
+                        answerElement,
+                        "Please try sending your question again.",
+                        "error"
+                    );
+                }
+
+                console.error(
+                    "Career Copilot error:",
+                    error
+                );
+
+            } finally {
+                setSendingState(false);
+                questionInput.focus();
+                scrollToBottom();
+            }
+        }
+    );
+
+    updateCharacterCount();
+});
+</script>
+{% endblock %}

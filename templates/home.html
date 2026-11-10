@@ -1,0 +1,457 @@
+{% extends 'base.html' %}
+
+{% block title %}AI Career & Placement System | Build Your Future{% endblock %}
+
+{% block extra_css %}
+<style>
+    .landing-page {
+        color: #17213b;
+    }
+
+    .hero-section {
+        position: relative;
+        overflow: hidden;
+        padding: clamp(42px, 7vw, 78px) clamp(22px, 5vw, 56px);
+        color: #fff;
+        background: linear-gradient(120deg, #0d102b 0%, #14213d 58%, #1e3a5f 100%);
+        border-radius: 22px;
+        margin-bottom: 30px;
+    }
+
+    .hero-section::before,
+    .hero-section::after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .hero-section::before {
+        width: 280px;
+        height: 280px;
+        right: -90px;
+        top: -120px;
+        background: rgba(255, 255, 255, .06);
+    }
+
+    .hero-section::after {
+        width: 190px;
+        height: 190px;
+        right: 20%;
+        bottom: -130px;
+        background: rgba(100, 160, 255, .10);
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        max-width: 690px;
+    }
+
+    .hero-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 13px;
+        margin-bottom: 20px;
+        color: #e1eaff;
+        background: rgba(255, 255, 255, .10);
+        border: 1px solid rgba(255, 255, 255, .16);
+        border-radius: 50px;
+        font-size: .84rem;
+    }
+
+    .hero-section h1 {
+        max-width: 650px;
+        color: #fff;
+        font-size: clamp(2.1rem, 5vw, 3.7rem);
+        font-weight: 800;
+        letter-spacing: -1.5px;
+        line-height: 1.12;
+    }
+
+    .hero-description {
+        max-width: 590px;
+        margin: 20px 0 26px;
+        color: #d5deef;
+        font-size: clamp(1rem, 2vw, 1.12rem);
+        line-height: 1.8;
+    }
+
+    .btn-hero-primary {
+        padding: 12px 21px;
+        color: #14213d;
+        background: #fff;
+        border: 1px solid #fff;
+        border-radius: 10px;
+        font-weight: 700;
+    }
+
+    .btn-hero-primary:hover {
+        color: #0d102b;
+        background: #eaf1ff;
+        border-color: #eaf1ff;
+        transform: translateY(-1px);
+    }
+
+    .btn-hero-secondary {
+        padding: 12px 21px;
+        color: #fff;
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, .4);
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+    .btn-hero-secondary:hover {
+        color: #14213d;
+        background: #fff;
+        border-color: #fff;
+    }
+
+    .hero-visual {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 245px;
+    }
+
+    .visual-panel {
+        width: min(100%, 330px);
+        padding: 24px;
+        color: #fff;
+        background: rgba(255, 255, 255, .09);
+        border: 1px solid rgba(255, 255, 255, .19);
+        border-radius: 22px;
+        box-shadow: 0 22px 50px rgba(0, 0, 0, .14);
+        backdrop-filter: blur(8px);
+    }
+
+    .visual-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        margin-bottom: 17px;
+        color: #fff;
+        background: rgba(255, 255, 255, .13);
+        border-radius: 15px;
+        font-size: 1.55rem;
+    }
+
+    .visual-item {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        padding: 12px 0;
+        color: #e4eaf6;
+        border-top: 1px solid rgba(255, 255, 255, .13);
+        font-size: .91rem;
+    }
+
+    .visual-item i {
+        color: #a9c9ff;
+        font-size: 1.1rem;
+    }
+
+    .features-section {
+        margin-bottom: 30px;
+    }
+
+    .section-heading {
+        margin-bottom: 20px;
+    }
+
+    .section-heading h2 {
+        margin-bottom: 7px;
+        color: #14213d;
+        font-size: clamp(1.4rem, 3vw, 1.85rem);
+        font-weight: 750;
+    }
+
+    .section-heading p {
+        margin-bottom: 0;
+        color: #68758d;
+        font-size: .96rem;
+    }
+
+    .feature-card {
+        height: 100%;
+        padding: 23px;
+        background: #fff;
+        border: 1px solid #e0e6f0;
+        border-radius: 16px;
+        transition: transform .2s ease, box-shadow .2s ease,
+                    border-color .2s ease;
+    }
+
+    .feature-card:hover {
+        transform: translateY(-4px);
+        border-color: #b8cbed;
+        box-shadow: 0 12px 28px rgba(20, 33, 61, .08);
+    }
+
+    .feature-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 46px;
+        height: 46px;
+        margin-bottom: 17px;
+        color: #244a83;
+        background: #edf3ff;
+        border-radius: 13px;
+        font-size: 1.35rem;
+    }
+
+    .feature-card h3 {
+        margin-bottom: 9px;
+        color: #182744;
+        font-size: 1.08rem;
+        font-weight: 700;
+    }
+
+    .feature-card p {
+        margin-bottom: 0;
+        color: #68758d;
+        font-size: .91rem;
+        line-height: 1.7;
+    }
+
+    .benefit-strip {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px 28px;
+        padding: 19px 22px;
+        margin-bottom: 8px;
+        background: #f7f9fd;
+        border: 1px solid #e1e7f1;
+        border-radius: 15px;
+    }
+
+    .benefit-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #35435d;
+        font-size: .9rem;
+        font-weight: 600;
+    }
+
+    .benefit-item i {
+        color: #3155a6;
+        font-size: 1.05rem;
+    }
+
+    @media (max-width: 767.98px) {
+        .hero-section {
+            padding: 35px 23px;
+            border-radius: 17px;
+        }
+
+        .hero-section h1 {
+            letter-spacing: -.8px;
+        }
+
+        .hero-visual {
+            min-height: auto;
+            margin-top: 12px;
+        }
+
+        .visual-panel {
+            padding: 20px;
+        }
+
+        .feature-card {
+            padding: 19px;
+        }
+
+        .benefit-strip {
+            justify-content: flex-start;
+            gap: 13px 20px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .feature-card,
+        .btn-hero-primary {
+            transition: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="landing-page">
+
+    <!-- Hero -->
+    <section class="hero-section">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-7">
+                <div class="hero-content">
+                    <span class="hero-label">
+                        <i class="bi bi-stars"></i>
+                        AI-powered career development
+                    </span>
+
+                    <h1>Build Your Skills. Shape Your Future.</h1>
+
+                    <p class="hero-description">
+                        Discover relevant job opportunities, understand your
+                        strengths, improve your resume, and prepare for
+                        placements with AI-powered career guidance—all in one place.
+                    </p>
+
+                    <div class="d-flex flex-wrap gap-3">
+                        {% if user.is_authenticated %}
+                            {% if user.is_staff %}
+                                <a href="{% url 'dashboard:admin_dashboard' %}"
+                                   class="btn btn-hero-primary">
+                                    <i class="bi bi-speedometer2 me-2"></i>
+                                    Open Dashboard
+                                </a>
+                            {% elif user.role == 'RECRUITER' %}
+                                <a href="{% url 'dashboard:recruiter_dashboard' %}"
+                                   class="btn btn-hero-primary">
+                                    <i class="bi bi-speedometer2 me-2"></i>
+                                    Open Dashboard
+                                </a>
+                            {% else %}
+                                <a href="{% url 'dashboard:student_dashboard' %}"
+                                   class="btn btn-hero-primary">
+                                    <i class="bi bi-person-workspace me-2"></i>
+                                    My Dashboard
+                                </a>
+                            {% endif %}
+
+                            <a href="{% url 'job_list' %}"
+                               class="btn btn-hero-secondary">
+                                <i class="bi bi-search me-2"></i>
+                                Explore Opportunities
+                            </a>
+                        {% else %}
+                            <a href="{% url 'student_register' %}"
+                               class="btn btn-hero-primary">
+                                <i class="bi bi-arrow-right-circle me-2"></i>
+                                Get Started
+                            </a>
+
+                            <a href="{% url 'job_list' %}"
+                               class="btn btn-hero-secondary">
+                                <i class="bi bi-briefcase me-2"></i>
+                                Explore Opportunities
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="hero-visual">
+                    <div class="visual-panel">
+                        <span class="visual-icon">
+                            <i class="bi bi-rocket-takeoff"></i>
+                        </span>
+
+                        <h2 class="h5 fw-bold mb-2">
+                            Your career journey starts here
+                        </h2>
+
+                        <p class="small mb-3" style="color:#d5deef;">
+                            Turn your skills and ambitions into a clear next step.
+                        </p>
+
+                        <div class="visual-item">
+                            <i class="bi bi-check-circle"></i>
+                            Discover relevant opportunities
+                        </div>
+
+                        <div class="visual-item">
+                            <i class="bi bi-file-earmark-person"></i>
+                            Strengthen your resume
+                        </div>
+
+                        <div class="visual-item">
+                            <i class="bi bi-chat-square-text"></i>
+                            Prepare with AI career guidance
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features-section">
+        <div class="section-heading">
+            <h2>Everything you need to move forward</h2>
+            <p>
+                Practical tools for students, job seekers, and recruiters.
+            </p>
+        </div>
+
+        <div class="row g-3">
+
+            <div class="col-sm-6 col-xl-3">
+                <article class="feature-card">
+                    <span class="feature-icon">
+                        <i class="bi bi-bullseye"></i>
+                    </span>
+                    <h3>AI Job Matching</h3>
+                    <p>
+                        Find opportunities aligned with your skills, profile,
+                        and career interests.
+                    </p>
+                </article>
+            </div>
+
+            <div class="col-sm-6 col-xl-3">
+                <article class="feature-card">
+                    <span class="feature-icon">
+                        <i class="bi bi-file-earmark-check"></i>
+                    </span>
+                    <h3>Resume Analysis</h3>
+                    <p>
+                        Identify your strengths and discover areas to improve
+                        your resume and skills.
+                    </p>
+                </article>
+            </div>
+
+            <div class="col-sm-6 col-xl-3">
+                <article class="feature-card">
+                    <span class="feature-icon">
+                        <i class="bi bi-robot"></i>
+                    </span>
+                    <h3>AI Career Copilot</h3>
+                    <p>
+                        Get career guidance, explore learning paths, and
+                        practise for interviews.
+                    </p>
+                </article>
+            </div>
+
+            <div class="col-sm-6 col-xl-3">
+                <article class="feature-card">
+                    <span class="feature-icon">
+                        <i class="bi bi-building-check"></i>
+                    </span>
+                    <h3>Recruiter Hiring</h3>
+                    <p>
+                        Manage job listings and review applications through
+                        a dedicated recruiter workspace.
+                    </p>
+                </article>
+            </div>
+
+        </div>
+    </section>
+
+    
+
+</div>
+{% endblock %}

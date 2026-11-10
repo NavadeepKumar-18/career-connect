@@ -1,0 +1,1196 @@
+
+{% extends 'base.html' %}
+
+{% block title %}Recruiter Applications{% endblock %}
+
+{% block extra_css %}
+<style>
+/* =====================================================
+   RECRUITER APPLICATIONS
+   Dark Navy Background + White Cards
+   Page-specific styles only
+===================================================== */
+
+.recruiter-applications {
+    --ra-bg: #101832;
+    --ra-card: #ffffff;
+    --ra-card-hover: #f8faff;
+    --ra-navy: #172548;
+    --ra-text: #26334d;
+    --ra-muted: #64748b;
+    --ra-border: #e2e8f0;
+    --ra-blue: #4268bd;
+    --ra-purple: #7954c6;
+
+    width: 100%;
+    min-height: 85vh;
+    padding: 30px 0 45px;
+    background: var(--ra-bg) !important;
+    color: #ffffff;
+    overflow-wrap: break-word;
+}
+
+.recruiter-applications * {
+    box-sizing: border-box;
+}
+
+/* Page heading */
+
+.recruiter-applications .page-heading h2 {
+    color: #f1f4fc !important;
+    font-size: 26px;
+    font-weight: 800;
+}
+
+.recruiter-applications .page-heading > p {
+    color: #a8b4cc !important;
+    font-size: 13px;
+}
+
+.recruiter-applications .page-heading .company-name {
+    color: #c4d2f1 !important;
+    font-size: 12px;
+}
+
+/* White cards */
+
+.recruiter-applications .ra-card {
+    background: #ffffff !important;
+    color: var(--ra-text) !important;
+    border: 1px solid var(--ra-border) !important;
+    border-radius: 15px;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, .13);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.recruiter-applications .ra-card:hover {
+    background: var(--ra-card-hover) !important;
+    box-shadow: 0 9px 24px rgba(0, 0, 0, .18);
+}
+
+/* Card typography */
+
+.recruiter-applications .ra-card h1,
+.recruiter-applications .ra-card h2,
+.recruiter-applications .ra-card h3,
+.recruiter-applications .ra-card h4,
+.recruiter-applications .ra-card h5,
+.recruiter-applications .ra-card h6 {
+    color: var(--ra-navy) !important;
+}
+
+.recruiter-applications .ra-card p {
+    color: var(--ra-muted);
+}
+
+.recruiter-applications .ra-card .text-muted {
+    color: var(--ra-muted) !important;
+}
+
+/* Statistics */
+
+.recruiter-applications .stat-card {
+    height: 100%;
+    text-align: center;
+    padding: 21px 12px;
+}
+
+.recruiter-applications .stat-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    font-size: 21px;
+    margin-bottom: 9px;
+}
+
+.recruiter-applications .stat-primary {
+    color: #4268bd;
+    background: #e9efff;
+}
+
+.recruiter-applications .stat-warning {
+    color: #c58a19;
+    background: #fff3d9;
+}
+
+.recruiter-applications .stat-info {
+    color: #1689a8;
+    background: #e2f7fb;
+}
+
+.recruiter-applications .stat-success {
+    color: #159b68;
+    background: #e4f7ee;
+}
+
+.recruiter-applications .stat-danger {
+    color: #d34c5a;
+    background: #ffe9ec;
+}
+
+.recruiter-applications .stat-number {
+    color: var(--ra-navy) !important;
+    font-size: 27px;
+    font-weight: 800;
+    margin: 3px 0;
+}
+
+.recruiter-applications .stat-label {
+    color: var(--ra-muted) !important;
+    font-size: 12px;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* Form controls */
+
+.recruiter-applications .form-label {
+    color: var(--ra-navy) !important;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.recruiter-applications .form-control,
+.recruiter-applications .form-select {
+    min-height: 43px;
+    border: 1px solid #d8e0ed;
+    border-radius: 9px;
+    background-color: #ffffff !important;
+    color: var(--ra-text) !important;
+    font-size: 13px;
+    box-shadow: none;
+}
+
+.recruiter-applications .form-control::placeholder {
+    color: #94a3b8;
+}
+
+.recruiter-applications .form-control:focus,
+.recruiter-applications .form-select:focus {
+    border-color: #7794dc;
+    box-shadow: 0 0 0 3px rgba(82, 120, 209, .13);
+}
+
+/* Section titles */
+
+.recruiter-applications .section-title {
+    color: var(--ra-navy) !important;
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.recruiter-applications .section-title i {
+    color: var(--ra-blue);
+}
+
+/* Application cards */
+
+.recruiter-applications .application-card {
+    overflow: hidden;
+    border-radius: 16px;
+}
+
+.recruiter-applications .application-card .card-body {
+    padding: 25px;
+}
+
+.recruiter-applications .applicant-name {
+    color: var(--ra-navy) !important;
+    font-size: 17px;
+    font-weight: 800;
+}
+
+.recruiter-applications .applicant-info {
+    color: var(--ra-muted) !important;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.recruiter-applications .applicant-info i {
+    color: #7184a7;
+}
+
+.recruiter-applications .application-card hr {
+    border-color: #e5eaf2;
+    opacity: 1;
+    margin: 20px 0;
+}
+
+/* AI Match Analysis */
+
+.recruiter-applications .ai-heading {
+    color: var(--ra-navy) !important;
+    font-size: 15px;
+    font-weight: 800;
+}
+
+.recruiter-applications .match-badge {
+    background: #e9efff !important;
+    color: #3157a7 !important;
+    border: 1px solid #cbd8f7;
+    font-size: 13px;
+    padding: 8px 12px;
+}
+
+.recruiter-applications .match-progress {
+    height: 11px;
+    overflow: hidden;
+    border-radius: 20px;
+    background: #e9edf5 !important;
+}
+
+.recruiter-applications .match-progress .progress-bar {
+    border-radius: 20px;
+}
+
+.recruiter-applications .analysis-note {
+    color: var(--ra-muted) !important;
+    font-size: 11px;
+    line-height: 1.7;
+}
+
+/* Skill headings */
+
+.recruiter-applications .skill-heading {
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.recruiter-applications .skill-heading.success {
+    color: #158354 !important;
+}
+
+.recruiter-applications .skill-heading.warning {
+    color: #a66b12 !important;
+}
+
+.recruiter-applications .skill-badge {
+    padding: 8px 11px !important;
+    border-radius: 7px;
+    font-size: 11px;
+    font-weight: 650;
+}
+
+/* Status badge */
+
+.recruiter-applications .status-badge {
+    display: inline-block;
+    padding: 8px 13px;
+    border-radius: 30px;
+    font-size: 11px;
+    font-weight: 750;
+}
+
+/* Buttons */
+
+.recruiter-applications .btn {
+    border-radius: 9px;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 10px 15px;
+    transition: .2s ease;
+}
+
+.recruiter-applications .btn-primary {
+    background: linear-gradient(100deg, #3155a6, #6651ad) !important;
+    border: 1px solid #4966a6 !important;
+    color: #ffffff !important;
+}
+
+.recruiter-applications .btn-primary:hover {
+    background: linear-gradient(100deg, #416ac5, #8068cb) !important;
+    transform: translateY(-2px);
+}
+
+.recruiter-applications .btn-outline-primary {
+    color: #4268bd !important;
+    border: 1px solid #7895d7 !important;
+    background: #ffffff !important;
+}
+
+.recruiter-applications .btn-outline-primary:hover {
+    color: #ffffff !important;
+    background: #4268bd !important;
+}
+
+.recruiter-applications .btn-outline-secondary {
+    color: #53647f !important;
+    border: 1px solid #cbd5e1 !important;
+    background: #ffffff !important;
+}
+
+.recruiter-applications .btn-outline-secondary:hover {
+    color: #ffffff !important;
+    background: #53647f !important;
+}
+
+/* Empty state */
+
+.recruiter-applications .empty-state {
+    padding: 45px 20px;
+    text-align: center;
+}
+
+.recruiter-applications .empty-state i {
+    color: #9aa9c0;
+}
+
+.recruiter-applications .empty-state h4 {
+    color: var(--ra-navy) !important;
+    font-weight: 800;
+}
+
+.recruiter-applications .empty-state p {
+    color: var(--ra-muted) !important;
+    font-size: 13px;
+}
+
+/* Alerts */
+
+.recruiter-applications .alert {
+    border-radius: 10px;
+    font-size: 12px;
+}
+
+.recruiter-applications .alert-light {
+    background: #f8fafc !important;
+    color: #475569 !important;
+}
+
+/* Checkbox */
+
+.recruiter-applications .form-check-input {
+    cursor: pointer;
+    border-color: #aab8cc;
+}
+
+.recruiter-applications .form-check-input:checked {
+    background-color: #4268bd;
+    border-color: #4268bd;
+}
+  .dashboard-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #3155A6;
+        background: #fff;
+        border: 1px solid #dce2f0;
+        border-radius: 11px;
+        padding: 10px 15px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 700;
+        transition: background .2s ease;
+    }
+
+    .dashboard-back:hover {
+        color: #24458F;
+        background: #f4f6fc;
+    }
+
+/* Responsive */
+
+@media (max-width: 767.98px) {
+    .recruiter-applications {
+        padding: 20px 0 30px;
+    }
+
+    .recruiter-applications .page-heading h2 {
+        font-size: 22px;
+    }
+
+    .recruiter-applications .application-card .card-body {
+        padding: 18px;
+    }
+
+    .recruiter-applications .stat-card {
+        padding: 17px 9px;
+    }
+
+    .recruiter-applications .stat-number {
+        font-size: 23px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .recruiter-applications .page-heading h2 {
+        font-size: 20px;
+    }
+
+    .recruiter-applications .applicant-name {
+        font-size: 15px;
+    }
+
+    .recruiter-applications .application-card .card-body {
+        padding: 15px;
+    }
+
+    .recruiter-applications .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+
+    .recruiter-applications .stat-number {
+        font-size: 21px;
+    }
+
+    .recruiter-applications .btn {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .recruiter-applications *,
+    .recruiter-applications *::before,
+    .recruiter-applications *::after {
+        transition: none !important;
+        transform: none !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="recruiter-applications">
+<div class="container-fluid px-3 px-lg-4">
+
+    <!-- Page Heading -->
+    <div class="page-heading text-center mb-4">
+        <h2 class="fw-bold">
+            <i class="bi bi-people-fill me-2"></i>
+            Applications Dashboard
+        </h2>
+
+        <p class="mb-1">
+            Review applicants, evaluate AI skill matches, and manage hiring decisions.
+        </p>
+
+        {% if company %}
+            <p class="company-name">
+                <i class="bi bi-building me-1"></i>
+                {{ company.company_name }}
+            </p>
+        {% endif %}
+    </div>
+
+    <!-- Django Messages -->
+    {% if messages %}
+        <div class="mb-4">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show"
+                     role="alert">
+                    {{ message }}
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Application Statistics -->
+    <div class="row g-3 mb-4">
+
+        <div class="col-6 col-md-4 col-lg">
+            <div class="ra-card stat-card">
+                <div class="stat-icon stat-primary">
+                    <i class="bi bi-people"></i>
+                </div>
+                <h3 class="stat-number">{{ total_applicants|default:0 }}</h3>
+                <p class="stat-label">Total Applicants</p>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg">
+            <div class="ra-card stat-card">
+                <div class="stat-icon stat-warning">
+                    <i class="bi bi-star"></i>
+                </div>
+                <h3 class="stat-number">{{ shortlisted_count|default:0 }}</h3>
+                <p class="stat-label">Shortlisted</p>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg">
+            <div class="ra-card stat-card">
+                <div class="stat-icon stat-info">
+                    <i class="bi bi-calendar-check"></i>
+                </div>
+                <h3 class="stat-number">{{ interview_count|default:0 }}</h3>
+                <p class="stat-label">Interviews</p>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg">
+            <div class="ra-card stat-card">
+                <div class="stat-icon stat-success">
+                    <i class="bi bi-check-circle"></i>
+                </div>
+                <h3 class="stat-number">{{ selected_count|default:0 }}</h3>
+                <p class="stat-label">Selected</p>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-4 col-lg">
+            <div class="ra-card stat-card">
+                <div class="stat-icon stat-danger">
+                    <i class="bi bi-x-circle"></i>
+                </div>
+                <h3 class="stat-number">{{ rejected_count|default:0 }}</h3>
+                <p class="stat-label">Rejected</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Search and Filter -->
+    <div class="ra-card mb-4">
+        <div class="card-body p-4">
+            <div class="row g-3">
+
+                <div class="col-md-7">
+                    <label for="applicantSearch" class="form-label">
+                        <i class="bi bi-search me-1"></i>
+                        Search Applicants
+                    </label>
+
+                    <input type="text"
+                           id="applicantSearch"
+                           class="form-control"
+                           placeholder="Search by student, email, or job title...">
+                </div>
+
+                <div class="col-md-5">
+                    <label for="statusFilter" class="form-label">
+                        <i class="bi bi-funnel me-1"></i>
+                        Filter by Status
+                    </label>
+
+                    <select id="statusFilter" class="form-select">
+                        <option value="">All Statuses</option>
+                        <option value="APPLIED">Applied</option>
+                        <option value="SHORTLISTED">Shortlisted</option>
+                        <option value="INTERVIEW_SCHEDULED">Interview Scheduled</option>
+                        <option value="SELECTED">Selected</option>
+                        <option value="REJECTED">Rejected</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Status Update -->
+    <div class="ra-card mb-4">
+        <div class="card-body p-4">
+
+            <h5 class="section-title mb-3">
+                <i class="bi bi-list-check me-2"></i>
+                Bulk Application Management
+            </h5>
+
+            <form id="bulkStatusForm"
+                  method="post"
+                  action="{% url 'bulk_update_application_status' %}"
+                  onsubmit="return confirmBulkUpdate();">
+
+                {% csrf_token %}
+
+                <div class="row g-3 align-items-end">
+
+                    <div class="col-md-5">
+                        <label for="bulkStatus" class="form-label">
+                            New application status
+                        </label>
+
+                        <select name="status"
+                                id="bulkStatus"
+                                class="form-select"
+                                required>
+                            <option value="">Choose status</option>
+                            <option value="SHORTLISTED">Shortlisted</option>
+                            <option value="INTERVIEW_SCHEDULED">Interview Scheduled</option>
+                            <option value="SELECTED">Selected</option>
+                            <option value="REJECTED">Rejected</option>
+                            <option value="APPLIED">Applied</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-arrow-repeat me-1"></i>
+                            Update Selected Applicants
+                        </button>
+                    </div>
+
+                    <div class="col-md-3">
+                        <button type="button"
+                                class="btn btn-outline-secondary w-100"
+                                id="selectAllButton">
+                            <i class="bi bi-check2-square me-1"></i>
+                            Select All Visible
+                        </button>
+                    </div>
+
+                </div>
+
+                <small class="text-muted d-block mt-3">
+                    Select applicants using the checkboxes on their cards before applying a bulk update.
+                </small>
+            </form>
+        </div>
+    </div>
+
+    <!-- Applications List -->
+    <div id="applicationsList">
+
+        {% for application in applications %}
+
+            <div class="ra-card application-card mb-4"
+                 data-status="{{ application.status }}"
+                 data-search="{{ application.student.user.get_full_name|default:application.student.user.username|lower }} {{ application.student.user.email|default:''|lower }} {{ application.job.title|lower }}">
+
+                <div class="card-body">
+
+                    <!-- Applicant Header -->
+                    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-3">
+
+                        <div class="d-flex align-items-start gap-3">
+
+                            <div class="form-check mt-1">
+                                <input class="form-check-input application-checkbox"
+                                       type="checkbox"
+                                       name="application_ids"
+                                       value="{{ application.id }}"
+                                       form="bulkStatusForm"
+                                       aria-label="Select applicant {{ application.student.user.username }}">
+                            </div>
+
+                            <div>
+                                <h5 class="applicant-name mb-1">
+                                    {{ application.student.user.get_full_name|default:application.student.user.username }}
+                                </h5>
+
+                                <p class="applicant-info mb-1">
+                                    <i class="bi bi-envelope me-1"></i>
+                                    {{ application.student.user.email|default:"Email not provided" }}
+                                </p>
+
+                                <p class="applicant-info mb-1">
+                                    <i class="bi bi-briefcase me-1"></i>
+                                    <strong>{{ application.job.title }}</strong>
+                                </p>
+
+                                <small class="applicant-info">
+                                    <i class="bi bi-calendar3 me-1"></i>
+                                    Applied:
+                                    {% if application.applied_at %}
+                                        {{ application.applied_at|date:"d M Y, h:i A" }}
+                                    {% else %}
+                                        Date unavailable
+                                    {% endif %}
+                                </small>
+                            </div>
+
+                        </div>
+
+                        <!-- Current Application Status -->
+                        <div>
+                            <span class="badge rounded-pill status-badge
+                                {% if application.status == 'SELECTED' %}
+                                    bg-success
+                                {% elif application.status == 'REJECTED' %}
+                                    bg-danger
+                                {% elif application.status == 'SHORTLISTED' %}
+                                    bg-warning text-dark
+                                {% elif application.status == 'INTERVIEW_SCHEDULED' %}
+                                    bg-info text-dark
+                                {% else %}
+                                    bg-secondary
+                                {% endif %}">
+
+                                {{ application.get_status_display|default:application.status }}
+
+                            </span>
+                        </div>
+
+                    </div>
+                    
+<!-- Applicant Academic and Profile Details -->
+<div class="applicant-details-panel p-3 rounded-3 mb-3"
+     style="background:#f5f7fc; border:1px solid #e2e8f0;">
+
+    <h6 class="fw-bold mb-3">
+        <i class="bi bi-person-vcard me-2 text-primary"></i>
+        Applicant Profile
+    </h6>
+
+    <div class="row g-3">
+
+        <div class="col-md-4">
+            <small class="text-muted d-block">Full Name</small>
+            <strong>
+                {{ application.student.full_name|default:application.student.user.username }}
+            </strong>
+        </div>
+
+        <div class="col-md-4">
+            <small class="text-muted d-block">Branch</small>
+            <strong>
+                {{ application.student.branch|default:"Not provided" }}
+            </strong>
+        </div>
+
+        <div class="col-md-4">
+            <small class="text-muted d-block">CGPA</small>
+            <strong>
+                {{ application.student.cgpa|default:"Not provided" }}
+            </strong>
+        </div>
+
+        <div class="col-md-4">
+            <small class="text-muted d-block">College</small>
+            <strong>
+                {{ application.student.college|default:"Not provided" }}
+            </strong>
+        </div>
+
+        <div class="col-md-4">
+            <small class="text-muted d-block">Phone</small>
+            <strong>
+                {{ application.student.phone|default:"Not provided" }}
+            </strong>
+        </div>
+
+        <div class="col-md-4">
+            <small class="text-muted d-block">Career Interest</small>
+            <strong>
+                {{ application.student.career_interest|default:"Not specified" }}
+            </strong>
+        </div>
+
+    </div>
+
+    <hr>
+
+    <h6 class="fw-bold mb-2">
+        <i class="bi bi-tools me-2 text-primary"></i>
+        Registered Skills
+    </h6>
+
+    {% if application.student.skills.all %}
+        <div class="d-flex flex-wrap gap-2">
+            {% for skill in application.student.skills.all %}
+                <span class="badge
+                    {% if skill.skill_type == 'SOFT' %}
+                        bg-info-subtle text-info-emphasis
+                    {% else %}
+                        bg-primary-subtle text-primary
+                    {% endif %}
+                    border">
+                    {{ skill.skill }}
+                </span>
+            {% empty %}
+                <span class="text-muted small">No skills added.</span>
+            {% endfor %}
+        </div>
+    {% else %}
+        <span class="text-muted small">No skills added.</span>
+    {% endif %}
+
+    <hr>
+
+    <h6 class="fw-bold mb-2">
+        <i class="bi bi-folder2-open me-2 text-primary"></i>
+        Student Projects
+    </h6>
+
+    {% for project in application.student.projects.all %}
+        <div class="mb-2">
+            <strong>{{ project.title }}</strong>
+            <p class="small text-muted mb-1">
+                {{ project.description|truncatechars:180 }}
+            </p>
+            <small class="text-muted">
+                Technologies: {{ project.technologies }}
+            </small>
+        </div>
+    {% empty %}
+        <p class="text-muted small mb-0">
+            No projects added.
+        </p>
+    {% endfor %}
+
+    <hr>
+
+    <div class="d-flex flex-wrap align-items-center
+                justify-content-between gap-2">
+
+        <div>
+            <h6 class="fw-bold mb-1">
+                <i class="bi bi-file-earmark-pdf me-2 text-danger"></i>
+                Applicant Resume
+            </h6>
+
+            {% if application.student.resume %}
+                <small class="text-muted">
+                    {{ application.student.resume.resume_file.name }}
+                </small>
+            {% else %}
+                <small class="text-muted">
+                    No resume uploaded.
+                </small>
+            {% endif %}
+        </div>
+
+        {% if application.student.resume %}
+            <a href="{% url 'recruiter_application_resume' application.id %}"
+               class="btn btn-primary btn-sm">
+                <i class="bi bi-download me-1"></i>
+                Download Resume
+            </a>
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+                    <hr>
+
+                    <!-- AI Match Analysis -->
+                    <div class="mb-4">
+
+                        <div class="d-flex flex-wrap justify-content-between align-items-center mb-2">
+                            <h5 class="ai-heading mb-1">
+                                <i class="bi bi-robot me-2 text-primary"></i>
+                                AI Job Match Analysis
+                            </h5>
+
+                            {% if application.ai_match_percentage != None %}
+                                <span class="badge match-badge">
+                                    {{ application.ai_match_percentage }}% Match
+                                </span>
+                            {% else %}
+                                <span class="badge bg-secondary">
+                                    Match unavailable
+                                </span>
+                            {% endif %}
+                        </div>
+
+                        {% if application.ai_match_percentage != None %}
+
+                            <div class="progress match-progress mb-2"
+                                 role="progressbar"
+                                 aria-label="AI job match percentage"
+                                 aria-valuenow="{{ application.ai_match_percentage }}"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100">
+
+                                <div class="progress-bar
+                                    {% if application.ai_match_percentage >= 75 %}
+                                        bg-success
+                                    {% elif application.ai_match_percentage >= 45 %}
+                                        bg-info
+                                    {% else %}
+                                        bg-warning
+                                    {% endif %}"
+                                     style="width: {{ application.ai_match_percentage }}%;">
+                                </div>
+
+                            </div>
+
+                            <small class="analysis-note">
+                                This score estimates alignment with the job's matching criteria.
+                                Review the evidence and the applicant's qualifications before deciding.
+                            </small>
+
+                        {% else %}
+
+                            <div class="alert alert-light border mb-0">
+                                <i class="bi bi-info-circle me-1"></i>
+                                The AI match score could not be calculated for this application.
+                                You can still review the applicant and update their status.
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                    <!-- Matched Skills -->
+                    <div class="mb-3">
+
+                        <h6 class="skill-heading success mb-2">
+                            <i class="bi bi-check-circle-fill me-1"></i>
+                            Matching Skills
+                        </h6>
+
+                        {% if application.ai_matched_skills %}
+                            <div class="d-flex flex-wrap gap-2">
+                                {% for skill in application.ai_matched_skills %}
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle skill-badge">
+                                        {{ skill }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="text-muted small mb-0">
+                                No matching skills were identified by the current matching process.
+                            </p>
+                        {% endif %}
+
+                    </div>
+
+                    <!-- Missing / Skills to Review -->
+                    <div class="mb-4">
+
+                        <h6 class="skill-heading warning mb-2">
+                            <i class="bi bi-exclamation-circle-fill me-1"></i>
+                            Required Skills to Review
+                        </h6>
+
+                        {% if application.ai_missing_skills %}
+                            <div class="d-flex flex-wrap gap-2">
+                                {% for skill in application.ai_missing_skills %}
+                                    <span class="badge bg-warning-subtle text-dark border border-warning-subtle skill-badge">
+                                        {{ skill }}
+                                    </span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="text-muted small mb-0">
+                                No missing skills were identified by the current matching process.
+                            </p>
+                        {% endif %}
+
+                        <small class="analysis-note d-block mt-2">
+                            These results depend on the available applicant information and the job's configured criteria.
+                            A missing skill in this analysis does not necessarily mean the applicant lacks that skill.
+                        </small>
+
+                    </div>
+
+                    <hr>
+
+                    <!-- Individual Status Update -->
+                    <div>
+                        <h6 class="section-title mb-3">
+                            <i class="bi bi-pencil-square me-1"></i>
+                            Update Application Status
+                        </h6>
+
+                        <form method="post"
+                              action="{% url 'update_application_status' application.id %}"
+                              class="individual-status-form"
+                              onsubmit="return confirmIndividualUpdate(this);">
+
+                            {% csrf_token %}
+
+                            <div class="row g-2 align-items-end">
+
+                                <div class="col-md-7">
+                                    <label for="status-{{ application.id }}"
+                                           class="form-label">
+                                        Select new status
+                                    </label>
+
+                                    <select name="status"
+                                            id="status-{{ application.id }}"
+                                            class="form-select"
+                                            required>
+
+                                        <option value="APPLIED"
+                                            {% if application.status == 'APPLIED' %}selected{% endif %}>
+                                            Applied
+                                        </option>
+
+                                        <option value="SHORTLISTED"
+                                            {% if application.status == 'SHORTLISTED' %}selected{% endif %}>
+                                            Shortlisted
+                                        </option>
+
+                                        <option value="INTERVIEW_SCHEDULED"
+                                            {% if application.status == 'INTERVIEW_SCHEDULED' %}selected{% endif %}>
+                                            Interview Scheduled
+                                        </option>
+
+                                        <option value="SELECTED"
+                                            {% if application.status == 'SELECTED' %}selected{% endif %}>
+                                            Selected
+                                        </option>
+
+                                        <option value="REJECTED"
+                                            {% if application.status == 'REJECTED' %}selected{% endif %}>
+                                            Rejected
+                                        </option>
+
+                                    </select>
+                                </div>
+
+                                <div class="col-md-5">
+                                    <button type="submit"
+                                            class="btn btn-outline-primary w-100">
+                                        <i class="bi bi-save me-1"></i>
+                                        Save Status
+                                    </button>
+                                </div>
+
+                            </div>
+
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+        {% empty %}
+
+            <div class="ra-card">
+                <div class="empty-state">
+
+                    <i class="bi bi-inbox display-3"></i>
+
+                    <h4 class="mt-3">No Applications Yet</h4>
+
+                    <p class="mb-0">
+                        Applications for your company's jobs will appear here when students apply.
+                    </p>
+
+                </div>
+            </div>
+
+        {% endfor %}
+
+        <!-- No Search Results -->
+        <div id="noSearchResults"
+             class="alert alert-info text-center d-none">
+            <i class="bi bi-search me-1"></i>
+            No applications match your search or selected status.
+        </div>
+           <div class="mt-4">
+            <a href="{% url 'dashboard:recruiter_dashboard' %}" class="dashboard-back">
+                <i class="bi bi-arrow-left"></i>
+                Back to Dashboard
+            </a>
+        </div>
+
+    </div>
+
+</div>
+</div>
+
+<!-- Page JavaScript -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput = document.getElementById("applicantSearch");
+    const statusFilter = document.getElementById("statusFilter");
+    const applicationCards = Array.from(
+        document.querySelectorAll(".application-card")
+    );
+    const noSearchResults = document.getElementById("noSearchResults");
+    const selectAllButton = document.getElementById("selectAllButton");
+
+    function filterApplications() {
+        const searchTerm = searchInput.value.trim().toLowerCase();
+        const selectedStatus = statusFilter.value;
+        let visibleCount = 0;
+
+        applicationCards.forEach(function (card) {
+            const searchableText = card.dataset.search || "";
+            const applicationStatus = card.dataset.status || "";
+
+            const matchesSearch = searchableText.includes(searchTerm);
+            const matchesStatus =
+                !selectedStatus || applicationStatus === selectedStatus;
+
+            const visible = matchesSearch && matchesStatus;
+
+            card.classList.toggle("d-none", !visible);
+
+            if (visible) {
+                visibleCount++;
+            }
+        });
+
+        noSearchResults.classList.toggle(
+            "d-none",
+            visibleCount !== 0 || applicationCards.length === 0
+        );
+    }
+
+    searchInput.addEventListener("input", filterApplications);
+    statusFilter.addEventListener("change", filterApplications);
+
+    selectAllButton.addEventListener("click", function () {
+        const visibleCards = applicationCards.filter(function (card) {
+            return !card.classList.contains("d-none");
+        });
+
+        const visibleCheckboxes = visibleCards
+            .map(function (card) {
+                return card.querySelector(".application-checkbox");
+            })
+            .filter(Boolean);
+
+        const shouldSelectAll = visibleCheckboxes.some(function (checkbox) {
+            return !checkbox.checked;
+        });
+
+        visibleCheckboxes.forEach(function (checkbox) {
+            checkbox.checked = shouldSelectAll;
+        });
+
+        selectAllButton.innerHTML = shouldSelectAll
+            ? '<i class="bi bi-x-square me-1"></i> Deselect Visible'
+            : '<i class="bi bi-check2-square me-1"></i> Select All Visible';
+    });
+
+    filterApplications();
+});
+
+function confirmBulkUpdate() {
+    const selectedApplicants = document.querySelectorAll(
+        '.application-checkbox:checked'
+    );
+
+    const newStatus = document.getElementById("bulkStatus").value;
+
+    if (selectedApplicants.length === 0) {
+        alert("Please select at least one applicant.");
+        return false;
+    }
+
+    if (!newStatus) {
+        alert("Please choose a status.");
+        return false;
+    }
+
+    return confirm(
+        "Update the status of " +
+        selectedApplicants.length +
+        " selected application(s)?"
+    );
+}
+
+function confirmIndividualUpdate(form) {
+    const statusSelect = form.querySelector('select[name="status"]');
+
+    if (!statusSelect || !statusSelect.value) {
+        alert("Please choose an application status.");
+        return false;
+    }
+
+    return confirm(
+        "Are you sure you want to update this application's status?"
+    );
+}
+</script>
+
+{% endblock %}

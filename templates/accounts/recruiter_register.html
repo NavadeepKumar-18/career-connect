@@ -1,0 +1,572 @@
+{% extends 'base.html' %}
+
+{% block title %}Recruiter Registration | AI Career & Placement System{% endblock %}
+
+
+{% block extra_css %}
+<style>
+    :root {
+        --navy-primary: #0D102B;
+        --navy-secondary: #14213D;
+        --navy-light: #1E3A5F;
+        --blue-accent: #3155A6;
+        --page-bg: #EEF1F8;
+        --border-color: #D9DEEB;
+        --muted-color: #68718A;
+    }
+
+    /* Fit registration page inside the available viewport */
+    .page-main {
+        padding: 10px 18px !important;
+    }
+
+    .page-main > .container {
+        height: 100%;
+    }
+
+    .recruiter-register-page {
+        min-height: calc(100vh - 20px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 12px;
+        background: var(--page-bg);
+    }
+
+    .recruiter-register-card {
+        width: 100%;
+        max-width: 520px;
+        overflow: hidden;
+        border: 1px solid #E0E3F0;
+        border-radius: 16px;
+        background: #FFFFFF;
+        box-shadow: 0 10px 30px rgba(13, 16, 43, 0.12);
+    }
+
+    .recruiter-register-header {
+        padding: 14px 24px 12px;
+        color: #FFFFFF;
+        text-align: center;
+        background: linear-gradient(
+            125deg,
+            var(--navy-primary),
+            var(--navy-secondary) 65%,
+            var(--navy-light)
+        );
+    }
+
+    .recruiter-register-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        margin-bottom: 5px;
+        border: 1px solid rgba(255,255,255,.25);
+        border-radius: 11px;
+        background: rgba(255,255,255,.10);
+        color: #FFFFFF;
+        font-size: 20px;
+    }
+
+    .recruiter-register-header h1 {
+        margin-bottom: 3px;
+        font-size: 1.4rem;
+        font-weight: 750;
+    }
+
+    .recruiter-register-header p {
+        margin-bottom: 0;
+        color: #D7DFEF;
+        font-size: .82rem;
+    }
+
+    .recruiter-register-body {
+        padding: 14px 24px 16px;
+    }
+
+    .section-heading {
+        display: flex;
+        align-items: center;
+        margin-bottom: 9px;
+        color: var(--navy-secondary);
+        font-size: .9rem;
+        font-weight: 700;
+    }
+
+    .section-heading span {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 25px;
+        height: 25px;
+        margin-right: 8px;
+        border-radius: 7px;
+        background: var(--page-bg);
+        color: var(--blue-accent);
+    }
+
+    .recruiter-register-body .form-label {
+        margin-bottom: 4px;
+        color: var(--navy-secondary);
+        font-size: .84rem;
+        font-weight: 600;
+    }
+
+    .recruiter-register-body .form-control {
+        min-height: 38px;
+        padding: 6px 11px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: .88rem;
+    }
+
+    .recruiter-register-body .form-control::placeholder {
+        color: #9299AB;
+    }
+
+    .recruiter-register-body .form-control:focus {
+        border-color: var(--blue-accent);
+        box-shadow: 0 0 0 .18rem rgba(49,85,166,.15);
+    }
+
+    .recruiter-register-body .form-text {
+        margin-top: 3px;
+        color: var(--muted-color);
+        font-size: .73rem;
+    }
+
+    .recruiter-register-body .mb-3 {
+        margin-bottom: 10px !important;
+    }
+
+    .recruiter-register-body .mb-4 {
+        margin-bottom: 12px !important;
+    }
+
+    .password-group .form-control {
+        border-radius: 8px 0 0 8px;
+    }
+
+    .password-group .btn {
+        min-width: 42px;
+        padding: 5px 10px;
+        border: 1px solid var(--border-color);
+        border-left: 0;
+        border-radius: 0 8px 8px 0;
+        background: #F8F9FD;
+        color: var(--navy-secondary);
+    }
+
+    .password-group .btn:hover {
+        background: var(--page-bg);
+        color: var(--blue-accent);
+    }
+
+    .approval-note {
+        display: flex;
+        gap: 9px;
+        align-items: flex-start;
+        padding: 9px 11px;
+        margin-bottom: 12px;
+        border: 1px solid #D9E2F3;
+        border-radius: 9px;
+        background: var(--page-bg);
+        color: #394967;
+        font-size: .78rem;
+        line-height: 1.4;
+    }
+
+    .approval-note i {
+        margin-top: 2px;
+        color: var(--blue-accent);
+        font-size: 1rem;
+    }
+
+    .approval-note strong {
+        display: block;
+        margin-bottom: 2px;
+        color: var(--navy-secondary);
+    }
+
+    .recruiter-register-submit {
+        min-height: 40px;
+        padding: 8px 12px;
+        border: 0;
+        border-radius: 8px;
+        background: linear-gradient(
+            100deg,
+            var(--navy-secondary),
+            var(--blue-accent)
+        );
+        color: #FFFFFF;
+        font-size: .9rem;
+        font-weight: 700;
+        transition: background .2s ease, box-shadow .2s ease;
+    }
+
+    .recruiter-register-submit:hover {
+        background: linear-gradient(
+            100deg,
+            var(--navy-primary),
+            var(--navy-light)
+        );
+        color: #FFFFFF;
+        box-shadow: 0 5px 14px rgba(20,33,61,.2);
+    }
+
+    .login-prompt {
+        margin: 12px 0 0;
+        color: var(--muted-color);
+        text-align: center;
+        font-size: .84rem;
+    }
+
+    .login-prompt a {
+        color: var(--blue-accent);
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .login-prompt a:hover {
+        color: var(--navy-primary);
+        text-decoration: underline;
+    }
+
+    .register-error-summary {
+        margin-bottom: 10px;
+        padding: 8px 12px;
+        border-radius: 9px;
+        font-size: .82rem;
+    }
+
+    /* Smaller screens */
+    @media (max-width: 767.98px) {
+        .page-main {
+            padding: 68px 10px 12px !important;
+        }
+
+        .recruiter-register-page {
+            min-height: auto;
+            padding: 8px 0;
+        }
+
+        .recruiter-register-card {
+            max-width: 480px;
+        }
+
+        .recruiter-register-header {
+            padding: 16px 16px 12px;
+        }
+
+        .recruiter-register-body {
+            padding: 16px;
+        }
+    }
+
+    /* Short desktop/laptop screens */
+    @media (min-width: 768px) and (max-height: 760px) {
+        .recruiter-register-page {
+            align-items: flex-start;
+            min-height: auto;
+            padding-top: 4px;
+            padding-bottom: 4px;
+        }
+
+        .recruiter-register-header {
+            padding-top: 9px;
+            padding-bottom: 8px;
+        }
+
+        .recruiter-register-icon {
+            width: 30px;
+            height: 30px;
+            font-size: 17px;
+            margin-bottom: 2px;
+        }
+
+        .recruiter-register-header h1 {
+            font-size: 1.2rem;
+        }
+
+        .recruiter-register-body {
+            padding-top: 9px;
+            padding-bottom: 10px;
+        }
+
+        .recruiter-register-body .form-text {
+            display: none;
+        }
+
+        .approval-note {
+            padding: 6px 9px;
+            margin-bottom: 8px;
+        }
+
+        .login-prompt {
+            margin-top: 8px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .recruiter-register-submit {
+            transition: none;
+        }
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="recruiter-register-page">
+    <section
+        class="recruiter-register-card"
+        aria-labelledby="recruiter-register-title"
+    >
+        <header class="recruiter-register-header">
+            <div class="recruiter-register-icon" aria-hidden="true">
+                <i class="bi bi-building"></i>
+            </div>
+
+            <h1 id="recruiter-register-title">
+                Recruiter Registration
+            </h1>
+
+            <p>
+                Create your account to connect with talented students.
+            </p>
+        </header>
+
+        <div class="recruiter-register-body">
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div
+                        class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show"
+                        role="alert"
+                    >
+                        {{ message }}
+
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if form.errors %}
+                <div class="alert alert-danger register-error-summary" role="alert">
+                    <strong>Please correct the following errors:</strong>
+                    {{ form.errors }}
+                </div>
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <fieldset class="border-0 p-0 m-0">
+                    <legend class="section-heading">
+                        <span aria-hidden="true">
+                            <i class="bi bi-person"></i>
+                        </span>
+                        Account Details
+                    </legend>
+
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label">
+                            Username
+                        </label>
+
+                        <input
+                            type="text"
+                            name="username"
+                            id="id_username"
+                            class="form-control"
+                            placeholder="Choose a username"
+                            autocomplete="username"
+                            value="{{ request.POST.username|default:'' }}"
+                            required
+                        >
+
+                        <div class="form-text">
+                            Choose a username you can easily remember.
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="id_email" class="form-label">
+                            Email Address
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            id="id_email"
+                            class="form-control"
+                            placeholder="you@company.com"
+                            autocomplete="email"
+                            value="{{ request.POST.email|default:'' }}"
+                            required
+                        >
+
+                        <div class="form-text">
+                            Use a valid email address you can access.
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="border-0 p-0 m-0">
+                    <legend class="section-heading">
+                        <span aria-hidden="true">
+                            <i class="bi bi-shield-lock"></i>
+                        </span>
+                        Password Setup
+                    </legend>
+
+                    <div class="mb-3">
+                        <label for="id_password" class="form-label">
+                            Password
+                        </label>
+
+                        <div class="input-group password-group">
+                            <input
+                                type="password"
+                                name="password"
+                                id="id_password"
+                                class="form-control"
+                                placeholder="Create a password"
+                                autocomplete="new-password"
+                                aria-describedby="password-hint"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="btn"
+                                id="togglePassword"
+                                aria-label="Show password"
+                                aria-controls="id_password"
+                                aria-pressed="false"
+                            >
+                                <i class="bi bi-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
+
+                        <div id="password-hint" class="form-text">
+                            Choose a strong password that is difficult to guess.
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="id_confirm_password" class="form-label">
+                            Confirm Password
+                        </label>
+
+                        <div class="input-group password-group">
+                            <input
+                                type="password"
+                                name="confirm_password"
+                                id="id_confirm_password"
+                                class="form-control"
+                                placeholder="Re-enter your password"
+                                autocomplete="new-password"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="btn"
+                                id="toggleConfirmPassword"
+                                aria-label="Show confirmation password"
+                                aria-controls="id_confirm_password"
+                                aria-pressed="false"
+                            >
+                                <i class="bi bi-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="approval-note" role="note">
+                    <i class="bi bi-info-circle" aria-hidden="true"></i>
+
+                    <div>
+                        <strong>Account approval</strong>
+                        Recruiter accounts may require approval before
+                         job-posting features become available.<!--Follow any
+                        status messages shown after registration. -->
+                    </div>
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn recruiter-register-submit w-100"
+                >
+                    <i class="bi bi-person-plus me-2" aria-hidden="true"></i>
+                    Register as Recruiter
+                </button>
+            </form>
+
+            <p class="login-prompt">
+                Already have an account?
+                <a href="{% url 'login' %}">Login here</a>
+            </p>
+
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        function setupPasswordToggle(inputId, buttonId, label) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleButton = document.getElementById(buttonId);
+
+            if (!passwordInput || !toggleButton) {
+                return;
+            }
+
+            toggleButton.addEventListener("click", function () {
+                const showPassword = passwordInput.type === "password";
+
+                passwordInput.type = showPassword ? "text" : "password";
+
+                toggleButton.setAttribute(
+                    "aria-pressed",
+                    String(showPassword)
+                );
+
+                toggleButton.setAttribute(
+                    "aria-label",
+                    showPassword ? "Hide " + label : "Show " + label
+                );
+
+                const icon = toggleButton.querySelector("i");
+
+                if (icon) {
+                    icon.classList.toggle("bi-eye", !showPassword);
+                    icon.classList.toggle("bi-eye-slash", showPassword);
+                }
+            });
+        }
+
+        setupPasswordToggle(
+            "id_password",
+            "togglePassword",
+            "password"
+        );
+
+        setupPasswordToggle(
+            "id_confirm_password",
+            "toggleConfirmPassword",
+            "confirmation password"
+        );
+    });
+</script>
+{% endblock %}

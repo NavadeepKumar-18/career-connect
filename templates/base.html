@@ -1,0 +1,1208 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{% block title %}AI-Powered Smart Career &amp; Placement System{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+          rel="stylesheet">
+
+    <style>
+        :root {
+            --navy: #0D102B;
+            --navy-dark: #080B20;
+            --navy-medium: #14213D;
+            --navy-light: #1E3A5F;
+            --blue: #3155A6;
+            --blue-hover: #24458F;
+            --purple: #7051B8;
+            --page-bg: #0B1535;
+            --text-main: #EDF1FF;
+            --text-muted: #A8B5D1;
+            --border: #2B3B60;
+            --sidebar-width: 255px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+
+        html {
+            min-height: 100%;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            background: var(--page-bg);
+            color: var(--text-main);
+            font-family: "Segoe UI", Roboto, Arial, sans-serif;
+            line-height: 1.6;
+        }
+
+        /* =================================
+           LEFT SIDEBAR
+        ================================= */
+
+        .app-sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1060;
+            width: var(--sidebar-width);
+            padding: 20px 14px 18px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            overscroll-behavior: contain;
+
+            background: linear-gradient(
+                180deg,
+                #080B20 0%,
+                #11102E 48%,
+                #202744 100%
+            );
+
+            border-right: 1px solid rgba(255, 255, 255, 0.07);
+            color: #FFFFFF;
+
+            scrollbar-width: thin;
+            scrollbar-color: #385274 transparent;
+        }
+
+        /* BRAND */
+
+        .sidebar-brand {
+            padding: 0 10px;
+            margin-bottom: 30px;
+        }
+
+        .sidebar-logo {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(
+                135deg,
+                #7051B8,
+                #3155A6
+            );
+            color: #FFFFFF;
+            border-radius: 9px;
+            font-size: 1.15rem;
+        }
+
+        .sidebar-brand-title {
+            color: #FFFFFF;
+            font-weight: 700;
+            font-size: 0.97rem;
+            line-height: 1.4;
+        }
+
+        .sidebar-brand-subtitle {
+            color: #A8B5D1;
+            font-size: 0.77rem;
+            margin-top: 2px;
+        }
+
+        /* SECTION HEADINGS */
+
+        .sidebar-heading {
+            margin: 0 0 9px;
+            padding: 0 12px;
+            color: #91A7C4;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 1.15px;
+            text-transform: uppercase;
+        }
+
+        /* NAVIGATION LINKS */
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            min-width: 0;
+            padding: 10px 12px;
+            margin-bottom: 4px;
+            border-radius: 9px;
+
+            color: #D9E4F2;
+            text-decoration: none;
+            font-size: 0.86rem;
+            font-weight: 600;
+
+            overflow-wrap: anywhere;
+
+            transition:
+                background-color 0.18s ease,
+                color 0.18s ease;
+        }
+
+        .sidebar-link i {
+            width: 20px;
+            flex-shrink: 0;
+            text-align: center;
+            font-size: 1.05rem;
+        }
+
+        .sidebar-link:hover,
+        .sidebar-link:focus-visible {
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-link.active {
+            color: #FFFFFF;
+            background: #29365F;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
+        }
+
+        .sidebar-divider {
+            border-color: rgba(255, 255, 255, 0.13);
+            margin: 15px 8px;
+        }
+
+        /* USER PROFILE */
+
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 10px;
+            margin-bottom: 24px;
+
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+        }
+
+        .sidebar-avatar {
+            width: 37px;
+            height: 37px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #244C7D;
+            color: #FFFFFF;
+            border-radius: 50%;
+            font-size: 1.1rem;
+        }
+
+        .sidebar-user-name {
+            color: #FFFFFF;
+            font-size: 0.85rem;
+            font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+
+        .sidebar-user-role {
+            color: #A8BAD2;
+            font-size: 0.73rem;
+        }
+
+        .sidebar-bottom {
+            padding-top: 14px;
+            margin-top: 22px;
+            border-top: 1px solid rgba(255, 255, 255, 0.13);
+        }
+
+        /* =================================
+           MOBILE SIDEBAR CONTROLS
+        ================================= */
+
+        .sidebar-toggle {
+            position: fixed;
+            top: 14px;
+            left: 14px;
+            z-index: 1045;
+
+            display: none;
+            align-items: center;
+            justify-content: center;
+
+            width: 42px;
+            height: 42px;
+
+            color: #FFFFFF;
+            background: var(--navy-dark);
+            border: 1px solid var(--border);
+            border-radius: 9px;
+
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar-toggle:focus-visible {
+            outline: 2px solid #BFDBFE;
+            outline-offset: 2px;
+        }
+
+        .sidebar-close {
+            display: none;
+            align-items: center;
+            justify-content: center;
+
+            width: 34px;
+            height: 34px;
+            flex-shrink: 0;
+
+            color: #FFFFFF;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            background: transparent;
+        }
+
+        .sidebar-overlay {
+            display: none;
+        }
+
+        /* =================================
+           MAIN CONTENT
+        ================================= */
+
+        .page-main {
+            flex: 1 0 auto;
+            width: calc(100% - var(--sidebar-width));
+            min-width: 0;
+            margin-left: var(--sidebar-width);
+            padding: 26px 24px 32px;
+        }
+
+        .page-main > .container {
+            width: 100%;
+            max-width: none;
+            padding-left: 0;
+            padding-right: 0;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* =================================
+           GENERAL COMPONENTS
+        ================================= */
+
+        h1, h2, h3, h4, h5, h6 {
+            color: var(--text-main);
+            font-weight: 700;
+            letter-spacing: -0.25px;
+        }
+
+        p, label, .form-label {
+            color: inherit;
+        }
+
+        .text-muted,
+        .text-secondary {
+            color: var(--text-muted) !important;
+        }
+
+        .btn {
+            border-radius: 9px;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            --bs-btn-bg: var(--blue);
+            --bs-btn-border-color: var(--blue);
+            --bs-btn-hover-bg: var(--blue-hover);
+            --bs-btn-hover-border-color: var(--blue-hover);
+            --bs-btn-active-bg: var(--blue-hover);
+            --bs-btn-active-border-color: var(--blue-hover);
+        }
+
+        .btn-outline-primary {
+            --bs-btn-color: #A9B8FF;
+            --bs-btn-border-color: var(--blue);
+            --bs-btn-hover-bg: var(--blue);
+            --bs-btn-hover-border-color: var(--blue);
+            --bs-btn-hover-color: #FFFFFF;
+        }
+
+        .card {
+            background: #111F43;
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header,
+        .card-footer {
+            background: #14213D;
+            color: var(--text-main);
+            border-color: var(--border);
+        }
+
+        .form-control,
+        .form-select {
+            min-height: 43px;
+            background-color: #0B1535;
+            color: var(--text-main);
+            border-color: #354361;
+            border-radius: 9px;
+        }
+
+        .form-control::placeholder {
+            color: #A8B5D1;
+            opacity: 0.8;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            background-color: #0B1535;
+            color: var(--text-main);
+            border-color: var(--blue);
+            box-shadow: 0 0 0 0.2rem rgba(49, 85, 166, 0.25);
+        }
+
+        .form-select option {
+            background: #111F43;
+            color: #FFFFFF;
+        }
+
+        .site-alert {
+            border: 0;
+            border-radius: 11px;
+        }
+
+        .page-main img,
+        .page-main canvas,
+        .page-main video {
+            max-width: 100%;
+        }
+
+        .page-main .table-responsive {
+            max-width: 100%;
+        }
+
+        .table {
+            --bs-table-bg: #111F43;
+            --bs-table-color: #EDF1FF;
+            --bs-table-border-color: #2B3B60;
+            --bs-table-striped-bg: #14213D;
+            --bs-table-striped-color: #EDF1FF;
+            --bs-table-hover-bg: #22345C;
+            --bs-table-hover-color: #FFFFFF;
+        }
+
+        /* =================================
+           FOOTER
+        ================================= */
+
+        .site-footer {
+            flex-shrink: 0;
+            width: calc(100% - var(--sidebar-width));
+            margin-left: var(--sidebar-width);
+            margin-top: auto;
+            padding: 16px 0;
+
+            background: var(--navy-dark);
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-text {
+            color: #A8B5D1;
+            font-size: 0.85rem;
+        }
+
+        body.landing-page .site-footer {
+            padding: 22px 0;
+
+            background: linear-gradient(
+                115deg,
+                var(--navy-dark),
+                var(--navy),
+                var(--navy-medium)
+            );
+
+            border-top: 3px solid var(--blue);
+            box-shadow: 0 -4px 18px rgba(7, 12, 35, 0.1);
+        }
+
+        body.landing-page .footer-text {
+            color: #E5EDF8;
+            font-size: 0.85rem;
+            letter-spacing: 0.15px;
+        }
+
+        body.landing-page .footer-text i {
+            color: #93C5FD;
+        }
+
+        /* =================================
+           RESPONSIVE MOBILE LAYOUT
+        ================================= */
+
+        @media (max-width: 767.98px) {
+
+            .sidebar-toggle {
+                display: inline-flex;
+            }
+
+            .app-sidebar {
+                width: min(285px, 86vw);
+                max-width: 100%;
+                padding-top: 22px;
+
+                box-shadow: 12px 0 35px rgba(0, 0, 0, 0.2);
+
+                transform: translateX(-105%);
+                visibility: hidden;
+
+                transition:
+                    transform 0.24s ease,
+                    visibility 0.24s ease;
+            }
+
+            .app-sidebar.mobile-open {
+                transform: translateX(0);
+                visibility: visible;
+            }
+
+            .sidebar-close {
+                display: inline-flex;
+            }
+
+            .sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                z-index: 1050;
+                background: rgba(4, 15, 31, 0.58);
+            }
+
+            .sidebar-overlay.show {
+                display: block;
+            }
+
+            body.sidebar-open {
+                overflow: hidden;
+            }
+
+            .page-main {
+                width: 100%;
+                min-width: 0;
+                margin-left: 0;
+                padding: 72px 14px 24px;
+            }
+
+            .page-main > .container {
+                width: 100%;
+                max-width: none;
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .site-footer {
+                width: 100%;
+                margin-left: 0;
+            }
+
+            .sidebar-bottom {
+                margin-top: 18px;
+            }
+        }
+.logout-form {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.logout-button {
+    appearance: none;
+    -webkit-appearance: none;
+
+    /* Inherit all navigation link styling */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    width: 100%;
+    min-width: 0;
+    padding: 10px 12px;
+    margin-bottom: 4px;
+
+    background: transparent;
+    border: none;
+    border-radius: 9px;
+
+    color: #D9E4F2;
+    font-family: inherit;
+    font-size: 0.86rem;
+    font-weight: 600;
+    line-height: 1.6;
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.18s ease,
+        color 0.18s ease;
+}
+
+.logout-button i {
+    width: 20px;
+    flex-shrink: 0;
+    text-align: center;
+    font-size: 1.05rem;
+}
+
+.logout-button:hover,
+.logout-button:focus-visible {
+    color: #FFFFFF;
+    background: rgba(255, 255, 255, 0.1);
+    outline: none;
+}
+
+.logout-button:active {
+    color: #FFFFFF;
+    background: #29365F;
+}
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body class="has-app-sidebar {% if request.path == '/' %}landing-page{% endif %}">
+
+<!-- MOBILE MENU BUTTON -->
+
+<button class="sidebar-toggle"
+        type="button"
+        id="sidebarToggle"
+        aria-label="Open navigation menu"
+        aria-controls="appSidebar"
+        aria-expanded="false">
+
+    <i class="bi bi-list fs-4"></i>
+</button>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+
+<!-- =================================
+     FIXED LEFT SIDEBAR
+================================= -->
+
+<aside class="app-sidebar" id="appSidebar" aria-label="Main navigation">
+
+    <!-- BRAND -->
+
+    <div class="d-flex align-items-center justify-content-between sidebar-brand">
+
+        <div class="d-flex align-items-center gap-2">
+
+            <div class="sidebar-logo">
+                <i class="bi bi-mortarboard-fill"></i>
+            </div>
+
+            <div>
+                <div class="sidebar-brand-title">
+                    Career &amp; Placement
+                </div>
+
+                <div class="sidebar-brand-subtitle">
+                    Your future starts here
+                </div>
+            </div>
+
+        </div>
+
+        <button type="button"
+                class="sidebar-close"
+                id="sidebarClose"
+                aria-label="Close navigation menu">
+
+            <i class="bi bi-x-lg"></i>
+        </button>
+
+    </div>
+
+
+    {% if user.is_authenticated %}
+
+        <!-- USER INFORMATION -->
+
+        <div class="sidebar-user">
+
+            <div class="sidebar-avatar">
+                <i class="bi bi-person-fill"></i>
+            </div>
+
+            <div class="min-w-0">
+
+                <div class="sidebar-user-name">
+                    {{ user.get_full_name|default:user.username }}
+                </div>
+
+                <div class="sidebar-user-role">
+
+                    {% if user.role == 'ADMIN' or user.is_staff or user.is_superuser %}
+                        Administrator
+
+                    {% elif user.role == 'STUDENT' %}
+                        Student
+
+                    {% elif user.role == 'RECRUITER' %}
+                        Recruiter
+
+                    {% else %}
+                        Account
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================
+             ADMIN NAVIGATION
+        ================================= -->
+
+        {% if user.role == 'ADMIN' or user.is_staff or user.is_superuser %}
+
+            <p class="sidebar-heading">Main Menu</p>
+
+            <a class="sidebar-link"
+               href="{% url 'dashboard:admin_dashboard' %}">
+
+                <i class="bi bi-grid-1x2-fill"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a class="sidebar-link"
+               href="{% url 'dashboard:admin_dashboard' %}#analytics">
+
+                <i class="bi bi-pie-chart-fill"></i>
+                <span>Analytics</span>
+            </a>
+
+
+            <hr class="sidebar-divider">
+
+
+            <p class="sidebar-heading">Management</p>
+
+            <a class="sidebar-link"
+               href="{% url 'dashboard:admin_recruiter_approvals' %}">
+
+                <i class="bi bi-building-check"></i>
+                <span>Company Approvals</span>
+            </a>
+
+            <a class="sidebar-link"
+               href="{% url 'dashboard:admin_dashboard' %}#applications">
+
+                <i class="bi bi-file-earmark-text"></i>
+                <span>Applications</span>
+            </a>
+
+
+            <hr class="sidebar-divider">
+
+
+            <p class="sidebar-heading">Tools</p>
+
+            <a class="sidebar-link"
+               href="{% url 'admin:index' %}">
+
+                <i class="bi bi-gear-fill"></i>
+                <span>Django Admin</span>
+            </a>
+
+            <a class="sidebar-link"
+               href="{% url 'career_copilot_page' %}">
+
+                <i class="bi bi-robot"></i>
+                <span>AI Career Copilot</span>
+            </a>
+
+
+        <!-- =================================
+             RECRUITER NAVIGATION
+        ================================= -->
+
+        {% elif user.role == 'RECRUITER' %}
+
+            <p class="sidebar-heading">Main Menu</p>
+
+            <a class="sidebar-link"
+               href="{% url 'dashboard:recruiter_dashboard' %}">
+
+                <i class="bi bi-grid-1x2-fill"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a class="sidebar-link"
+               href="{% url 'recruiter_jobs' %}">
+
+                <i class="bi bi-briefcase-fill"></i>
+                <span>My Jobs</span>
+            </a>
+
+
+            <hr class="sidebar-divider">
+
+
+            <p class="sidebar-heading">Tools</p>
+
+            <a class="sidebar-link"
+               href="{% url 'career_copilot_page' %}">
+
+                <i class="bi bi-robot"></i>
+                <span>AI Career Copilot</span>
+            </a>
+
+
+        <!-- =================================
+             STUDENT NAVIGATION
+        ================================= -->
+
+        {% elif user.role == 'STUDENT' %}
+
+            <p class="sidebar-heading">Main Menu</p>
+
+            <a class="sidebar-link"
+               href="{% url 'dashboard:student_dashboard' %}">
+
+                <i class="bi bi-grid-1x2-fill"></i>
+                <span>Dashboard</span>
+            </a>
+
+            <a class="sidebar-link"
+               href="{% url 'job_list' %}">
+
+                <i class="bi bi-briefcase-fill"></i>
+                <span>Browse Jobs</span>
+            </a>
+
+            <a class="sidebar-link"
+               href="{% url 'my_applications' %}">
+
+                <i class="bi bi-file-earmark-check-fill"></i>
+                <span>My Applications</span>
+            </a>
+
+            <a class="sidebar-link"
+               href="{% url 'recommended_jobs' %}">
+
+                <i class="bi bi-stars"></i>
+                <span>Recommended Jobs</span>
+            </a>
+
+
+            <hr class="sidebar-divider">
+
+
+            <p class="sidebar-heading">My Career</p>
+
+            <a class="sidebar-link"
+               href="{% url 'student_profile' %}">
+
+                <i class="bi bi-person-vcard-fill"></i>
+                <span>My Profile</span>
+            </a>
+
+            <a class="sidebar-link"
+               href="{% url 'student_skills' %}">
+
+                <i class="bi bi-tools"></i>
+                <span>My Skills</span>
+            </a>
+
+            <a class="sidebar-link"
+               href="{% url 'student_projects' %}">
+
+                <i class="bi bi-code-square"></i>
+                <span>My Projects</span>
+            </a>
+
+            <a class="sidebar-link"
+               href="{% url 'student_resume' %}">
+
+                <i class="bi bi-file-earmark-person-fill"></i>
+                <span>My Resume</span>
+            </a>
+
+            <a class="sidebar-link"
+               href="{% url 'career_readiness' %}">
+
+                <i class="bi bi-graph-up-arrow"></i>
+                <span>Career Readiness</span>
+            </a>
+
+            <a class="sidebar-link"
+               href="{% url 'student_notifications' %}">
+
+                <i class="bi bi-bell-fill"></i>
+                <span>Notifications</span>
+
+                {% if unread_notification_count %}
+                    <span class="badge rounded-pill bg-danger ms-auto">
+                        {{ unread_notification_count }}
+                    </span>
+                {% endif %}
+
+            </a>
+
+
+            <hr class="sidebar-divider">
+
+
+            <p class="sidebar-heading">AI Tools</p>
+
+            <a class="sidebar-link"
+               href="{% url 'career_copilot_page' %}">
+
+                <i class="bi bi-robot"></i>
+                <span>AI Career Copilot</span>
+            </a>
+
+        {% else %}
+
+            <p class="sidebar-heading">Account</p>
+
+            <a class="sidebar-link"
+               href="{% url 'home' %}">
+
+                <i class="bi bi-house-fill"></i>
+                <span>Home</span>
+            </a>
+
+        {% endif %}
+
+
+        <!-- LOGOUT -->
+
+<div class="sidebar-bottom">
+
+    <form method="POST"
+          action="{% url 'logout' %}"
+          class="logout-form">
+
+        {% csrf_token %}
+
+        <button type="submit" class="sidebar-link logout-button">
+            <i class="bi bi-box-arrow-left"></i>
+            <span>Log Out</span>
+        </button>
+
+    </form>
+
+</div>
+
+
+    {% else %}
+
+
+        <!-- =================================
+             GUEST NAVIGATION
+        ================================= -->
+
+        <p class="sidebar-heading">Main Menu</p>
+
+        <a class="sidebar-link"
+           href="{% url 'home' %}">
+
+            <i class="bi bi-house-fill"></i>
+            <span>Home</span>
+        </a>
+
+
+        <hr class="sidebar-divider">
+
+
+        <p class="sidebar-heading">Account</p>
+
+        <a class="sidebar-link"
+           href="{% url 'login' %}">
+
+            <i class="bi bi-box-arrow-in-right"></i>
+            <span>Login</span>
+        </a>
+
+        <a class="sidebar-link"
+           href="{% url 'student_register' %}">
+
+            <i class="bi bi-person-plus-fill"></i>
+            <span>Student Registration</span>
+        </a>
+
+        <a class="sidebar-link"
+           href="{% url 'recruiter_register' %}">
+
+            <i class="bi bi-person-plus-fill"></i>
+            <span>Recruiter Registration</span>
+        </a>
+
+
+    {% endif %}
+
+</aside>
+
+
+<!-- =================================
+     MAIN CONTENT
+================================= -->
+
+<main class="page-main">
+
+    <div class="container">
+
+        {% if messages %}
+
+            <div class="mb-4" aria-live="polite" aria-atomic="true">
+
+                {% for message in messages %}
+
+                    <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show site-alert"
+                         role="alert">
+
+                        <div class="d-flex align-items-start gap-2">
+
+                            <i class="bi bi-info-circle-fill mt-1"></i>
+
+                            <div>
+                                {{ message }}
+                            </div>
+
+                        </div>
+
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="alert"
+                                aria-label="Close">
+                        </button>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+
+        {% block content %}{% endblock %}
+
+    </div>
+
+</main>
+
+
+<!-- =================================
+     FOOTER
+================================= -->
+
+<footer class="site-footer">
+
+    <div class="container">
+
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+
+            <p class="footer-text mb-0">
+                &copy; {% now "Y" %} AI-Powered Smart Career &amp; Placement System
+            </p>
+
+            <p class="footer-text mb-0">
+
+                <i class="bi bi-mortarboard me-1"></i>
+
+                Connecting talent with opportunity
+
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+<!-- =================================
+     JAVASCRIPT
+================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+(() => {
+
+    const sidebar = document.getElementById("appSidebar");
+    const overlay = document.getElementById("sidebarOverlay");
+    const toggle = document.getElementById("sidebarToggle");
+    const close = document.getElementById("sidebarClose");
+
+    if (!sidebar || !overlay || !toggle) {
+        return;
+    }
+
+
+    /* OPEN SIDEBAR */
+
+    function openSidebar() {
+
+        sidebar.classList.add("mobile-open");
+        overlay.classList.add("show");
+
+        document.body.classList.add("sidebar-open");
+
+        toggle.setAttribute("aria-expanded", "true");
+
+        if (close) {
+            close.focus();
+        }
+    }
+
+
+    /* CLOSE SIDEBAR */
+
+    function closeSidebar() {
+
+        sidebar.classList.remove("mobile-open");
+        overlay.classList.remove("show");
+
+        document.body.classList.remove("sidebar-open");
+
+        toggle.setAttribute("aria-expanded", "false");
+    }
+
+
+    /* TOGGLE BUTTON */
+
+    toggle.addEventListener("click", () => {
+
+        if (sidebar.classList.contains("mobile-open")) {
+            closeSidebar();
+        } else {
+            openSidebar();
+        }
+
+    });
+
+
+    /* CLOSE BUTTON */
+
+    if (close) {
+
+        close.addEventListener("click", () => {
+
+            closeSidebar();
+            toggle.focus();
+
+        });
+
+    }
+
+
+    /* OVERLAY CLICK */
+
+    overlay.addEventListener("click", closeSidebar);
+
+
+    /* ESCAPE KEY */
+
+    document.addEventListener("keydown", (event) => {
+
+        if (event.key === "Escape") {
+            closeSidebar();
+        }
+
+    });
+
+
+    /* ACTIVE NAVIGATION LINK */
+
+    function updateActiveLink() {
+
+        const currentPath =
+            window.location.pathname.replace(/\/+$/, "") || "/";
+
+        sidebar.querySelectorAll(".sidebar-link").forEach((link) => {
+
+            const linkUrl = new URL(link.href, window.location.origin);
+
+            const linkPath =
+                linkUrl.pathname.replace(/\/+$/, "") || "/";
+
+            const isActive =
+                linkPath === currentPath &&
+                (!linkUrl.hash || linkUrl.hash === window.location.hash);
+
+            link.classList.toggle("active", isActive);
+
+            if (isActive) {
+                link.setAttribute("aria-current", "page");
+            } else {
+                link.removeAttribute("aria-current");
+            }
+
+        });
+
+    }
+
+    updateActiveLink();
+
+    window.addEventListener("hashchange", updateActiveLink);
+
+
+    /* CLOSE AFTER NAVIGATION ON MOBILE */
+
+    sidebar.querySelectorAll(".sidebar-link").forEach((link) => {
+
+        link.addEventListener("click", () => {
+
+            if (window.innerWidth < 768) {
+                closeSidebar();
+            }
+
+        });
+
+    });
+
+
+    /* RESPONSIVE RESIZE */
+
+    window.addEventListener("resize", () => {
+
+        if (window.innerWidth >= 768) {
+            closeSidebar();
+        }
+
+    });
+
+})();
+</script>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

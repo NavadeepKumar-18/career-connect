@@ -1,0 +1,370 @@
+{% extends 'base.html' %}
+
+{% block title %}My Applications{% endblock %}
+
+{% block extra_css %}
+<style>
+    .applications-page {
+        color: #17233f;
+    }
+
+    .applications-hero {
+        padding: 2.25rem;
+        border-radius: 1.1rem;
+        color: #fff;
+        background: linear-gradient(135deg, #0D102B, #14213D 65%, #3155A6);
+        box-shadow: 0 10px 28px rgba(13, 16, 43, 0.13);
+    }
+
+    .applications-hero p {
+        color: rgba(255, 255, 255, 0.78);
+    }
+
+    .applications-hero-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 54px;
+        height: 54px;
+        margin-bottom: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.12);
+        font-size: 1.6rem;
+    }
+
+    .application-card {
+        height: 100%;
+        overflow: hidden;
+        border: 1px solid #e2e7f0;
+        border-radius: 1rem;
+        background: #fff;
+        box-shadow: 0 5px 18px rgba(13, 16, 43, 0.05);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .application-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 28px rgba(13, 16, 43, 0.1);
+    }
+
+    .application-card.status-applied {
+        border-top: 4px solid #3155A6;
+    }
+
+    .application-card.status-shortlisted {
+        border-top: 4px solid #e5a323;
+    }
+
+    .application-card.status-rejected {
+        border-top: 4px solid #dc3545;
+    }
+
+    .application-card.status-selected {
+        border-top: 4px solid #198754;
+    }
+
+    .application-job-title {
+        color: #0D102B;
+        font-size: 1.2rem;
+        font-weight: 750;
+        overflow-wrap: anywhere;
+    }
+
+    .company-name {
+        color: #3155A6;
+        font-weight: 650;
+        overflow-wrap: anywhere;
+    }
+
+    .application-meta {
+        display: inline-block;
+        margin: 0.15rem 0.2rem 0.15rem 0;
+        padding: 0.45rem 0.7rem;
+        border: 1px solid #e0e6f0;
+        border-radius: 0.55rem;
+        color: #465571;
+        background: #f7f8fc;
+        font-size: 0.82rem;
+        overflow-wrap: anywhere;
+    }
+
+    .application-date {
+        padding: 1rem;
+        border: 1px solid #e3e8f2;
+        border-radius: 0.8rem;
+        background: #f7f8fc;
+    }
+
+    .application-date-label {
+        color: #75819a;
+        font-size: 0.8rem;
+    }
+
+    .application-date-value {
+        color: #17233f;
+        font-weight: 700;
+        overflow-wrap: anywhere;
+    }
+
+    .deadline-info {
+        color: #65718a;
+        font-size: 0.86rem;
+        overflow-wrap: anywhere;
+    }
+
+    .applications-page .btn-primary {
+        border-color: #3155A6;
+        background: #3155A6;
+    }
+
+    .applications-page .btn-primary:hover {
+        border-color: #24458F;
+        background: #24458F;
+    }
+
+    .applications-page .btn-outline-primary {
+        color: #3155A6;
+        border-color: #3155A6;
+    }
+
+    .applications-page .btn-outline-primary:hover {
+        color: #fff;
+        background: #3155A6;
+    }
+
+    .empty-applications {
+        padding: 3rem 1.25rem;
+        border: 1px dashed #cbd4e5;
+        border-radius: 1rem;
+        background: #f8f9fd;
+        text-align: center;
+    }
+
+    .empty-applications-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 82px;
+        height: 82px;
+        border-radius: 50%;
+        color: #3155A6;
+        background: #e9edff;
+        font-size: 2.5rem;
+    }
+
+    @media (max-width: 575.98px) {
+        .applications-hero {
+            padding: 1.4rem;
+        }
+
+        .applications-hero h1 {
+            font-size: 1.7rem;
+        }
+
+        .application-card .card-body {
+            padding: 1.15rem !important;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .application-card {
+            transition: none;
+        }
+
+        .application-card:hover {
+            transform: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4 py-lg-5 applications-page">
+
+    <!-- PAGE HEADER -->
+    <section class="applications-hero mb-4 mb-lg-5">
+        <div class="row align-items-center g-3">
+            <div class="col-lg-9">
+                <div class="applications-hero-icon">
+                    <i class="bi bi-file-earmark-check"></i>
+                </div>
+
+                <h1 class="fw-bold mb-2">My Applications</h1>
+
+                <p class="mb-0">
+                    Track your job applications, review their current status,
+                    and stay informed about your placement journey.
+                </p>
+            </div>
+
+            <div class="col-lg-3 text-lg-end">
+                <a href="{% url 'job_list' %}" class="btn btn-light px-3 py-2">
+                    <i class="bi bi-search me-2"></i>
+                    Browse Jobs
+                </a>
+            </div>
+        </div>
+    </section>
+
+    {% if applications %}
+
+        <!-- APPLICATION LIST -->
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+            <h2 class="h5 fw-bold mb-0">
+                <i class="bi bi-briefcase me-2" style="color:#3155A6;"></i>
+                Your Applications
+            </h2>
+
+            <span class="text-muted small">
+                {{ applications|length }} application{{ applications|length|pluralize }}
+            </span>
+        </div>
+
+        <div class="row g-4">
+            {% for application in applications %}
+
+                <div class="col-12 col-xl-6">
+                    <article class="card application-card
+                        {% if application.status == 'APPLIED' %}status-applied
+                        {% elif application.status == 'SHORTLISTED' %}status-shortlisted
+                        {% elif application.status == 'REJECTED' %}status-rejected
+                        {% elif application.status == 'SELECTED' %}status-selected
+                        {% endif %}">
+
+                        <div class="card-body p-4 d-flex flex-column">
+
+                            <!-- JOB HEADER -->
+                            <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                                <div class="flex-grow-1">
+                                    <h3 class="application-job-title mb-2">
+                                        {{ application.job.title }}
+                                    </h3>
+
+                                    <p class="company-name mb-0">
+                                        <i class="bi bi-building me-2"></i>
+                                        {{ application.job.company.company_name }}
+                                    </p>
+                                </div>
+
+                                <!-- APPLICATION STATUS -->
+                                <div class="flex-shrink-0">
+                                    {% if application.status == 'APPLIED' %}
+                                        <span class="badge rounded-pill bg-primary px-3 py-2">
+                                            <i class="bi bi-send me-1"></i>
+                                            Applied
+                                        </span>
+
+                                    {% elif application.status == 'SHORTLISTED' %}
+                                        <span class="badge rounded-pill bg-warning text-dark px-3 py-2">
+                                            <i class="bi bi-star me-1"></i>
+                                            Shortlisted
+                                        </span>
+
+                                    {% elif application.status == 'REJECTED' %}
+                                        <span class="badge rounded-pill bg-danger px-3 py-2">
+                                            <i class="bi bi-x-circle me-1"></i>
+                                            Rejected
+                                        </span>
+
+                                    {% elif application.status == 'SELECTED' %}
+                                        <span class="badge rounded-pill bg-success px-3 py-2">
+                                            <i class="bi bi-check-circle me-1"></i>
+                                            Selected
+                                        </span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <hr class="my-3">
+
+                            <!-- JOB INFORMATION -->
+                            <div class="mb-4">
+                                {% if application.job.location %}
+                                    <span class="application-meta">
+                                        <i class="bi bi-geo-alt me-1"></i>
+                                        {{ application.job.location }}
+                                    </span>
+                                {% endif %}
+
+                                {% if application.job.salary %}
+                                    <span class="application-meta">
+                                        <i class="bi bi-currency-rupee me-1"></i>
+                                        {{ application.job.salary }}
+                                    </span>
+                                {% endif %}
+                            </div>
+
+                            <!-- APPLICATION DATE -->
+                            <div class="application-date mb-3">
+                                <div class="application-date-label mb-1">
+                                    <i class="bi bi-calendar-check me-2"></i>
+                                    Applied On
+                                </div>
+
+                                <div class="application-date-value">
+                                    {{ application.applied_at|date:"d M Y, h:i A" }}
+                                </div>
+                            </div>
+
+                            <!-- DEADLINE -->
+                            <div class="deadline-info mb-4">
+                                <i class="bi bi-calendar-event me-2"></i>
+                                Application Deadline:
+                                <strong class="text-dark">
+                                    {{ application.job.deadline }}
+                                </strong>
+                            </div>
+
+                            <!-- VIEW JOB -->
+                            <div class="mt-auto">
+                                <a
+                                    href="{% url 'job_detail' application.job.id %}"
+                                    class="btn btn-outline-primary w-100 py-2">
+                                    <i class="bi bi-eye me-2"></i>
+                                    View Job Details
+                                </a>
+                            </div>
+
+                        </div>
+                    </article>
+                </div>
+
+            {% endfor %}
+        </div>
+
+    {% else %}
+
+        <!-- EMPTY STATE -->
+        <div class="empty-applications">
+            <div class="empty-applications-icon mb-4">
+                <i class="bi bi-file-earmark-x"></i>
+            </div>
+
+            <h2 class="h4 fw-bold mb-2">No Applications Yet</h2>
+
+            <p class="text-muted mb-4">
+                You haven't applied for any jobs yet.
+                Explore available opportunities and take the next step in your career.
+            </p>
+
+            <a href="{% url 'job_list' %}" class="btn btn-primary px-4 py-2">
+                <i class="bi bi-search me-2"></i>
+                Browse Jobs
+            </a>
+        </div>
+
+    {% endif %}
+
+    <!-- BACK TO DASHBOARD -->
+    <div class="text-center mt-5 pt-2">
+        <a
+            href="{% url 'dashboard:student_dashboard' %}"
+            class="btn btn-outline-secondary px-4 py-2">
+            <i class="bi bi-arrow-left me-2"></i>
+            Back to Dashboard
+        </a>
+    </div>
+
+</div>
+{% endblock %}

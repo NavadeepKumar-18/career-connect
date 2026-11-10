@@ -1,0 +1,362 @@
+{% extends 'base.html' %}
+
+{% block title %}My Company Profile{% endblock %}
+
+{% block extra_css %}
+<style>
+    .company-profile-page {
+        color: #17233f;
+    }
+
+    .company-hero {
+        padding: 2rem;
+        border-radius: 1.1rem;
+        color: #fff;
+        background: linear-gradient(135deg, #0D102B, #14213D 65%, #3155A6);
+        box-shadow: 0 10px 28px rgba(13, 16, 43, 0.13);
+    }
+
+    .company-hero p {
+        color: rgba(255, 255, 255, 0.78);
+    }
+
+    .company-hero-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 54px;
+        height: 54px;
+        margin-bottom: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.12);
+        font-size: 1.6rem;
+    }
+
+    .company-form-card {
+        overflow: hidden;
+        border: 1px solid #e2e7f0;
+        border-radius: 1rem;
+        background: #fff;
+        box-shadow: 0 6px 22px rgba(13, 16, 43, 0.06);
+    }
+
+    .company-form-header {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid #e8ebf3;
+        background: #f8f9fd;
+    }
+
+    .company-form-header h2 {
+        color: #0D102B;
+        font-size: 1.1rem;
+        font-weight: 750;
+    }
+
+    .company-profile-page .form-label {
+        margin-bottom: 0.5rem;
+        color: #263653;
+        font-size: 0.9rem;
+        font-weight: 650;
+    }
+
+    .company-profile-page .form-control {
+        min-height: 46px;
+        padding: 0.7rem 0.85rem;
+        border: 1px solid #d8dfeb;
+        border-radius: 0.65rem;
+        background-color: #fff;
+    }
+
+    .company-profile-page textarea.form-control {
+        min-height: 140px;
+        resize: vertical;
+    }
+
+    .company-profile-page .form-control:focus {
+        border-color: #3155A6;
+        box-shadow: 0 0 0 0.2rem rgba(49, 85, 166, 0.13);
+    }
+
+    .approval-card {
+        padding: 1.1rem 1.25rem;
+        border: 1px solid transparent;
+        border-radius: 0.85rem;
+    }
+
+    .approval-approved {
+        border-color: #b7e4cc;
+        background: #effaf3;
+        color: #146c43;
+    }
+
+    .approval-pending {
+        border-color: #f1d99b;
+        background: #fff9e9;
+        color: #795400;
+    }
+
+    .approval-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.75);
+        font-size: 1.35rem;
+    }
+
+    .approval-card p {
+        margin: 0.3rem 0 0;
+        font-size: 0.88rem;
+        line-height: 1.6;
+    }
+
+    .company-profile-page .btn-primary {
+        border-color: #3155A6;
+        background: #3155A6;
+    }
+
+    .company-profile-page .btn-primary:hover {
+        border-color: #24458F;
+        background: #24458F;
+    }
+
+    .company-profile-page .btn {
+        border-radius: 0.65rem;
+        font-weight: 600;
+    }
+
+    .form-help {
+        margin-top: 0.35rem;
+        color: #77829a;
+        font-size: 0.8rem;
+    }
+
+    @media (max-width: 575.98px) {
+        .company-hero {
+            padding: 1.4rem;
+        }
+
+        .company-hero h1 {
+            font-size: 1.65rem;
+        }
+
+        .company-form-body {
+            padding: 1.2rem !important;
+        }
+
+        .company-form-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .company-form-actions .btn {
+            width: 100%;
+            margin: 0 !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4 py-lg-5 company-profile-page">
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-xl-9">
+
+            <!-- PAGE HEADER -->
+            <section class="company-hero mb-4">
+                <div class="company-hero-icon">
+                    <i class="bi bi-building"></i>
+                </div>
+
+                <h1 class="fw-bold mb-2">My Company Profile</h1>
+
+                <p class="mb-0">
+                    Manage your company information and complete your profile
+                    to participate in the placement process.
+                </p>
+            </section>
+
+            <!-- DJANGO MESSAGES -->
+            {% if messages %}
+                <div class="mb-4" aria-live="polite">
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show border-0 shadow-sm rounded-3"
+                             role="alert">
+                            {{ message }}
+                            <button type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <!-- APPROVAL STATUS -->
+            {% if company.is_approved %}
+                <section class="approval-card approval-approved mb-4">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="approval-icon">
+                            <i class="bi bi-check-circle-fill"></i>
+                        </div>
+
+                        <div>
+                            <h2 class="h6 fw-bold mb-0">Company Approved</h2>
+                            <p>
+                                Your company has been approved by the administrator.
+                                You can now post jobs, subject to your recruiter account
+                                permissions and approval status.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            {% else %}
+                <section class="approval-card approval-pending mb-4">
+                    <div class="d-flex align-items-start gap-3">
+                        <div class="approval-icon">
+                            <i class="bi bi-hourglass-split"></i>
+                        </div>
+
+                        <div>
+                            <h2 class="h6 fw-bold mb-0">Approval Pending</h2>
+                            <p>
+                                Your company profile is waiting for administrator
+                                approval. Job posting will become available after
+                                the required approvals are completed.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+            {% endif %}
+
+            <!-- COMPANY FORM -->
+            <section class="company-form-card">
+                <div class="company-form-header">
+                    <h2 class="mb-1">
+                        <i class="bi bi-pencil-square me-2" style="color:#3155A6;"></i>
+                        Company Information
+                    </h2>
+                    <p class="text-muted small mb-0">
+                        Keep your company details accurate and up to date.
+                    </p>
+                </div>
+
+                <div class="company-form-body card-body p-4 p-lg-5">
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <!-- COMPANY NAME -->
+                        <div class="mb-4">
+                            <label for="company_name" class="form-label">
+                                Company Name <span class="text-danger">*</span>
+                            </label>
+
+                            <input
+                                type="text"
+                                id="company_name"
+                                name="company_name"
+                                class="form-control"
+                                value="{{ company.company_name }}"
+                                placeholder="Enter company name"
+                                autocomplete="organization"
+                                maxlength="255"
+                                required>
+
+                            <div class="form-help">
+                                Enter the official name of your company.
+                            </div>
+                        </div>
+
+                        <!-- DESCRIPTION -->
+                        <div class="mb-4">
+                            <label for="description" class="form-label">
+                                Company Description
+                            </label>
+
+                            <textarea
+                                id="description"
+                                name="description"
+                                class="form-control"
+                                rows="5"
+                                placeholder="Describe your company, industry, products, or services">{{ company.description }}</textarea>
+
+                            <div class="form-help">
+                                Help students understand your organization and its work.
+                            </div>
+                        </div>
+
+                        <!-- WEBSITE -->
+                        <div class="mb-4">
+                            <label for="website" class="form-label">
+                                Company Website
+                            </label>
+
+                            <input
+                                type="url"
+                                id="website"
+                                name="website"
+                                class="form-control"
+                                value="{{ company.website }}"
+                                placeholder="https://example.com"
+                                autocomplete="url">
+
+                            <div class="form-help">
+                                Include the full website address, starting with https://.
+                            </div>
+                        </div>
+
+                        <!-- LOCATION -->
+                        <div class="mb-4">
+                            <label for="location" class="form-label">
+                                Company Location
+                            </label>
+
+                            <input
+                                type="text"
+                                id="location"
+                                name="location"
+                                class="form-control"
+                                value="{{ company.location }}"
+                                placeholder="Hyderabad, India"
+                                autocomplete="address-level2">
+
+                            <div class="form-help">
+                                Enter your company headquarters or primary office location.
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- ACTIONS -->
+                        <div class="company-form-actions d-flex flex-wrap gap-2">
+                            <button type="submit" class="btn btn-primary px-4 py-2">
+                                <i class="bi bi-save me-2"></i>
+                                Save Company Profile
+                            </button>
+
+                            <a
+                                href="{% url 'dashboard:recruiter_dashboard' %}"
+                                class="btn btn-outline-secondary px-4 py-2">
+                                <i class="bi bi-arrow-left me-2"></i>
+                                Back to Dashboard
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <p class="text-muted small text-center mt-4 mb-0">
+                <i class="bi bi-shield-check me-1"></i>
+                Your company information is managed through your recruiter account.
+            </p>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

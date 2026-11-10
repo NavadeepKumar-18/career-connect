@@ -1,0 +1,541 @@
+{% extends 'base.html' %}
+
+{% block title %}Post New Job{% endblock %}
+
+{% block extra_css %}
+<style>
+    .post-job-page {
+        color: #17233f;
+    }
+
+    .post-job-hero {
+        padding: 2rem;
+        border-radius: 1rem;
+        color: #fff;
+        background: linear-gradient(135deg, #0D102B, #14213D 65%, #3155A6);
+        box-shadow: 0 8px 24px rgba(13, 16, 43, 0.12);
+    }
+
+    .post-job-hero p {
+        color: rgba(255, 255, 255, 0.78);
+    }
+
+    .post-job-icon {
+        display: inline-flex;
+        width: 52px;
+        height: 52px;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.12);
+        font-size: 1.5rem;
+    }
+
+    .post-job-company {
+        padding: 1rem 1.2rem;
+        border: 1px solid #dce5fa;
+        border-radius: 0.85rem;
+        color: #29457f;
+        background: #edf2ff;
+        overflow-wrap: anywhere;
+    }
+
+    .post-job-card {
+        overflow: hidden;
+        border: 1px solid #e2e7f0;
+        border-radius: 1rem;
+        background: #fff;
+        box-shadow: 0 6px 24px rgba(13, 16, 43, 0.055);
+    }
+
+    .post-job-card-header {
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid #e9edf5;
+        background: #fafbfe;
+    }
+
+    .post-job-card-header h2 {
+        color: #0D102B;
+        font-size: 1.1rem;
+        font-weight: 800;
+    }
+
+    .post-job-page .form-label {
+        margin-bottom: 0.5rem;
+        color: #17233f;
+        font-size: 0.9rem;
+        font-weight: 700;
+    }
+
+    .post-job-page .form-control {
+        min-height: 45px;
+        border-color: #dce3ef;
+        border-radius: 0.65rem;
+    }
+
+    .post-job-page textarea.form-control {
+        min-height: 130px;
+    }
+
+    .post-job-page .form-control:focus {
+        border-color: #3155A6;
+        box-shadow: 0 0 0 0.2rem rgba(49, 85, 166, 0.12);
+    }
+
+    .post-job-page .form-text {
+        color: #758098;
+        font-size: 0.8rem;
+    }
+
+    .form-section-title {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        margin-bottom: 1.1rem;
+        color: #0D102B;
+        font-size: 1rem;
+        font-weight: 800;
+    }
+
+    .form-section-title i {
+        color: #3155A6;
+        font-size: 1.15rem;
+    }
+
+    .branch-selection-panel {
+        padding: 1.15rem;
+        border: 1px solid #e2e7f0;
+        border-radius: 0.8rem;
+        background: #f8f9fd;
+    }
+
+    .branch-all-option {
+        padding: 0.8rem;
+        border: 1px solid #dce5fa;
+        border-radius: 0.65rem;
+        background: #edf2ff;
+    }
+
+    .branch-option-card {
+        height: 100%;
+        padding: 0.7rem 0.8rem;
+        border: 1px solid #e4e8f1;
+        border-radius: 0.65rem;
+        background: #fff;
+        transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .branch-option-card:has(.branch-option:checked) {
+        border-color: #3155A6;
+        background: #f0f3ff;
+    }
+
+    .post-job-page .form-check-input {
+        cursor: pointer;
+    }
+
+    .post-job-page .form-check-input:checked {
+        border-color: #3155A6;
+        background-color: #3155A6;
+    }
+
+    .post-job-page .form-check-label {
+        cursor: pointer;
+        font-size: 0.88rem;
+        overflow-wrap: anywhere;
+    }
+
+    .post-job-page .btn {
+        border-radius: 0.65rem;
+        font-weight: 650;
+    }
+
+    .post-job-page .btn-primary {
+        border-color: #3155A6;
+        background: #3155A6;
+    }
+
+    .post-job-page .btn-primary:hover {
+        border-color: #24458F;
+        background: #24458F;
+    }
+
+    .post-job-actions {
+        padding-top: 1.4rem;
+        border-top: 1px solid #e9edf5;
+    }
+
+    @media (max-width: 575.98px) {
+        .post-job-hero {
+            padding: 1.4rem;
+        }
+
+        .post-job-card .card-body {
+            padding: 1.2rem !important;
+        }
+
+        .post-job-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .post-job-actions .btn {
+            width: 100%;
+            margin: 0 !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4 py-lg-5 post-job-page">
+
+    <div class="row justify-content-center">
+        <div class="col-12 col-xl-9">
+
+            <!-- PAGE HEADER -->
+            <section class="post-job-hero mb-4">
+                <div class="post-job-icon">
+                    <i class="bi bi-briefcase-fill"></i>
+                </div>
+
+                <h1 class="h2 fw-bold mb-2">Post a New Job</h1>
+
+                <p class="mb-0">
+                    Create an opportunity and help students discover their next career step.
+                </p>
+            </section>
+
+            <!-- COMPANY -->
+            <div class="post-job-company mb-4">
+                <div class="d-flex align-items-center gap-3">
+                    <i class="bi bi-building fs-3"></i>
+
+                    <div>
+                        <div class="small mb-1">Posting on behalf of</div>
+                        <div class="fw-bold">
+                            {{ company.company_name }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DJANGO MESSAGES -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-3"
+                         role="alert">
+                        {{ message }}
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- JOB FORM -->
+            <div class="post-job-card">
+
+                <div class="post-job-card-header">
+                    <h2 class="mb-1">
+                        <i class="bi bi-pencil-square text-primary me-2"></i>
+                        Job Information
+                    </h2>
+                    <p class="text-muted small mb-0">
+                        Complete the details below to create your job listing.
+                    </p>
+                </div>
+
+                <div class="card-body p-4 p-lg-5">
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <!-- BASIC DETAILS -->
+                        <section class="mb-4">
+                            <h3 class="form-section-title">
+                                <i class="bi bi-card-text"></i>
+                                Basic Details
+                            </h3>
+
+                            <div class="mb-3">
+                                <label for="title" class="form-label">
+                                    Job Title <span class="text-danger">*</span>
+                                </label>
+
+                                <input
+                                    id="title"
+                                    type="text"
+                                    name="title"
+                                    class="form-control"
+                                    placeholder="Example: Python Developer"
+                                    maxlength="200"
+                                    required
+                                >
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="description" class="form-label">
+                                    Job Description <span class="text-danger">*</span>
+                                </label>
+
+                                <textarea
+                                    id="description"
+                                    name="description"
+                                    class="form-control"
+                                    rows="5"
+                                    placeholder="Describe the role, responsibilities, and expectations."
+                                    required
+                                ></textarea>
+
+                                <div class="form-text">
+                                    Explain what the selected candidate will do in this role.
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="required_skills" class="form-label">
+                                    Required Technical Skills <span class="text-danger">*</span>
+                                </label>
+
+                                <input
+                                    id="required_skills"
+                                    type="text"
+                                    name="required_skills"
+                                    class="form-control"
+                                    placeholder="Python, Django, SQL, HTML, CSS"
+                                    required
+                                >
+
+                                <div class="form-text">
+                                    Enter technical skills separated by commas.
+                                </div>
+                            </div>
+
+                            <div class="mb-0">
+                                <label for="required_soft_skills" class="form-label">
+                                    Required Soft Skills
+                                </label>
+
+                                <input
+                                    id="required_soft_skills"
+                                    type="text"
+                                    name="required_soft_skills"
+                                    class="form-control"
+                                    maxlength="500"
+                                    placeholder="Communication, Teamwork, Leadership"
+                                >
+
+                                <div class="form-text">
+                                    Enter interpersonal skills separated by commas. This field is optional.
+                                </div>
+                            </div>
+                        </section>
+
+                        <hr class="my-4">
+
+                        <!-- BRANCH ELIGIBILITY -->
+                        <section class="mb-4">
+                            <h3 class="form-section-title">
+                                <i class="bi bi-mortarboard"></i>
+                                Branch Eligibility
+                            </h3>
+
+                            <div class="branch-selection-panel">
+                                <p class="text-muted small mb-3">
+                                    Select the branches eligible for this opportunity.
+                                    Choose All Branches to allow students from every branch.
+                                </p>
+
+                                <div class="branch-all-option mb-3">
+                                    <div class="form-check mb-0">
+                                        <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            name="eligible_branches"
+                                            value="ALL"
+                                            id="branch_all"
+                                        >
+
+                                        <label class="form-check-label fw-bold"
+                                               for="branch_all">
+                                            <i class="bi bi-globe me-1"></i>
+                                            All Branches
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="row g-2">
+                                    {% for value, label in branch_choices %}
+                                        <div class="col-12 col-sm-6">
+                                            <div class="branch-option-card">
+                                                <div class="form-check mb-0">
+                                                    <input
+                                                        class="form-check-input branch-option"
+                                                        type="checkbox"
+                                                        name="eligible_branches"
+                                                        value="{{ value }}"
+                                                        id="branch_{{ forloop.counter }}"
+                                                    >
+
+                                                    <label
+                                                        class="form-check-label"
+                                                        for="branch_{{ forloop.counter }}"
+                                                    >
+                                                        {{ label }}
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% empty %}
+                                        <div class="col-12">
+                                            <p class="text-muted small mb-0">
+                                                No branch choices are configured.
+                                            </p>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </section>
+
+                        <hr class="my-4">
+
+                        <!-- ELIGIBILITY AND COMPENSATION -->
+                        <section class="mb-4">
+                            <h3 class="form-section-title">
+                                <i class="bi bi-clipboard-check"></i>
+                                Requirements and Compensation
+                            </h3>
+
+                            <div class="mb-3">
+                                <label for="minimum_cgpa" class="form-label">
+                                    Minimum CGPA
+                                </label>
+
+                                <input
+                                    id="minimum_cgpa"
+                                    type="number"
+                                    name="minimum_cgpa"
+                                    class="form-control"
+                                    step="0.01"
+                                    min="0"
+                                    max="10"
+                                    placeholder="Example: 6.00"
+                                >
+
+                                <div class="form-text">
+                                    Leave blank if there is no minimum CGPA requirement.
+                                </div>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-12 col-md-6">
+                                    <label for="location" class="form-label">
+                                        Job Location
+                                    </label>
+
+                                    <input
+                                        id="location"
+                                        type="text"
+                                        name="location"
+                                        class="form-control"
+                                        placeholder="Hyderabad, India"
+                                    >
+                                </div>
+
+                                <div class="col-12 col-md-6">
+                                    <label for="salary" class="form-label">
+                                        Salary
+                                    </label>
+
+                                    <input
+                                        id="salary"
+                                        type="text"
+                                        name="salary"
+                                        class="form-control"
+                                        placeholder="Example: ₹3 - ₹5 LPA"
+                                    >
+                                </div>
+                            </div>
+                        </section>
+
+                        <hr class="my-4">
+
+                        <!-- DEADLINE -->
+                        <section class="mb-4">
+                            <h3 class="form-section-title">
+                                <i class="bi bi-calendar-event"></i>
+                                Application Timeline
+                            </h3>
+
+                            <label for="deadline" class="form-label">
+                                Application Deadline <span class="text-danger">*</span>
+                            </label>
+
+                            <input
+                                id="deadline"
+                                type="date"
+                                name="deadline"
+                                class="form-control"
+                                required
+                            >
+
+                            <div class="form-text">
+                                Choose the last date students can apply.
+                            </div>
+                        </section>
+
+                        <!-- ACTIONS -->
+                        <div class="post-job-actions d-flex flex-wrap gap-2">
+                            <button type="submit" class="btn btn-primary px-4 py-2">
+                                <i class="bi bi-check-circle me-2"></i>
+                                Post Job
+                            </button>
+
+                            <a href="{% url 'dashboard:recruiter_dashboard' %}"
+                               class="btn btn-outline-secondary px-4 py-2">
+                                <i class="bi bi-arrow-left me-2"></i>
+                                Cancel
+                            </a>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const allBranches = document.getElementById("branch_all");
+    const branchOptions = document.querySelectorAll(".branch-option");
+
+    if (!allBranches) {
+        return;
+    }
+
+    allBranches.addEventListener("change", function () {
+        if (this.checked) {
+            branchOptions.forEach(function (checkbox) {
+                checkbox.checked = false;
+            });
+        }
+    });
+
+    branchOptions.forEach(function (checkbox) {
+        checkbox.addEventListener("change", function () {
+            if (this.checked) {
+                allBranches.checked = false;
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

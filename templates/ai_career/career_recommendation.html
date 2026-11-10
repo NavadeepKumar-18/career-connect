@@ -1,0 +1,756 @@
+
+{% extends 'base.html' %}
+
+{% block title %}AI Career Intelligence{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Page-specific styling */
+    .career-intelligence {
+        max-width: 1250px;
+        margin: 0 auto;
+        color: #EDF1FF;
+    }
+
+    .career-intelligence .page-heading h1 {
+        color: #FFFFFF !important;
+    }
+
+    .career-intelligence .page-heading p {
+        color: #B8C6E5 !important;
+    }
+
+    .career-intelligence .page-heading .text-primary {
+        color: #7188FF !important;
+    }
+
+    .career-intelligence .page-badge {
+        background: #4B50D8;
+        color: #FFFFFF;
+        padding: 6px 11px;
+        border-radius: 7px;
+    }
+
+    /* Main career card */
+    .career-intelligence .career-main-card,
+    .career-intelligence .career-option-card,
+    .career-intelligence .roadmap-card {
+        background: #171D43 !important;
+        color: #EDF1FF !important;
+        border: 1px solid #2D3968 !important;
+        border-radius: 17px !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    .career-intelligence .career-main-card h2,
+    .career-intelligence .career-main-card h3,
+    .career-intelligence .career-main-card h4,
+    .career-intelligence .career-main-card h5,
+    .career-intelligence .career-option-card h5,
+    .career-intelligence .roadmap-card h5 {
+        color: #FFFFFF !important;
+    }
+
+    .career-intelligence .text-muted {
+        color: #B8C6E5 !important;
+    }
+
+    .career-intelligence .text-primary {
+        color: #7188FF !important;
+    }
+
+    /* Career icon */
+    .career-intelligence .career-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #E7EBFF;
+        color: #4055CB;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    /* Light score panels: explicitly override global card/text styles */
+    .career-intelligence .score-card {
+        background: #F8FAFF !important;
+        color: #243354 !important;
+        padding: 19px;
+        border: 1px solid #E0E6F3 !important;
+        border-radius: 14px;
+        height: 100%;
+    }
+
+    .career-intelligence .score-card,
+    .career-intelligence .score-card * {
+        color: #243354;
+    }
+
+    .career-intelligence .score-card .text-primary {
+        color: #4055CB !important;
+    }
+
+    .career-intelligence .score-card .text-success {
+        color: #078653 !important;
+    }
+
+    .career-intelligence .score-card .progress {
+        height: 10px;
+        background: #E5E9F1;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .career-intelligence .score-card .progress-bar {
+        border-radius: 20px;
+    }
+
+    /* Skill badges */
+    .career-intelligence .skill-matched {
+        display: inline-block;
+        padding: 9px 12px;
+        background: #D5F5E7;
+        color: #08794C !important;
+        border: 1px solid #A8E5C9;
+        border-radius: 7px;
+        font-size: .84rem;
+        font-weight: 600;
+    }
+
+    .career-intelligence .skill-missing {
+        display: inline-block;
+        padding: 9px 12px;
+        background: #FFF2C9;
+        color: #745000 !important;
+        border: 1px solid #F2D98C;
+        border-radius: 7px;
+        font-size: .84rem;
+        font-weight: 600;
+    }
+
+    /* Roadmap */
+    .career-intelligence .roadmap-container {
+        position: relative;
+        max-width: 950px;
+        margin: 0 auto;
+    }
+
+    .career-intelligence .roadmap-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 17px;
+        margin-bottom: 23px;
+    }
+
+    .career-intelligence .roadmap-number {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #4C55D9, #6478EA);
+        color: #FFFFFF !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        flex-shrink: 0;
+        box-shadow: 0 4px 12px rgba(76, 85, 217, 0.25);
+    }
+
+    .career-intelligence .roadmap-card {
+        flex: 1;
+        min-width: 0;
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .career-intelligence .roadmap-card:hover,
+    .career-intelligence .career-option-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+    }
+
+    .career-intelligence .roadmap-activity {
+        background: #222D58;
+        border: 1px solid #354574;
+        border-radius: 12px;
+        padding: 14px;
+        color: #E5ECFF;
+    }
+
+    .career-intelligence .roadmap-activity p,
+    .career-intelligence .roadmap-activity span {
+        color: #E5ECFF !important;
+    }
+
+    .career-intelligence .roadmap-section-heading h2 {
+        color: #FFFFFF !important;
+    }
+
+    .career-intelligence .section-description {
+        color: #B8C6E5 !important;
+    }
+
+    .career-intelligence .priority-high {
+        background: #5A2639;
+        color: #FFC1D0;
+    }
+
+    .career-intelligence .priority-medium {
+        background: #5B4820;
+        color: #FFE39A;
+    }
+
+    .career-intelligence .priority-normal {
+        background: #174B3D;
+        color: #A7F3D0;
+    }
+
+    .career-intelligence .priority-high,
+    .career-intelligence .priority-medium,
+    .career-intelligence .priority-normal {
+        padding: 7px 10px;
+        border-radius: 7px;
+        font-size: .78rem;
+        font-weight: 600;
+    }
+
+    /* Other career cards */
+    .career-intelligence .career-option-card {
+        height: 100%;
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .career-intelligence .career-option-card .progress {
+        height: 7px;
+        background: #303A60;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .career-intelligence .career-option-card .progress-bar {
+        border-radius: 20px;
+    }
+
+    .career-intelligence .career-option-card .skill-small {
+        display: inline-block;
+        background: #E8EDFF;
+        color: #334B9B !important;
+        border: 1px solid #CBD6FF;
+        border-radius: 6px;
+        padding: 5px 8px;
+        font-size: .76rem;
+    }
+
+    .career-intelligence .roadmap-label {
+        display: inline-block;
+        background: #DDF6FF;
+        color: #087A9D !important;
+        padding: 6px 10px;
+        border-radius: 7px;
+        font-size: .75rem;
+        font-weight: 700;
+    }
+
+    .career-intelligence .empty-state {
+        background: #171D43 !important;
+        color: #EDF1FF !important;
+        border: 1px solid #2D3968 !important;
+        border-radius: 17px;
+    }
+
+    .career-intelligence .empty-state h3,
+    .career-intelligence .empty-state h5 {
+        color: #FFFFFF !important;
+    }
+
+    .career-intelligence .empty-state p {
+        color: #B8C6E5 !important;
+    }
+
+    .career-intelligence .back-button {
+        color: #C5D1F5;
+        border-color: #52618E;
+    }
+
+    .career-intelligence .back-button:hover {
+        background: #4055A6;
+        border-color: #4055A6;
+        color: #FFFFFF;
+    }
+
+    @media (max-width: 767.98px) {
+        .career-intelligence {
+            width: 100%;
+        }
+
+        .career-intelligence .career-main-card .card-body {
+            padding: 24px !important;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .career-intelligence .roadmap-item {
+            gap: 10px;
+        }
+
+        .career-intelligence .roadmap-number {
+            width: 34px;
+            height: 34px;
+            font-size: .9rem;
+        }
+
+        .career-intelligence .roadmap-card .card-body {
+            padding: 16px !important;
+        }
+
+        .career-intelligence .career-main-card .card-body {
+            padding: 18px !important;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .career-intelligence .roadmap-card,
+        .career-intelligence .career-option-card {
+            transition: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4 py-lg-5">
+<div class="career-intelligence">
+
+    <!-- Page Heading -->
+    <div class="page-heading text-center mb-5">
+        <span class="page-badge mb-3 d-inline-block">
+            <i class="bi bi-robot me-1"></i>
+            AI Powered
+        </span>
+
+        <h1 class="fw-bold">
+            <i class="bi bi-compass me-2 text-primary"></i>
+            AI Career Intelligence
+        </h1>
+
+        <p>
+            Discover your career path and build a personalized learning roadmap.
+        </p>
+    </div>
+
+    <!-- Error Message -->
+    {% if error %}
+        <div class="alert alert-warning rounded-4">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            {{ error }}
+        </div>
+    {% endif %}
+
+    {% if best_career %}
+
+        <!-- Best Career Recommendation -->
+        <div class="card career-main-card mb-5">
+            <div class="card-body p-4 p-md-5">
+
+                <div class="d-flex align-items-center mb-4">
+                    <div class="career-icon me-3">
+                        <i class="bi bi-briefcase-fill"></i>
+                    </div>
+
+                    <div class="min-w-0">
+                        <span class="text-primary fw-semibold small">
+                            YOUR TOP CAREER MATCH
+                        </span>
+
+                        <h2 class="fw-bold mb-0">
+                            {% if best_career.title %}
+                                {{ best_career.title }}
+                            {% elif best_career.name %}
+                                {{ best_career.name }}
+                            {% else %}
+                                Recommended Career
+                            {% endif %}
+                        </h2>
+                    </div>
+                </div>
+
+                {% if best_career.description %}
+                    <p class="text-muted mb-4">
+                        {{ best_career.description }}
+                    </p>
+                {% endif %}
+
+                <!-- Career Match and Readiness -->
+                <div class="row g-4 mb-4">
+
+                    <!-- Career Match -->
+                    <div class="col-12 col-md-6">
+                        <div class="score-card">
+                            <div class="d-flex justify-content-between align-items-center mb-2 gap-2">
+                                <span class="fw-semibold">
+                                    <i class="bi bi-bullseye me-2 text-primary"></i>
+                                    Career Match
+                                </span>
+
+                                <strong class="text-primary">
+                                    {% if best_career.match_percentage != None %}
+                                        {{ best_career.match_percentage }}%
+                                    {% elif best_career.match_score != None %}
+                                        {{ best_career.match_score }}%
+                                    {% else %}
+                                        0%
+                                    {% endif %}
+                                </strong>
+                            </div>
+
+                            <div class="progress">
+                                <div class="progress-bar bg-primary"
+                                     role="progressbar"
+                                     {% if best_career.match_percentage != None %}
+                                         style="width: {{ best_career.match_percentage }}%;"
+                                         aria-valuenow="{{ best_career.match_percentage }}"
+                                     {% elif best_career.match_score != None %}
+                                         style="width: {{ best_career.match_score }}%;"
+                                         aria-valuenow="{{ best_career.match_score }}"
+                                     {% else %}
+                                         style="width: 0%;"
+                                         aria-valuenow="0"
+                                     {% endif %}
+                                     aria-valuemin="0"
+                                     aria-valuemax="100">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Readiness Score -->
+                    <div class="col-12 col-md-6">
+                        <div class="score-card">
+                            <div class="d-flex justify-content-between align-items-center mb-2 gap-2">
+                                <span class="fw-semibold">
+                                    <i class="bi bi-graph-up-arrow me-2 text-success"></i>
+                                    Readiness Score
+                                </span>
+
+                                <strong class="text-success">
+                                    {{ best_career.readiness_score|default_if_none:0 }}%
+                                </strong>
+                            </div>
+
+                            <div class="progress">
+                                <div class="progress-bar bg-success"
+                                     role="progressbar"
+                                     style="width: {{ best_career.readiness_score|default_if_none:0 }}%;"
+                                     aria-valuenow="{{ best_career.readiness_score|default_if_none:0 }}"
+                                     aria-valuemin="0"
+                                     aria-valuemax="100">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Matching Skills -->
+                <div class="mb-4">
+                    <h5 class="fw-bold">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        Your Matching Skills
+                    </h5>
+
+                    {% if best_career.matched_skills %}
+                        <div class="d-flex flex-wrap gap-2 mt-3">
+                            {% for skill in best_career.matched_skills %}
+                                <span class="skill-matched">
+                                    <i class="bi bi-check2 me-1"></i>
+                                    {{ skill }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">
+                            No matching skills have been identified yet.
+                            Add your skills to improve your career analysis.
+                        </p>
+                    {% endif %}
+                </div>
+
+                <!-- Missing Skills -->
+                <div>
+                    <h5 class="fw-bold">
+                        <i class="bi bi-lightbulb-fill text-warning me-2"></i>
+                        Skills to Develop
+                    </h5>
+
+                    {% if best_career.missing_skills %}
+                        <div class="d-flex flex-wrap gap-2 mt-3">
+                            {% for skill in best_career.missing_skills %}
+                                <span class="skill-missing">
+                                    <i class="bi bi-book me-1"></i>
+                                    {{ skill }}
+                                </span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-success mb-0">
+                            <i class="bi bi-check-circle me-1"></i>
+                            No missing skills were identified for this recommendation.
+                        </p>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Personalized Learning Roadmap -->
+        <section class="mb-5">
+
+            <div class="text-center mb-4 roadmap-section-heading">
+                <span class="roadmap-label mb-2">
+                    PERSONALIZED PLAN
+                </span>
+
+                <h2 class="fw-bold">
+                    <i class="bi bi-signpost-split me-2 text-primary"></i>
+                    Your Learning Roadmap
+                </h2>
+
+                <p class="section-description">
+                    Follow these steps to work toward your recommended career.
+                </p>
+            </div>
+
+            {% if roadmap %}
+                <div class="roadmap-container">
+
+                    {% for item in roadmap %}
+                        <div class="roadmap-item">
+
+                            <div class="roadmap-number">
+                                {{ forloop.counter }}
+                            </div>
+
+                            <div class="card roadmap-card">
+                                <div class="card-body p-4">
+
+                                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
+                                        <h5 class="fw-bold mb-0">
+                                            {{ item.skill|default:"Learning Step" }}
+                                        </h5>
+
+                                        {% if item.priority == "High" %}
+                                            <span class="priority-high">High Priority</span>
+                                        {% elif item.priority == "Medium" %}
+                                            <span class="priority-medium">Medium Priority</span>
+                                        {% else %}
+                                            <span class="priority-normal">
+                                                {{ item.priority|default:"Recommended" }} Priority
+                                            </span>
+                                        {% endif %}
+                                    </div>
+
+                                    {% if item.phase %}
+                                        <p class="small text-primary fw-semibold mb-2">
+                                            <i class="bi bi-flag me-1"></i>
+                                            {{ item.phase }}
+                                        </p>
+                                    {% endif %}
+
+                                    {% if item.reason %}
+                                        <p class="text-muted mb-2">
+                                            {{ item.reason }}
+                                        </p>
+                                    {% endif %}
+
+                                    {% if item.activity %}
+                                        <div class="roadmap-activity mt-3">
+                                            <span class="fw-semibold">
+                                                <i class="bi bi-tools me-2"></i>
+                                                Practical Activity
+                                            </span>
+
+                                            <p class="mb-0 mt-1">
+                                                {{ item.activity }}
+                                            </p>
+                                        </div>
+                                    {% endif %}
+
+                                </div>
+                            </div>
+
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+                <div class="alert alert-info border-0 rounded-4 mt-4">
+                    <i class="bi bi-info-circle-fill me-2"></i>
+                    <strong>Tip:</strong>
+                    Complete one learning step at a time. Practice what you learn
+                    and add your new skills and projects to your student profile.
+                </div>
+
+            {% else %}
+                <div class="card empty-state">
+                    <div class="card-body text-center py-5">
+                        <i class="bi bi-journal-code display-4 text-muted"></i>
+
+                        <h5 class="fw-bold mt-3">
+                            Your Roadmap Is Not Available Yet
+                        </h5>
+
+                        <p class="text-muted mb-0">
+                            Add your skills, branch, career interests, and projects
+                            to your profile to help generate a more useful roadmap.
+                        </p>
+                    </div>
+                </div>
+            {% endif %}
+
+        </section>
+
+    {% else %}
+
+        <!-- No Career Recommendation -->
+        <div class="card empty-state mb-5">
+            <div class="card-body text-center py-5 px-4">
+
+                <i class="bi bi-compass display-3 text-primary"></i>
+
+                <h3 class="fw-bold mt-3">
+                    No Career Recommendation Available
+                </h3>
+
+                <p class="text-muted mx-auto" style="max-width: 600px;">
+                    Add your branch, career interests, technical skills,
+                    soft skills, and project experience to help the system
+                    identify suitable career paths.
+                </p>
+
+                <a href="{% url 'student_profile' %}"
+                   class="btn btn-primary rounded-pill px-4 mt-2">
+                    <i class="bi bi-person-lines-fill me-2"></i>
+                    Update My Profile
+                </a>
+
+            </div>
+        </div>
+
+    {% endif %}
+
+    <!-- Other Career Recommendations -->
+    {% if other_careers %}
+        <section class="mb-5">
+
+            <div class="text-center mb-4">
+                <h2 class="fw-bold">
+                    <i class="bi bi-diagram-3 me-2 text-primary"></i>
+                    Other Career Opportunities
+                </h2>
+
+                <p class="section-description">
+                    Explore other career paths identified by the system.
+                </p>
+            </div>
+
+            <div class="row g-4">
+
+                {% for career in other_careers %}
+                    <div class="col-12 col-md-6 col-lg-4">
+
+                        <div class="card career-option-card">
+                            <div class="card-body p-4">
+
+                                <div class="career-icon mb-3">
+                                    <i class="bi bi-briefcase"></i>
+                                </div>
+
+                                <h5 class="fw-bold">
+                                    {% if career.title %}
+                                        {{ career.title }}
+                                    {% elif career.name %}
+                                        {{ career.name }}
+                                    {% else %}
+                                        Career Option
+                                    {% endif %}
+                                </h5>
+
+                                {% if career.description %}
+                                    <p class="text-muted small">
+                                        {{ career.description }}
+                                    </p>
+                                {% endif %}
+
+                                <div class="mt-3">
+                                    <span class="text-muted small">
+                                        Match Score
+                                    </span>
+
+                                    <strong class="float-end text-primary">
+                                        {% if career.match_percentage != None %}
+                                            {{ career.match_percentage }}%
+                                        {% elif career.match_score != None %}
+                                            {{ career.match_score }}%
+                                        {% else %}
+                                            0%
+                                        {% endif %}
+                                    </strong>
+                                </div>
+
+                                <div class="progress mt-2">
+                                    <div class="progress-bar bg-primary"
+                                         role="progressbar"
+                                         {% if career.match_percentage != None %}
+                                             style="width: {{ career.match_percentage }}%;"
+                                             aria-valuenow="{{ career.match_percentage }}"
+                                         {% elif career.match_score != None %}
+                                             style="width: {{ career.match_score }}%;"
+                                             aria-valuenow="{{ career.match_score }}"
+                                         {% else %}
+                                             style="width: 0%;"
+                                             aria-valuenow="0"
+                                         {% endif %}
+                                         aria-valuemin="0"
+                                         aria-valuemax="100">
+                                    </div>
+                                </div>
+
+                                {% if career.missing_skills %}
+                                    <div class="mt-3">
+                                        <span class="small fw-semibold">
+                                            Skills to Learn
+                                        </span>
+
+                                        <div class="d-flex flex-wrap gap-1 mt-2">
+                                            {% for skill in career.missing_skills %}
+                                                <span class="skill-small">
+                                                    {{ skill }}
+                                                </span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                            </div>
+                        </div>
+
+                    </div>
+                {% endfor %}
+
+            </div>
+        </section>
+    {% endif %}
+
+    <!-- Navigation -->
+    <div class="text-center mt-5">
+        <a href="{% url 'dashboard:student_dashboard' %}"
+           class="btn btn-outline-secondary back-button rounded-pill px-4">
+            <i class="bi bi-arrow-left me-2"></i>
+            Back to Dashboard
+        </a>
+    </div>
+
+</div>
+</div>
+{% endblock %}

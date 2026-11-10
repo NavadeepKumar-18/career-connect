@@ -1,0 +1,383 @@
+{% extends 'base.html' %}
+
+{% block title %}Login | AI Career & Placement System{% endblock %}
+
+{% block extra_css %}
+<style>
+    .login-page {
+        min-height: 72vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 32px 16px;
+        background: #eef1f8;
+    }
+
+    .login-card {
+        width: 100%;
+        max-width: 440px;
+        overflow: hidden;
+        background: #fff;
+        border: 1px solid #e0e6f0;
+        border-radius: 20px;
+        box-shadow: 0 15px 40px rgba(20, 33, 61, .10);
+    }
+
+    .login-header {
+        padding: 28px 25px 24px;
+        text-align: center;
+        color: #fff;
+        background: linear-gradient(
+            125deg,
+            #0d102b 0%,
+            #14213d 58%,
+            #1e3a5f 100%
+        );
+    }
+
+    .login-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 58px;
+        height: 58px;
+        margin-bottom: 14px;
+        color: #dbeafe;
+        background: rgba(255, 255, 255, .10);
+        border: 1px solid rgba(255, 255, 255, .25);
+        border-radius: 16px;
+        font-size: 27px;
+    }
+
+    .login-header h1 {
+        margin-bottom: 8px;
+        color: #fff;
+        font-size: 1.8rem;
+        font-weight: 750;
+    }
+
+    .login-header p {
+        margin-bottom: 0;
+        color: #d5deef;
+        font-size: .94rem;
+    }
+
+    .login-body {
+        padding: 27px;
+    }
+
+    .login-body .form-label {
+        margin-bottom: 8px;
+        color: #202b45;
+        font-weight: 600;
+    }
+
+    .login-body .form-control {
+        min-height: 47px;
+        padding: 11px 13px;
+        border: 1px solid #d9e0ed;
+        border-radius: 10px;
+        font-size: .95rem;
+    }
+
+    .login-body .form-control:focus {
+        border-color: #3155a6;
+        box-shadow: 0 0 0 .2rem rgba(49, 85, 166, .15);
+    }
+
+    .password-group .form-control {
+        border-radius: 10px 0 0 10px;
+    }
+
+    .password-group .btn {
+        min-width: 48px;
+        border: 1px solid #d9e0ed;
+        border-left: 0;
+        border-radius: 0 10px 10px 0;
+        background: #f7f9fd;
+        color: #243957;
+    }
+
+    .password-group .btn:focus-visible {
+        position: relative;
+        z-index: 2;
+        outline: 2px solid #3155a6;
+        outline-offset: 2px;
+    }
+
+    .login-submit {
+        min-height: 48px;
+        color: #fff;
+        background: linear-gradient(100deg, #14213d, #244a83);
+        border: 0;
+        border-radius: 10px;
+        font-weight: 700;
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .login-submit:hover {
+        color: #fff;
+        background: #0d102b;
+        transform: translateY(-1px);
+        box-shadow: 0 7px 18px rgba(20, 33, 61, .20);
+    }
+
+    .register-divider {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 23px 0 17px;
+        color: #778198;
+        font-size: .85rem;
+    }
+
+    .register-divider::before,
+    .register-divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #e5e9f1;
+    }
+
+    .register-link {
+        display: block;
+        width: 100%;
+        padding: 10px 12px;
+        color: #244a83;
+        background: #f7f9fd;
+        border: 1px solid #d6e0f1;
+        border-radius: 9px;
+        text-align: center;
+        text-decoration: none;
+        font-weight: 600;
+        transition: background .2s ease;
+    }
+
+    .register-link:hover {
+        color: #14213d;
+        background: #edf3ff;
+    }
+
+    .register-link:focus-visible {
+        outline: 2px solid #3155a6;
+        outline-offset: 3px;
+    }
+
+    .login-footer-note {
+        margin-top: 18px;
+        color: #778198;
+        font-size: .82rem;
+        text-align: center;
+    }
+
+    @media (max-width: 480px) {
+        .login-page {
+            min-height: auto;
+            padding: 22px 10px;
+        }
+
+        .login-header {
+            padding: 24px 18px 21px;
+        }
+
+        .login-body {
+            padding: 22px 19px;
+        }
+
+        .login-header h1 {
+            font-size: 1.6rem;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .login-submit,
+        .register-link {
+            transition: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-page">
+    <section class="login-card" aria-labelledby="login-title">
+
+        <!-- Header -->
+        <div class="login-header">
+            <div class="login-icon" aria-hidden="true">
+                <i class="bi bi-mortarboard-fill"></i>
+            </div>
+
+            <h1 id="login-title">Welcome Back</h1>
+
+            <p>Sign in to continue your career journey</p>
+        </div>
+
+        <!-- Form -->
+        <div class="login-body">
+
+            <!-- Django messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div
+                        class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} alert-dismissible fade show"
+                        role="alert"
+                    >
+                        {{ message }}
+
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Authentication errors -->
+            {% if form.errors or form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">
+                    <i class="bi bi-exclamation-circle me-2"></i>
+                    Your login details could not be verified.
+                    Please check your username and password.
+                </div>
+            {% endif %}
+
+            <form method="POST">
+    {% csrf_token %}
+
+ <input
+    type="hidden"
+    name="next"
+    value="{{ next|default:request.GET.next|default:'' }}"
+>
+
+                <div class="mb-3">
+                    <label for="id_username" class="form-label">
+                        Username
+                    </label>
+
+                    <input
+                        type="text"
+                        name="username"
+                        id="id_username"
+                        class="form-control"
+                        placeholder="Enter your username"
+                        autocomplete="username"
+                        required
+                        autofocus
+                        {% if form.username.value %}
+                            value="{{ form.username.value }}"
+                        {% endif %}
+                    >
+                </div>
+
+                <div class="mb-4">
+                    <label for="id_password" class="form-label">
+                        Password
+                    </label>
+
+                    <div class="input-group password-group">
+                        <input
+                            type="password"
+                            name="password"
+                            id="id_password"
+                            class="form-control"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                        <button
+                            class="btn"
+                            type="button"
+                            id="togglePassword"
+                            aria-label="Show password"
+                            aria-controls="id_password"
+                            aria-pressed="false"
+                        >
+                            <i class="bi bi-eye" aria-hidden="true"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn login-submit w-100">
+                    <i class="bi bi-box-arrow-in-right me-2"
+                       aria-hidden="true"></i>
+                    Log In
+                </button>
+            </form>
+
+            <!-- Registration links -->
+            <div class="register-divider">
+                New to the platform?
+            </div>
+
+            <div class="d-grid gap-2">
+                <a
+                    href="{% url 'student_register' %}"
+                    class="register-link"
+                >
+                    <i class="bi bi-mortarboard me-2"
+                       aria-hidden="true"></i>
+                    Register as a Student
+                </a>
+
+                {% url 'recruiter_register' as recruiter_register_url %}
+                {% if recruiter_register_url %}
+                    <a
+                        href="{{ recruiter_register_url }}"
+                        class="register-link"
+                    >
+                        <i class="bi bi-building me-2"
+                           aria-hidden="true"></i>
+                        Register as a Recruiter
+                    </a>
+                {% endif %}
+            </div>
+
+            <p class="login-footer-note">
+                Your next career step starts here.
+            </p>
+
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const passwordInput = document.getElementById("id_password");
+        const toggleButton = document.getElementById("togglePassword");
+
+        if (!passwordInput || !toggleButton) {
+            return;
+        }
+
+        toggleButton.addEventListener("click", function () {
+            const showPassword = passwordInput.type === "password";
+
+            passwordInput.type = showPassword ? "text" : "password";
+
+            toggleButton.setAttribute(
+                "aria-pressed",
+                String(showPassword)
+            );
+
+            toggleButton.setAttribute(
+                "aria-label",
+                showPassword ? "Hide password" : "Show password"
+            );
+
+            const icon = toggleButton.querySelector("i");
+
+            if (icon) {
+                icon.classList.toggle("bi-eye", !showPassword);
+                icon.classList.toggle("bi-eye-slash", showPassword);
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,598 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Registration | AI Career & Placement System{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Keep the registration page within the available viewport */
+    body:has(.register-page) .site-footer {
+        display: none !important;
+    }
+
+    .page-main:has(.register-page) {
+        padding: 0 !important;
+    }
+
+    .register-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 14px;
+        background: #eef1f8;
+        box-sizing: border-box;
+    }
+
+    .register-card {
+        width: 100%;
+        max-width: 500px;
+        overflow: hidden;
+        background: #fff;
+        border: 1px solid #e0e6f0;
+        border-radius: 15px;
+        box-shadow: 0 10px 28px rgba(20, 33, 61, .10);
+    }
+
+    .register-header {
+        padding: 14px 20px 12px;
+        color: #fff;
+        text-align: center;
+        background: linear-gradient(125deg, #0d102b, #14213d 58%, #1e3a5f);
+    }
+
+    .register-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        margin-bottom: 5px;
+        color: #dbeafe;
+        background: rgba(255, 255, 255, .10);
+        border: 1px solid rgba(255, 255, 255, .24);
+        border-radius: 10px;
+        font-size: 20px;
+    }
+
+    .register-header h1 {
+        margin-bottom: 4px;
+        color: #fff;
+        font-size: 1.35rem;
+        font-weight: 750;
+    }
+
+    .register-header p {
+        margin: 0;
+        color: #d5deef;
+        font-size: .82rem;
+    }
+
+    .register-body {
+        padding: 16px 22px;
+    }
+
+    .register-body .alert {
+        padding: 7px 10px;
+        margin-bottom: 10px;
+        font-size: .82rem;
+    }
+
+    .section-heading {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin: 0 0 9px;
+        color: #182744;
+        font-size: .88rem;
+        font-weight: 700;
+    }
+
+    .section-heading i {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 25px;
+        height: 25px;
+        color: #244a83;
+        background: #edf3ff;
+        border-radius: 7px;
+        font-size: .9rem;
+    }
+
+    .register-body .mb-3 {
+        margin-bottom: 10px !important;
+    }
+
+    .register-body .mb-4 {
+        margin-bottom: 12px !important;
+    }
+
+    .register-body .form-label {
+        display: block;
+        margin-bottom: 4px;
+        color: #26334d;
+        font-size: .82rem;
+        font-weight: 600;
+    }
+
+    .register-body .form-control {
+        min-height: 37px;
+        padding: 7px 10px;
+        border: 1px solid #d9e0ed;
+        border-radius: 8px;
+        font-size: .86rem;
+    }
+
+    .register-body .form-control:focus {
+        border-color: #3155a6;
+        box-shadow: 0 0 0 .15rem rgba(49, 85, 166, .14);
+    }
+
+    .register-body .form-control.is-invalid {
+        border-color: #dc3545;
+    }
+
+    .register-body .form-text {
+        margin-top: 3px;
+        color: #748098;
+        font-size: .72rem;
+    }
+
+    .field-error {
+        display: block;
+        margin-top: 3px;
+        color: #dc3545;
+        font-size: .77rem;
+    }
+
+    .password-group .form-control {
+        border-radius: 8px 0 0 8px;
+    }
+
+    .password-group .btn {
+        min-width: 39px;
+        padding: 5px 9px;
+        border: 1px solid #d9e0ed;
+        border-left: 0;
+        border-radius: 0 8px 8px 0;
+        background: #f7f9fd;
+        color: #244a83;
+    }
+
+    .password-group .btn:focus-visible {
+        outline: 2px solid #3155a6;
+        outline-offset: 2px;
+        z-index: 2;
+    }
+
+    .form-section + .form-section {
+        padding-top: 10px !important;
+        margin-top: 2px;
+        border-top: 1px solid #e9edf5;
+    }
+
+    .register-submit {
+        min-height: 39px;
+        padding: 8px 12px;
+        color: #fff;
+        background: linear-gradient(100deg, #14213d, #244a83);
+        border: 0;
+        border-radius: 8px;
+        font-size: .88rem;
+        font-weight: 700;
+    }
+
+    .register-submit:hover {
+        color: #fff;
+        background: #0d102b;
+    }
+
+    .security-note {
+        display: flex;
+        align-items: flex-start;
+        gap: 7px;
+        padding: 8px 10px;
+        margin-top: 10px;
+        color: #56647d;
+        background: #f7f9fd;
+        border: 1px solid #e4eaf4;
+        border-radius: 8px;
+        font-size: .74rem;
+        line-height: 1.4;
+    }
+
+    .security-note i {
+        margin-top: 1px;
+        color: #3155a6;
+        font-size: .9rem;
+    }
+
+    .login-prompt {
+        margin: 10px 0 0;
+        color: #68758d;
+        text-align: center;
+        font-size: .82rem;
+    }
+
+    .login-prompt a {
+        color: #244a83;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .login-prompt a:hover {
+        text-decoration: underline;
+    }
+
+    /* Short desktop screens */
+    @media (min-width: 481px) and (max-height: 760px) {
+        .register-page {
+            align-items: flex-start;
+            padding-top: 6px;
+            padding-bottom: 6px;
+        }
+
+        .register-header {
+            padding: 9px 18px;
+        }
+
+        .register-icon {
+            width: 30px;
+            height: 30px;
+            margin-bottom: 3px;
+            font-size: 17px;
+        }
+
+        .register-header h1 {
+            font-size: 1.2rem;
+        }
+
+        .register-body {
+            padding: 10px 20px;
+        }
+
+        .register-body .form-text {
+            display: none;
+        }
+
+        .security-note {
+            padding: 6px 9px;
+            margin-top: 7px;
+        }
+
+        .login-prompt {
+            margin-top: 7px;
+        }
+    }
+
+    /* Mobile layout */
+    @media (max-width: 480px) {
+        .page-main:has(.register-page) {
+            padding: 0 !important;
+        }
+
+        .register-page {
+            min-height: 100vh;
+            align-items: flex-start;
+            padding: 66px 9px 14px;
+        }
+
+        .register-card {
+            max-width: 400px;
+            border-radius: 13px;
+        }
+
+        .register-header {
+            padding: 14px 14px 12px;
+        }
+
+        .register-header h1 {
+            font-size: 1.25rem;
+        }
+
+        .register-body {
+            padding: 15px;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .register-submit {
+            transition: none;
+        }
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+<div class="register-page">
+    <section class="register-card" aria-labelledby="register-title">
+
+        <!-- Page heading -->
+        <header class="register-header">
+            <div class="register-icon" aria-hidden="true">
+                <i class="bi bi-mortarboard-fill"></i>
+            </div>
+
+            <h1 id="register-title">Create Your Student Account</h1>
+
+            <p>Start building your skills and preparing for your career.</p>
+        </header>
+
+        <div class="register-body">
+
+            <!-- Django messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div
+                        class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} alert-dismissible fade show"
+                        role="alert"
+                    >
+                        {{ message }}
+
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Non-field errors -->
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger" role="alert">
+                    <strong>Please check your details.</strong>
+                    {% for error in form.non_field_errors %}
+                        <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% elif form.errors %}
+                <div class="alert alert-danger" role="alert">
+                    Please correct the highlighted fields below.
+                </div>
+            {% endif %}
+
+            <form method="POST" id="studentRegistrationForm">
+                {% csrf_token %}
+
+                <!-- Account details -->
+                <fieldset class="form-section border-0 p-0 m-0">
+                    <legend class="section-heading">
+                        <i class="bi bi-person" aria-hidden="true"></i>
+                        Account Details
+                    </legend>
+
+                    <div class="mb-3">
+                        <label for="id_username" class="form-label">
+                            Username
+                        </label>
+
+                        <input
+                            type="text"
+                            name="username"
+                            id="id_username"
+                            class="form-control {% if form.username.errors %}is-invalid{% endif %}"
+                            placeholder="Choose a username"
+                            autocomplete="username"
+                            value="{{ form.username.value|default:'' }}"
+                            aria-describedby="username-errors"
+                            required
+                        >
+
+                        {% if form.username.errors %}
+                            <div id="username-errors" class="field-error">
+                                {% for error in form.username.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="id_email" class="form-label">
+                            Email Address
+                        </label>
+
+                        <input
+                            type="email"
+                            name="email"
+                            id="id_email"
+                            class="form-control {% if form.email.errors %}is-invalid{% endif %}"
+                            placeholder="you@example.com"
+                            autocomplete="email"
+                            value="{{ form.email.value|default:'' }}"
+                            aria-describedby="email-errors"
+                            required
+                        >
+
+                        {% if form.email.errors %}
+                            <div id="email-errors" class="field-error">
+                                {% for error in form.email.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </fieldset>
+
+                <!-- Password setup -->
+                <fieldset class="form-section border-0 p-0 m-0">
+                    <legend class="section-heading">
+                        <i class="bi bi-shield-lock" aria-hidden="true"></i>
+                        Password Setup
+                    </legend>
+
+                    <div class="mb-3">
+                        <label for="id_password" class="form-label">
+                            Password
+                        </label>
+
+                        <div class="input-group password-group">
+                            <input
+                                type="password"
+                                name="password"
+                                id="id_password"
+                                class="form-control {% if form.password.errors %}is-invalid{% endif %}"
+                                placeholder="Create a password"
+                                autocomplete="new-password"
+                                aria-describedby="password-errors"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="btn"
+                                id="togglePassword"
+                                aria-label="Show password"
+                                aria-controls="id_password"
+                                aria-pressed="false"
+                            >
+                                <i class="bi bi-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
+
+                        {% if form.password.errors %}
+                            <div id="password-errors" class="field-error">
+                                {% for error in form.password.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="form-text">
+                                Choose a strong password that is difficult to guess.
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="id_confirm_password" class="form-label">
+                            Confirm Password
+                        </label>
+
+                        <div class="input-group password-group">
+                            <input
+                                type="password"
+                                name="confirm_password"
+                                id="id_confirm_password"
+                                class="form-control {% if form.confirm_password.errors %}is-invalid{% endif %}"
+                                placeholder="Re-enter your password"
+                                autocomplete="new-password"
+                                aria-describedby="confirm-password-errors"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="btn"
+                                id="toggleConfirmPassword"
+                                aria-label="Show confirmation password"
+                                aria-controls="id_confirm_password"
+                                aria-pressed="false"
+                            >
+                                <i class="bi bi-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
+
+                        {% if form.confirm_password.errors %}
+                            <div id="confirm-password-errors" class="field-error">
+                                {% for error in form.confirm_password.errors %}
+                                    <div>{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </fieldset>
+
+                <button
+                    type="submit"
+                    class="btn register-submit w-100"
+                >
+                    <i class="bi bi-person-plus me-2" aria-hidden="true"></i>
+                    Create Account
+                </button>
+            </form>
+
+            <!-- Privacy note -->
+            <div class="security-note">
+                <i class="bi bi-shield-check" aria-hidden="true"></i>
+                <span>
+                    Your account information is used to support your career
+                    and placement journey. Keep your password private.
+                </span>
+            </div>
+
+            <p class="login-prompt">
+                Already have an account?
+                <a href="{% url 'login' %}">Log in</a>
+            </p>
+
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        function setupPasswordToggle(inputId, buttonId, label) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleButton = document.getElementById(buttonId);
+
+            if (!passwordInput || !toggleButton) {
+                return;
+            }
+
+            toggleButton.addEventListener("click", function () {
+                const showPassword = passwordInput.type === "password";
+
+                passwordInput.type = showPassword ? "text" : "password";
+
+                toggleButton.setAttribute(
+                    "aria-pressed",
+                    String(showPassword)
+                );
+
+                toggleButton.setAttribute(
+                    "aria-label",
+                    showPassword ? "Hide " + label : "Show " + label
+                );
+
+                const icon = toggleButton.querySelector("i");
+
+                if (icon) {
+                    icon.classList.toggle("bi-eye", !showPassword);
+                    icon.classList.toggle("bi-eye-slash", showPassword);
+                }
+            });
+        }
+
+        setupPasswordToggle(
+            "id_password",
+            "togglePassword",
+            "password"
+        );
+
+        setupPasswordToggle(
+            "id_confirm_password",
+            "toggleConfirmPassword",
+            "confirmation password"
+        );
+
+        // Bootstrap-style client-side validation.
+        const form = document.getElementById("studentRegistrationForm");
+
+        if (form) {
+            form.addEventListener("submit", function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+
+                form.classList.add("was-validated");
+            });
+        }
+    });
+</script>
+{% endblock %}
