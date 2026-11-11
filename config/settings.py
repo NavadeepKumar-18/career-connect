@@ -40,14 +40,19 @@ DEBUG = os.getenv(
 ).strip().lower() in {"1", "true", "yes", "on"}
 
 
-ALLOWED_HOSTS = [
+default_hosts = [
+    "127.0.0.1",
+    "localhost",
+    ".vercel.app",
+]
+
+configured_hosts = [
     host.strip()
-    for host in os.getenv(
-        "DJANGO_ALLOWED_HOSTS",
-        "127.0.0.1,localhost,.vercel.app,smart-career-placement-system-fvsafxlab-self-e5b3.vercel.app"
-    ).split(",")
+    for host in os.getenv("DJANGO_ALLOWED_HOSTS", "").split(",")
     if host.strip()
 ]
+
+ALLOWED_HOSTS = list(dict.fromkeys(default_hosts + configured_hosts))
 
 
 
