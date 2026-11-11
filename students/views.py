@@ -266,7 +266,8 @@ def student_resume(request):
                     'resume, if any, has not been changed.'
                 )
                 return redirect('student_resume')
-
+            # Reset file pointer before uploading to Cloudinary.
+            resume_file.seek(0)
             # Save only after text extraction succeeds.
             if resume:
                 resume.resume_file = resume_file
