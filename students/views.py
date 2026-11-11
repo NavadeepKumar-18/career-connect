@@ -7,6 +7,9 @@ from .models import (
     Project,
     Resume
 )
+import logging
+
+logger = logging.getLogger(__name__)
 import mimetypes
 from .services import extract_resume_text
 from functools import wraps
@@ -282,11 +285,13 @@ def student_resume(request):
             )
 
         except Exception:
-            messages.error(
-                request,
-                'Unable to process this resume. Please upload a valid '
-                'PDF or DOCX file.'
-            )
+         logger.exception("Resume upload or processing failed")
+
+         messages.error(
+        request,
+        'Unable to process this resume. Please upload a valid '
+        'PDF or DOCX file.'
+    )
 
         return redirect('student_resume')
 
