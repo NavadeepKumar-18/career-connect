@@ -39,6 +39,7 @@ DEBUG = os.getenv(
     "DJANGO_DEBUG", "False"
 ).strip().lower() in {"1", "true", "yes", "on"}
 
+
 ALLOWED_HOSTS = [
     host.strip()
     for host in os.getenv(
@@ -48,13 +49,17 @@ ALLOWED_HOSTS = [
     if host.strip()
 ]
 
+
+
 CSRF_TRUSTED_ORIGINS = [
     origin.strip()
     for origin in os.getenv(
-        "DJANGO_CSRF_TRUSTED_ORIGINS", ""
+        "DJANGO_CSRF_TRUSTED_ORIGINS",
+        "https://smart-career-placement-system.vercel.app"
     ).split(",")
     if origin.strip()
 ]
+
 
 AUTH_USER_MODEL = 'accounts.User'
 
