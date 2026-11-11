@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from .storage import private_resume_storage
+from cloudinary_storage.storage import MediaCloudinaryStorage
 
 class StudentProfile(models.Model):
 
@@ -43,10 +44,11 @@ class StudentProfile(models.Model):
     )
 
     profile_image = models.ImageField(
-        upload_to='profile_images/',
-        blank=True,
-        null=True
-    )
+    upload_to='profile_images/',
+    blank=True,
+    null=True,
+    storage=MediaCloudinaryStorage()
+)
 
     def __str__(self):
         return self.full_name or self.user.username
@@ -124,7 +126,6 @@ class Resume(models.Model):
     upload_to='resumes/',
     storage=private_resume_storage,
 )
-
     extracted_text = models.TextField(
         blank=True
     )
