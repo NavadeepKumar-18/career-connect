@@ -44,7 +44,7 @@ ALLOWED_HOSTS = [
     host.strip()
     for host in os.getenv(
         "DJANGO_ALLOWED_HOSTS",
-        "127.0.0.1,localhost,.vercel.app"
+        "127.0.0.1,localhost,.vercel.app,smart-career-placement-system-fvsafxlab-self-e5b3.vercel.app"
     ).split(",")
     if host.strip()
 ]
