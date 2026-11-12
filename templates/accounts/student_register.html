@@ -322,7 +322,7 @@
         <div class="register-body">
 
             <!-- Django messages -->
-            {% if messages %}
+            <!-- {% if messages %}
                 {% for message in messages %}
                     <div
                         class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} alert-dismissible fade show"
@@ -338,7 +338,7 @@
                         ></button>
                     </div>
                 {% endfor %}
-            {% endif %}
+            {% endif %} -->
 
             <!-- Non-field errors -->
             {% if form.non_field_errors %}
