@@ -60,13 +60,28 @@
         font-weight: 650;
     }
 
-    .company-profile-page .form-control {
-        min-height: 46px;
-        padding: 0.7rem 0.85rem;
-        border: 1px solid #d8dfeb;
-        border-radius: 0.65rem;
-        background-color: #fff;
-    }
+.company-profile-page .form-control {
+    min-height: 46px;
+    padding: 0.7rem 0.85rem;
+    border: 1px solid #d8dfeb;
+    border-radius: 0.65rem;
+    background-color: #fff;
+    color: #17233f !important;
+}
+
+/* Text visibility while typing */
+.company-profile-page .form-control:focus {
+    background-color: #fff;
+    color: #17233f !important;
+    border-color: #3155A6;
+    box-shadow: 0 0 0 0.2rem rgba(49, 85, 166, 0.13);
+}
+
+/* Placeholder visibility */
+.company-profile-page .form-control::placeholder {
+    color: #77829a;
+    opacity: 1;
+}
 
     .company-profile-page textarea.form-control {
         min-height: 140px;
