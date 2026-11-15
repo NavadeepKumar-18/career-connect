@@ -56,6 +56,7 @@ ALLOWED_HOSTS = list(dict.fromkeys(default_hosts + configured_hosts))
 
 
 CRON_SECRET = os.getenv("CRON_SECRET", "")
+
 CSRF_TRUSTED_ORIGINS = [
     origin.strip()
     for origin in os.getenv(
