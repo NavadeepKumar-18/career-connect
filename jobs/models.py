@@ -162,13 +162,28 @@ class Notification(models.Model):
     blank=True,
     related_name="notifications"
 )
+    reminder_type = models.CharField(
+    max_length=20,
+    blank=True,
+    default=""
+)
+
+    email_sent = models.BooleanField(default=False)
     title = models.CharField(max_length=200)
     message = models.TextField()
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        ordering = ['-created_at']
+       ordering = ['-created_at']
+
+       constraints = [
+        models.UniqueConstraint(
+            fields=['student', 'job', 'reminder_type'],
+            condition=~models.Q(reminder_type=''),
+            name='unique_student_job_deadline_reminder'
+        )
+    ]
 
     def __str__(self):
         return f"{self.title} - {self.student}"

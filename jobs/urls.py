@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from . import cron_views
 
 urlpatterns = [
     path('company/profile/', views.company_profile, name='company_profile'),
@@ -70,5 +71,10 @@ path(
     'applications/<int:application_id>/resume/',
     views.recruiter_application_resume,
     name='recruiter_application_resume'
+),
+path(
+    'cron/deadline-reminders/',
+    cron_views.send_deadline_reminders,
+    name='send_deadline_reminders'
 ),
 ]
