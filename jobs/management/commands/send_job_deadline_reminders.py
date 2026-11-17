@@ -137,10 +137,10 @@ class Command(BaseCommand):
                         f"Company: {job.company.company_name}\n"
                         f"Deadline: {job.deadline.strftime('%d-%m-%Y')}\n\n"
                         f"Apply here:\n{job_url}\n\n"
-                        "Log in to your Smart Career & Placement System "
+                        "Log in to your Career Connect Platform"
                         "account to apply.\n\n"
                         "Best regards,\n"
-                        "Placement Team"
+                        "Career Connect Team"
                     )
 
                     result = send_mail(

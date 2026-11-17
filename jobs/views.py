@@ -501,7 +501,7 @@ def post_job(request):
                     f'View the job and apply here:\n'
                     f'{job_url}\n\n'
                     'Best regards,\n'
-                    'Smart Career & Placement System'
+                    'Career Connect Team'
                 )
 
                 try:
@@ -891,7 +891,7 @@ def apply_job(request, job_id):
                     f'Company: {job.company.company_name}\n'
                     f'Application Date: {today}\n\n'
                     'Best regards,\n'
-                    'AI-Powered Smart Career & Placement System'
+                    'Career Connect Team'
                 ),
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[request.user.email],
@@ -1264,7 +1264,7 @@ def update_application_status(request, application_id):
                     'Please log in to your placement account '
                     'to view your application details.\n\n'
                     'Regards,\n'
-                    'AI-Powered Smart Career & Placement System'
+                    'Career Connect Team'
                 ),
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[recipient_email],
@@ -1426,7 +1426,7 @@ def bulk_update_application_status(request):
                     f"\n\nPlease log in to your placement account to view "
                     f"your application details.\n\n"
                     "Regards,\n"
-                    "AI-Powered Smart Career & Placement System"
+                    "Career Connect Team"
                 ),
                 from_email=settings.DEFAULT_FROM_EMAIL,
                 recipient_list=[item['email']],
